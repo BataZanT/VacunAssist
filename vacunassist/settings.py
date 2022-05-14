@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vacuApp',
-    'vacuApp.apps.MainConfig'
 ]
 
 MIDDLEWARE = [
