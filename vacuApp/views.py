@@ -8,3 +8,6 @@ def testBulma(response):
 
 def home(response):
     return render(response,'home.html')
+
+def infoPersonal(response):
+    return render(response,'visualizarInfoPersonal.html')

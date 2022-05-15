@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('register',views.testBulma,name='register'),
-    path('',views.home,name='home')
+    path('',views.home,name='home'),
+    path('infoPersonal',views.infoPersonal,name='visualizarInfoPersonal'),
 ]
