@@ -4,3 +4,7 @@ from django.shortcuts import render
 
 def testBulma(response):
     return render(response,'register.html')
+
+
+def home(response):
+    return render(response,'home.html')
