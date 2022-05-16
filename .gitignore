@@ -6,3 +6,4 @@ __pycache__/
 vacunassist/__pycache__
 vacunassist/__pycache__/settings.cpython-310.pyc
 vacunassist\__pycache__/
+db.sqlite3
