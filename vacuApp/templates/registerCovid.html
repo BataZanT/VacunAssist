@@ -1,0 +1,37 @@
+
+<head>
+  {% load django_simple_bulma %}
+  {% bulma %}
+  {% font_awesome %}
+</head>
+
+<body class="has-background-success-light">
+  {% include 'base.html' %}
+  <div class="page mt-6 pt-3 mx-3 is-flex-column">
+    <section class="section">
+      <h2 class="title">Vacuna Covid-19</h2>
+    </section>
+    <section class="section">
+      <h2 class="subtitle">¿Cuantas dosis de la vacuna contra el Covid-19 se ha aplicado?</h2>
+      <form action="submit" class="form">
+        <div class="field">
+        <div class="control">
+          <div class="select">
+            <select name="sexo" id="sexo">
+              <option value="0">Ninguna</option>
+              <option value="1">Una (1)</option>
+              <option value="2">Dos (2)</option>
+            </select>
+          </div>
+          
+        </div>
+      </div>
+
+      <button class="button mt-6">Continuar</button>
+
+      
+    </section>
+
+  </div>  
+</body>
+

@@ -1,0 +1,32 @@
+
+<head>
+  {% load django_simple_bulma %}
+  {% bulma %}
+  {% font_awesome %}
+</head>
+
+<body class="has-background-success-light">
+  {% include 'base.html' %}
+  <div class="page mt-6 pt-3 mx-3 is-flex-column">
+    <section class="section">
+      <h2 class="title">Vacuna contra la Gripe</h2>
+    </section>
+    <section class="section">
+      <h2 class="subtitle">¿Cuado se aplico su ultima dosis de vacuna contra la Gripe?</h2>
+      <form action="submit" class="form">
+      
+        <div class="field mr-3">
+          <div class="control">
+            <input class="input" type="date" >
+          </div>
+        </div>
+      </form>
+
+      <button class="button mt-6">Continuar</button>
+
+      
+    </section>
+
+  </div>  
+</body>
+
