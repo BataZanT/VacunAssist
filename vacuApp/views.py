@@ -14,3 +14,6 @@ def infoPersonal(response):
 
 def modificarInfo(response):
     return render(response,'modificarInfoPersonal.html')
+
+def modContraseña(response):
+    return render(response,'modificarContraseña.html')
