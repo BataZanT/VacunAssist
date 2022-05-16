@@ -11,3 +11,6 @@ def home(response):
 
 def infoPersonal(response):
     return render(response,'visualizarInfoPersonal.html')
+
+def modificarInfo(response):
+    return render(response,'modificarInfoPersonal.html')
