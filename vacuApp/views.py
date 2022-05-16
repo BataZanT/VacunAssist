@@ -20,3 +20,9 @@ def modContraseña(response):
 
 def modMail(response):
     return render(response,'modificarMail.html')
+
+def recuContraseña(response):
+    return render(response,'recuperarContraseña.html')
+
+def camContraseñaRecu(response):
+    return render(response,'cambiarContraseñaRecuperada.html')

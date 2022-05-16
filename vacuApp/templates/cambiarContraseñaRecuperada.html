@@ -1,0 +1,18 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}
+  
+  </head>
+
+<body class= "mt-6 pt-3">
+    {% include 'base.html' %}
+    <div class= ml-4><h2 class="title"> Recuperar Contraseña</h2></div>
+    <div class="box background-success-light" >
+        <p > <b>La nueva contraseña debe tener: al menos una mayuscula y al menos 8 caracteres.</b></p> <br/>
+        <p>Ingrese la nueva Contraseña:</p>
+        <input class="input is-primary mt-3" style="width: 35% ;" type="passwod" placeholder="Aaaaaaaa"><br/>
+        <p>Ingrese de nuevo la nueva contraseña:</p>
+        <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Aaaaaaaaa"><br/>
+        <div class=" mt-5"> <button class="button">Atras</button>      <button class="button"> Confirmar </button></div>
+    </div>
+</body>

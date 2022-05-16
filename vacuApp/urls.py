@@ -9,5 +9,7 @@ urlpatterns = [
     path('modificarInfo',views.modificarInfo,name='modificarInfoPersonal'),
     path('modContraseña',views.modContraseña,name='modificarContraseña'),
     path('modMail',views.modMail,name='modificarMail'),
+    path('recuContraseña',views.recuContraseña,name='recuperarContraseña'),
+    path('camContraseñaRecu',views.camContraseñaRecu,name='cambiarContraeñaRecuperada'),
 
 ]
