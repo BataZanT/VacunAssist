@@ -3,12 +3,12 @@
     {% load django_simple_bulma %}
     {% bulma %}
 </head>
-<body class= "mt-6 pt-3">
+<body class= "background-success-light mt-6 pt-3">
     {% include 'base.html' %}
     <div class= ml-4><h2 class="title"> Modificar Informacion Personal</h2></div>
-    <div class="box mt-3" >
+    <div class="box mt-3 background-success-light" >
         <p class="subtitle is-5">Mail: </p>
-        <button class="button">Modificar Mail</button>
-        <div class=" mt-5"> <button class="button">Modificar Contraseña</button></div> 
+        <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modMail" target="_self">Modificar Mail</a></button>
+        <div class=" mt-5"> <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modContraseña" target="_self">Modificar Contraseña</a></button></div> 
     </div>
 </body>
