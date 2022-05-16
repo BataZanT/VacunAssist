@@ -8,4 +8,6 @@ urlpatterns = [
     path('infoPersonal',views.infoPersonal,name='visualizarInfoPersonal'),
     path('modificarInfo',views.modificarInfo,name='modificarInfoPersonal'),
     path('modContraseña',views.modContraseña,name='modificarContraseña'),
+    path('modMail',views.modMail,name='modificarMail'),
+
 ]

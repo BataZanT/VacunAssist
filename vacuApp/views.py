@@ -17,3 +17,6 @@ def modificarInfo(response):
 
 def modContraseña(response):
     return render(response,'modificarContraseña.html')
+
+def modMail(response):
+    return render(response,'modificarMail.html')
