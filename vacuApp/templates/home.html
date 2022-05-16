@@ -1,21 +1,23 @@
-
 <head>
     {% load django_simple_bulma %}
-    {% bulma %}
+    {% bulma %}  
+    {% load static %}  
   
   </head>
   <body>
-    {% include 'base.html' %}
-    <h1>
+    <div>
+      {% include 'base.html' %}
+      <h1>
         <p style="text-align:center;">
           <br>
           <br>
           <br>
-          <img src="/imagenes/logoV.jpg" alt="Logo VacunAssist">
+          <img src="{% static 'imagenes/logoCompleto.png' %}" alt="Logo Completo VacunAssist" width="500" height="500"/>
           <br>
           Bienvenido a VACUNASSIST este es un nuevo sistema para la administracion y gestion de turnos para las vacunas contra los virus de COVID-19, GRIPE y FIEBRE AMARILLA. <br>
           Desde esta aplicacion podra obtener turnos automaticamente para las vacunas pendientes y descargar el certificado una vez aplicada. <br>
           Para poder acceder a las funciones debera registrarce o iniciar sesion. <br>
         </p>
-    </h1>
+      </h1>
+    </div>
   </body>
