@@ -5,7 +5,6 @@ from django.shortcuts import render
 def register(response):
     return render(response,'register/register.html')
 
-
 def home(response):
     return render(response,'home.html')
 
@@ -20,3 +19,6 @@ def registerFiebreA(response):
 
 def registerCentro(response):
     return render(response,'register/registerCentro.html')
+
+def login(response):
+    return render(response,'login.html')
