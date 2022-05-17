@@ -26,6 +26,7 @@ def recuContraseña(response):
 
 def camContraseñaRecu(response):
     return render(response,'cambiarContraseñaRecuperada.html')
+
 def registerCovid(response):
     return render(response,'register/registerCovid.html')
 
@@ -37,3 +38,6 @@ def registerFiebreA(response):
 
 def registerCentro(response):
     return render(response,'register/registerCentro.html')
+
+def login(response):
+    return render(response,'login.html')
