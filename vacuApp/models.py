@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import CharField
-
+from datetime import date
 
 # Create your models here.
 

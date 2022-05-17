@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from vacuApp.models import *
 # Create your views here.
+from datetime import date
 
+def calculate_age(born):
+    today = date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    
 def register(response):
     return render(response,'register/register.html')
 
@@ -9,8 +14,11 @@ def register(response):
 def home(response):
     return render(response,'home.html')
 
-def infoPersonal(response):
-    return render(response,'visualizarInfoPersonal.html')
+def infoPersonal(response,idu):
+    o= User.objects
+    usu=o.get(id=idu)
+    edad = calculate_age(usu.birthDate)
+    return render(response,'visualizarInfoPersonal.html', {"usuario":usu,"edad":edad})
 
 def modificarInfo(response):
     return render(response,'modificarInfoPersonal.html')
@@ -26,6 +34,7 @@ def recuContraseña(response):
 
 def camContraseñaRecu(response):
     return render(response,'cambiarContraseñaRecuperada.html')
+
 def registerCovid(response):
     return render(response,'register/registerCovid.html')
 
@@ -37,3 +46,6 @@ def registerFiebreA(response):
 
 def registerCentro(response):
     return render(response,'register/registerCentro.html')
+
+def login(response):
+    return render(response,'login.html')
