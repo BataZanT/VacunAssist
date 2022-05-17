@@ -9,8 +9,10 @@ def register(response):
 def home(response):
     return render(response,'home.html')
 
-def infoPersonal(response):
-    return render(response,'visualizarInfoPersonal.html')
+def infoPersonal(response,idu):
+    o= User.objects
+    usu=o.get(id=idu)
+    return render(response,'visualizarInfoPersonal.html', {"usuario":usu})
 
 def modificarInfo(response):
     return render(response,'modificarInfoPersonal.html')
