@@ -1,8 +1,9 @@
-
 <head>
   {% load django_simple_bulma %}
   {% bulma %}
   {% font_awesome %}
+  {% csrf_token %}
+  <script src="../../scripts/pruebaemails.py" language="python"></script>
 </head>
 
 <body class="has-background-success-light">
@@ -13,30 +14,24 @@
     </section>
     <section class="section">
       <h2 class="subtitle"></h2>
-      <form target="_blank" action="MAILTO:agustinferrrr@gmail.com" method="POST" class="form">
-    
-        <div class="field">
-        <div class="control">
-          <label class="label is-size-5">Seleccione un centro de vacunacion de preferencia para vacunarse</label>
-          <div class="select">
-            <select name="centro" id="centro">
-              <option value="Cementerio">Cementerio</option>
-              <option value="Municipalidad">Municipalidad</option>
-              <option value="Terminal">Terminal</option>
-            </select>
+      <form target="_self" action="/enviaremail" method="POST" class="form">
+        <form method="post">{% csrf_token %}
+          <div class="field">
+            <div class="control">
+              <label class="label is-size-5">Seleccione un centro de vacunacion de preferencia para vacunarse</label>
+              <div class="select">
+                <select name="centro" id="centro">
+                  <option value="Cementerio">Cementerio</option>
+                  <option value="Municipalidad">Municipalidad</option>
+                  <option value="Terminal">Terminal</option>
+                </select>
+              </div>        
+            </div>
           </div>
-          
-        </div>
-      </div>
-
-      <button class="button mt-6">Finalizar Registro</button>
-      
-      </form>  
-      
-
-      
+          <button class="button mt-6" onclick= "">Finalizar Registro</button>      
+        </form>
+      </form> 
     </section>
-
   </div>  
 </body>
 

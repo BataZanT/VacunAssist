@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -22,3 +23,7 @@ def registerCentro(response):
 
 def login(response):
     return render(response,'login.html')
+
+def enviarmail(request):
+    exec= '../scripts/pruebaemails.py'
+    return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
