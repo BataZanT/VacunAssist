@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import CharField
-
+from datetime import date
 
 # Create your models here.
 
@@ -16,7 +16,7 @@ class User(models.Model):
     surname = CharField(max_length=90)
     email = CharField(max_length=100)
     DNI = CharField(max_length=8,unique=True)
-    birthDate = models.DateField
+    birthDate = models.DateField()
     sex = CharField(max_length=1)
     password = CharField(max_length=20)
     token = CharField(max_length=4,null=True)
