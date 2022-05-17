@@ -1,13 +1,12 @@
 <head>
     {% load django_simple_bulma %}
     {% bulma %}  
-    {% load static %}  
   
   </head>
   <body>
     {% include 'base.html' %}
-      <div class= mt-6> <h2> Iniciar Sesion </h2> </div>
-      <div class=" box mt-6 pt-3 background-success-light" >
+      <div class= "ml-3 mt-6"> <h2 class="title"> Iniciar Sesion </h2> </div>
+      <div class=" box pt-2 background-success-light" >
         <p class="mt-5"> Ingrese Mail:</p>
         <input class="input is-primary " style="width: 35% ;" type="text" placeholder="Mail" required=""> <br/>
         <p class="mt-5"> Ingrese Contraseña:</p>
