@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from vacuApp.models import *
 # Create your views here.
 
 def register(response):
