@@ -1,4 +1,16 @@
+vacuApp/__pycache__/
+vacunassist/__pycache__/
+vacuApp/migrations/__pycache__/0001_initial.cpython-310.pyc
+vacuApp/migrations/__pycache__/__init__.cpython-310.pyc
 __pycache__/
 vacunassist/__pycache__
 vacunassist/__pycache__/settings.cpython-310.pyc
 vacunassist\__pycache__/
+db.sqlite3
+db.sqlite3
+*.sqlite3
+db.sqlite3
+db.sqlite3
+db.sqlite3
+db.sqlite3
+*.sqlite3
