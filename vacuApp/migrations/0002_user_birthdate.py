@@ -11,9 +11,9 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='user',
+            model_name='User',
             name='birthDate',
-            field=models.DateField(default=0.0005),
+            field=models.DateField(default="2000-01-01"),
             preserve_default=False,
         ),
     ]

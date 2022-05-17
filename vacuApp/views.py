@@ -17,7 +17,8 @@ def home(response):
 def infoPersonal(response,idu):
     o= User.objects
     usu=o.get(id=idu)
-    return render(response,'visualizarInfoPersonal.html', {"usuario":usu})
+    edad = calculate_age(usu.birthDate)
+    return render(response,'visualizarInfoPersonal.html', {"usuario":usu,"edad":edad})
 
 def modificarInfo(response):
     return render(response,'modificarInfoPersonal.html')
