@@ -4,6 +4,7 @@ from hashlib import scrypt
 from subprocess import call
 from django.shortcuts import render
 from vacuApp.models import *
+from .forms import Register
 # Create your views here.
 from django.http import HttpResponse
 from pkg_resources import run_script
@@ -20,7 +21,8 @@ def calculate_age(born):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
 def register(response):
-    return render(response,'register/register.html')
+    form = Register()
+    return render(response,'register/register.html',{"form":form})
 
 
 def home(response):

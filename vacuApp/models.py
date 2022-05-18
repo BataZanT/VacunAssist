@@ -7,9 +7,11 @@ from datetime import date
 class Center(models.Model):
     name = CharField(max_length=100)
     adress = CharField(max_length=100)
-
+    
+    
     def __str__(self):
-        return str(self.name)
+        return str(self.name)    
+    
 
 class User(models.Model):
     name = CharField(max_length=50)
@@ -39,4 +41,18 @@ class Appointment(models.Model):
     vaccine = models.ForeignKey(Vaccine,on_delete=models.CASCADE)
     patient = models.ForeignKey(User,on_delete=models.CASCADE)
 
-
+class History(models.Model):
+    covid_1= models.BooleanField()
+    covid_2= models.BooleanField()
+    covid_date = models.DateField
+    gripe= models.BooleanField()
+    gripe_date = models.DateField
+    fiebreA= models.BooleanField()
+    fiebreA_date = models.DateField
+    fiebreA_eleccion= models.BooleanField()
+    name = CharField(max_length=40)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
