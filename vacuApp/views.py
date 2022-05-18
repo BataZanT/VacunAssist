@@ -4,8 +4,7 @@ from hashlib import scrypt
 from subprocess import call
 from django.shortcuts import render
 from django.http import HttpResponse
-
-#from vacuApp.models import *
+from vacuApp.models import *
 # Create your views here.
 from django.http import HttpResponse
 from pkg_resources import run_script
@@ -72,7 +71,9 @@ def enviaremail(request):
         smtp.login(EMAIL, PASSW)                                            #Nos logeamos (xoejdavfzdfnoigf)
         TOKEN = random.randint(1000, 9999)
         subject = 'Confirmacion de cuenta'                                  #Asunto del email
-        body = 'Este es un mensage autogenerado por VacunAssist, tu TOKEN de ingreso es ' + str(TOKEN)          #Cuerpo del email
+                                                                            #Cuerpo del email
+
+        body = 'Este es un mensage autogenerado por VacunAssist, tu TOKEN de ingreso es ' + str(TOKEN)          
 
         msg = f'Subject: {subject}\n\n{body}'                               #Es necesario formatear el mensaje (f) para que lo tome gmail
 
