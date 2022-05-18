@@ -22,7 +22,7 @@ class User(models.Model):
     sex = CharField(max_length=1)
     password = CharField(max_length=20)
     token = CharField(max_length=4,null=True)
-    center = models.ForeignKey(Center,on_delete=models.CASCADE)
+    center = models.ForeignKey(Center,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
         return str(self.name + ' ' + self.surname + ' ' + self.DNI)
@@ -37,7 +37,7 @@ class Vaccine(models.Model):
 class Appointment(models.Model):
     state = models.IntegerField
     date = models.DateField
-    center = models.ForeignKey(Center,on_delete=models.CASCADE)
+    center = models.ForeignKey(Center,on_delete=models.CASCADE,null=True)
     vaccine = models.ForeignKey(Vaccine,on_delete=models.CASCADE)
     patient = models.ForeignKey(User,on_delete=models.CASCADE)
 
