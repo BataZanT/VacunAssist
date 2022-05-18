@@ -145,3 +145,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'vacuApp\static')
 ]
 
+AUTH_USER_MODEL = 'vacuApp.User'
