@@ -1,5 +1,7 @@
+import django
 from django.shortcuts import render
 from vacuApp.models import *
+from .forms import Register
 # Create your views here.
 from datetime import date
 
@@ -8,7 +10,8 @@ def calculate_age(born):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
 def register(response):
-    return render(response,'register/register.html')
+    form = Register()
+    return render(response,'register/register.html',{"form":form})
 
 
 def home(response):

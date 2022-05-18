@@ -41,4 +41,17 @@ class Appointment(models.Model):
     vaccine = models.ForeignKey(Vaccine,on_delete=models.CASCADE)
     patient = models.ForeignKey(User,on_delete=models.CASCADE)
 
-
+class History(models.Model):
+    covid_1= models.BooleanField()
+    covid_2= models.BooleanField()
+    gripe= models.BooleanField()
+    fiebreA= models.BooleanField()
+    fiebreA_eleccion= models.BooleanField()
+    state = models.IntegerField
+    date = models.DateField
+    name = CharField(max_length=40)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
