@@ -44,11 +44,12 @@ class Appointment(models.Model):
 class History(models.Model):
     covid_1= models.BooleanField()
     covid_2= models.BooleanField()
+    covid_date = models.DateField
     gripe= models.BooleanField()
+    gripe_date = models.DateField
     fiebreA= models.BooleanField()
+    fiebreA_date = models.DateField
     fiebreA_eleccion= models.BooleanField()
-    state = models.IntegerField
-    date = models.DateField
     name = CharField(max_length=40)
     user = models.OneToOneField(
         User,
