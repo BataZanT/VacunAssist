@@ -28,7 +28,6 @@ def register(response):
             if form.is_valid():
                 data = form.cleaned_data
                 user = User( name = data["name"] ,center = None, token = None, password = data["password"],sex = data["sex"], birthDate = data["birthDate"],DNI = str(data["DNI"]), email = data["email"],surname = data["surname"] )
-                request.session["user"] = user
                 return enviaremail(user)
 
             else:
