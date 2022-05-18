@@ -7,7 +7,7 @@ from unicodedata import name
 from django.shortcuts import render
 from requests import request
 from vacuApp.models import *
-from .forms import Register
+from .admin import UserCreationForm
 # Create your views here.
 from django.http import HttpResponse
 from pkg_resources import run_script
@@ -24,17 +24,20 @@ def calculate_age(born):
     
 def register(response):
         if(response.method == "POST"):
-            form = Register(response.POST)
+            form = UserCreationForm(response.POST)
             if form.is_valid():
                 data = form.cleaned_data
-                user = User( name = data["name"] ,center = None, token = None, password = data["password"],sex = data["sex"], birthDate = data["birthDate"],DNI = str(data["DNI"]), email = data["email"],surname = data["surname"] )
+                form.save()
+                print(User.objects.all())
+                user = User( name = data["name"] ,center = None, token = None, password = data["password1"],sex = data["sex"], birthDate = data["birthDate"],DNI = str(data["DNI"]), email = data["email"],surname = data["surname"] )
+                return render(response,'home.html')
                 return enviaremail(user)
 
             else:
-                form = Register()
+                form = UserCreationForm()
                 return render(response,'register/register.html',{"form":form})
         else:
-            form = Register()
+            form = UserCreationForm()
             return render(response,'register/register.html',{"form":form})
         
 
