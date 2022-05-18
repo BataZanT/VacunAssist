@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vacuApp',
-    'django_simple_bulma'
+    'django_simple_bulma',
 ]
 
 MIDDLEWARE = [

@@ -7,19 +7,23 @@
     {% include 'base.html' %}
       <div class= "ml-3 mt-6"> <h2 class="title"> Iniciar Sesion </h2> </div>
       <div class=" box pt-2 background-success-light" >
-        <form method="post" id="login" action="{% url 'login' %}">
+        <form action="validar" method="post">
           {% csrf_token %}
-          <label class="mt-5">Ingrese Mail:</label><br/>
-          <input class="input is-primary " style="width: 35% ;" type="email" placeholder="Mail" required="" name="email" > <br/>
-          {{loginFrom.mail}}
+          <label class="mt-5">Ingrese Mail:</label> <br/>
+          <input class="input is-primary mt-3 " name="mail" style="width: 35%" type="email" placeholder="Mail" required="" > <br/> <br/> 
+          {{forms.username}}
           <label class="mt-5">Ingrese Contraseña:</label><br/>
-          <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña" required="" minlength="8" name="contraseña"><br/>  
-          {{loginFrom.password}}
+          <input class="input is-primary mt-3" name="contraseña" style="width: 35% ;" type="password" placeholder="Contraseña" required="" minlength="8" > <br/> <br/>
+          {{form.password}}
           <label class="mt-5">Ingrese Token:</label><br/> 
-          <input class="input is-primary mt-3" style="width: 35% ;" type="text" placeholder="Contraseña Nueva" required="" minlength="4" maxlength="4" name="token"><br/>
-          {{loginFrom.token}}
-          <br/>
-          <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>   <button type="submit" class="button"> Continuar</button>
+          <input class="input is-primary mt-3" name="token" style="width: 35% ;" type="text" placeholder="Contraseña Nueva" required="" minlength="4" maxlength="4" > <br/>
+          <br/>{% for message in messages %}
+        <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+                 {{ message }}
+        </div>
+        {% endfor %}
+          <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>  <button type="submit" class="button"> Continuar</button>
         </form>
     </div>
   </body>

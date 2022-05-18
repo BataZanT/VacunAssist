@@ -1,27 +1,9 @@
 
 from django import forms
-class UserLoginForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.TextInput(attrs={
-                'id': 'loginEmail',
-                'type': 'text',
-                'class': 'form-control'
-            })
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'id': 'loginPassword',
-            'type': 'password',
-            'class': 'form-control',
-        })
-       )
-    token = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'id': 'loginToken',
-            'type': 'text',
-            'class': 'form-control'
-         })
-    )
+class UserForm(forms.Form):
+    username=forms.EmailField()
+    password=forms.CharField(label="contraseña",min_length=8)
+
  
 from django import forms
 from django.forms import CharField
@@ -36,6 +18,6 @@ class Register(forms.Form):
         ('M','M')
     ]
     sex = forms.ChoiceField(label="Sexo",choices = SEX,)
-    password = CharField(label="Contraseña",max_length=10)
-    repeatPassword = CharField(label="Repetir Contraseña",max_length=10,widget= forms.TextInput
+    password = CharField(label="Contraseña",max_length=20)
+    repeatPassword = CharField(label="Repetir Contraseña",max_length=20,widget= forms.TextInput
                            (attrs={'type':'password'}))

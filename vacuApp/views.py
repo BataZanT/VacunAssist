@@ -1,19 +1,14 @@
+import email
 import smtplib
 import random
-from hashlib import scrypt
-from subprocess import call
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from vacuApp.models import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import redirect
-from django import forms
-from .forms import UserLoginForm
+from django.http.response import HttpResponse
 from .forms import Register
 # Create your views here.
 from django.http import HttpResponse
-from pkg_resources import run_script
 from vacuApp.models import *
 from datetime import date
 from django.dispatch import receiver
@@ -69,24 +64,37 @@ def registerCentro(response):
 
 def login(response):
     return render(response,'login.html')
+    
+from .forms import UserForm
 
-def login_view(request):
-    login_form = UserLoginForm(request.POST or None)
-    if login_form.is_valid():
-        email = login_form.cleaned_data.get('mail')
-        password = login_form.cleaned_data.get('password')
-        token=login_form.cleaned_data.get('token')
-        user = authenticate(request, email=email, password=password,token=token)
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Has iniciado sesion correctamente')
-            return redirect('visualizarInfoPersonal')
-        else:
-            messages.warning(
-                request, 'Correo Electronico, Contraseña o Token invalida')
-            return redirect('login')
-    messages.error(request, 'Formulario Invalido')
-    return redirect('login')     
+def validar(request):
+        mail=request.POST['mail']
+        contraseña=request.POST['contraseña']
+        token=request.POST['token']
+        o= User.objects
+        usu=o.get(email=mail)
+        if usu!=None:
+            if usu.password==contraseña:
+                if usu.token==token:
+                    login_form = UserForm(request.POST)
+                    if login_form.is_valid():
+                        username= login_form.cleaned_data.get('username')
+                        password = login_form.cleaned_data.get('password')
+                        auth_user = authenticate(request, username=username, password=password)
+                        login(auth_user) 
+                        messages.success(request, 'Has iniciado sesion correctamente') 
+                        return redirect('vinfoPersonal/',usu.Id)
+                    else:   
+                        messages.warning(request, 'Ocurrio un problema')
+                else:
+                    messages.warning(request, 'Token invalido')
+            else:
+                messages.warning(request, ' Contraseña invalido')
+        else: 
+            messages.warning(request, ' Mail invalido')
+        return redirect('http://127.0.0.1:8000/login')    
+
+
 def enviaremail(request): 
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                       #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp
         smtp.ehlo()                                                         #Nos identifica con gmail
@@ -100,6 +108,4 @@ def enviaremail(request):
         msg = f'Subject: {subject}\n\n{body}'                               #Es necesario formatear el mensaje (f) para que lo tome gmail
 
         smtp.sendmail(EMAIL, YO, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
-
- 
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
