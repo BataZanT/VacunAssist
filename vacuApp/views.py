@@ -1,3 +1,7 @@
+import smtplib
+import random
+from hashlib import scrypt
+from subprocess import call
 from django.shortcuts import render
 from vacuApp.models import *
 from django.contrib import messages
@@ -6,15 +10,25 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django import forms
 from .forms import UserLoginForm
+from .forms import Register
 # Create your views here.
+from django.http import HttpResponse
+from pkg_resources import run_script
+from vacuApp.models import *
 from datetime import date
+from django.dispatch import receiver
+
+EMAIL = 'vacunassist.contacto@gmail.com'
+PASSW = 'xoejdavfzdfnoigf'
+YO = 'agustinferrrr@gmail.com'                                              #Esto es para la prueba, despues se va
 
 def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
 def register(response):
-    return render(response,'register/register.html')
+    form = Register()
+    return render(response,'register/register.html',{"form":form})
 
 
 def home(response):
@@ -73,3 +87,19 @@ def login_view(request):
             return redirect('login')
     messages.error(request, 'Formulario Invalido')
     return redirect('login')     
+def enviaremail(request): 
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                       #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp
+        smtp.ehlo()                                                         #Nos identifica con gmail
+        smtp.starttls()                                                     #Encripta algo que no se como se llama
+        smtp.ehlo()                                                         #Nos identificamos de nuevo porque nos encriptamos    
+        smtp.login(EMAIL, PASSW)                                            #Nos logeamos (xoejdavfzdfnoigf)
+        TOKEN = random.randint(1000, 9999)
+        subject = 'Confirmacion de cuenta'                                  #Asunto del email
+        body = 'Este es un mensage autogenerado por VacunAssist, tu TOKEN de ingreso es ' + str(TOKEN)          #Cuerpo del email
+
+        msg = f'Subject: {subject}\n\n{body}'                               #Es necesario formatear el mensaje (f) para que lo tome gmail
+
+        smtp.sendmail(EMAIL, YO, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
+
+ 
+    return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
