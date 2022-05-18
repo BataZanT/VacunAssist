@@ -1,5 +1,11 @@
 from django.shortcuts import render
 from vacuApp.models import *
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.http.response import HttpResponse, JsonResponse
+from django.shortcuts import redirect
+from django import forms
+from .forms import UserLoginForm
 # Create your views here.
 from datetime import date
 
@@ -49,3 +55,21 @@ def registerCentro(response):
 
 def login(response):
     return render(response,'login.html')
+
+def login_view(request):
+    login_form = UserLoginForm(request.POST or None)
+    if login_form.is_valid():
+        email = login_form.cleaned_data.get('mail')
+        password = login_form.cleaned_data.get('password')
+        token=login_form.cleaned_data.get('token')
+        user = authenticate(request, email=email, password=password,token=token)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Has iniciado sesion correctamente')
+            return redirect('visualizarInfoPersonal')
+        else:
+            messages.warning(
+                request, 'Correo Electronico, Contraseña o Token invalida')
+            return redirect('login')
+    messages.error(request, 'Formulario Invalido')
+    return redirect('login')     
