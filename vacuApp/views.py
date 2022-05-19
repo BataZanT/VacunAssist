@@ -35,24 +35,6 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
-def register(response):
-        if(response.method == "POST"):
-            form = UserCreationForm(response.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                form.save()
-                print(User.objects.all())
-                user = User( name = data["name"] ,center = None, token = None, password = data["password1"],sex = data["sex"], birthDate = data["birthDate"],DNI = str(data["DNI"]), email = data["email"],surname = data["surname"] )
-                return render(response,'home.html')
-                return enviaremail(user)
-            else:
-                form = UserCreationForm()
-                print('ourrio un error')
-                return render(response,'register/register.html',{"form":form})
-        else:
-            form = UserCreationForm()
-            return render(response,'register/register.html',{"form":form})
-
         
 
 
