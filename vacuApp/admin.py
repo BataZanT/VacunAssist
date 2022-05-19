@@ -24,7 +24,6 @@ class UserCreationForm(ModelForm):
     password1 = CharField(label="Contraseña",max_length=10,widget= forms.PasswordInput)
     password2 = CharField(label="Repetir Contraseña",max_length=10,widget= forms.PasswordInput)
 
-
     class Meta:
         model = User
         fields = ('name','surname','email','DNI', 'birthDate','sex','password1','password2')
@@ -36,4 +35,3 @@ class UserCreationForm(ModelForm):
         if commit:
             user.save()
         return user
-

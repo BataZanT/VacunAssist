@@ -1,8 +1,9 @@
 
 from django import forms
-class UserForm(forms.Form):
-    username=forms.EmailField()
+class UserLoginForm(forms.Form):
+    email=forms.EmailField()
     password=forms.CharField(label="contraseña",min_length=8)
+    token=forms.CharField(label="token",max_length=4)
 
  
 from django import forms

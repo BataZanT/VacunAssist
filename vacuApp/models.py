@@ -45,10 +45,10 @@ class User(AbstractBaseUser):
     birthDate = models.DateField()
     sex = CharField(max_length=1)
     password = CharField(max_length=20)
-    token = CharField(max_length=4, null=True)
+    token = CharField(max_length=4, null=True,default='1111')
     center = models.ForeignKey(Center, on_delete=models.CASCADE, null=True)
     is_staff = models.BooleanField()
-    is_admin = models.BooleanField()
+    is_admin = models.BooleanField(default=True)
 
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
