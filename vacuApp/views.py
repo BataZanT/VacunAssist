@@ -62,7 +62,6 @@ def home(response):
 def infoPersonal(response):
     o= User.objects.all()
     idu=response.session["user_id"]
-    messages.success(response, 'Has iniciado sesion correctamente')
     usu=o.get(id=idu)
     edad = calculate_age(usu.birthDate)
     return render(response,'visualizarInfoPersonal.html', {"usuario":usu,"edad":edad})
@@ -131,6 +130,8 @@ def login(response):
     return render(response,'login.html')
     
 from django.contrib.auth.hashers import check_password
+from django.contrib import auth
+
 def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
@@ -142,6 +143,7 @@ def validar(response):
                 usu=o.get(email=mail)
                 if check_password(contraseña, usu.password):
                     if usu.token==token:
+                            auth.login(response,usu)
                             response.session["user_id"]=usu.id
                             return redirect('/infoPersonal')
                     else:
@@ -183,22 +185,3 @@ def enviaremail(response):
                 ##sex = data, birthDate = data,
                 ##DNI = data, email = data,
                 ##surname =data
-
-from .forms import UserLoginForm
-def validar2(request): #no se esta usandp
-    if(request.method == "POST"):
-        login_form = UserLoginForm(request.POST)
-        if login_form.is_valid():
-            email= login_form.cleaned_data.get('email')
-            password = login_form.cleaned_data.get('password')
-            token=login_form.cleaned_data.get('token')
-            auth_user = authenticate(request, email=email, password=password, token=token)
-            if auth_user is not None:
-                login(request,auth_user) 
-                messages.success(request, 'Has iniciado sesion correctamente') 
-                return redirect('vinfoPersonal/1')
-            else:   
-                messages.warning(request, 'Ocurrio un problema')
-        else:
-            messages.warning(request, 'problema')
-    return redirect('http://127.0.0.1:8000/login') 
