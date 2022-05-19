@@ -15,4 +15,9 @@ class Migration(migrations.Migration):
             name='is_admin',
             field=models.BooleanField(default=True),
         ),
+        migrations.AlterField(
+            model_name='user',
+            name='token',
+            field=models.CharField(default='1111', max_length=4, null=True),
+        )
     ]
