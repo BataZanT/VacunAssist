@@ -146,3 +146,7 @@ STATICFILES_DIRS = [
 ]
 
 AUTH_USER_MODEL = 'vacuApp.User'
+
+
+
+TEMPLATE_CONTEXT_PROCESSORS= ("vacu.context_processors.loquequeremos", )
