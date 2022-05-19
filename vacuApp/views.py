@@ -97,6 +97,11 @@ def login(response):
 from django.contrib.auth.hashers import check_password
 from django.contrib import auth
 
+def cerrarSesion(respose):
+    respose.session.flush()
+    return redirect('http://127.0.0.1:8000/')
+
+
 def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
