@@ -1,32 +1,15 @@
-import email
 import smtplib
 import random
-from urllib import response
-from django.shortcuts import render, redirect
 from vacuApp.models import *
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
 from django.http.response import HttpResponse
-# Create your views here.
 from django.http import HttpResponse
-from vacuApp.models import *
 from asyncio.windows_events import NULL
-import smtplib
-import random
-from hashlib import scrypt
-from subprocess import call
-from unicodedata import name
-from django.shortcuts import render
 from django.shortcuts import redirect, render
-from vacuApp.models import *
 from .admin import UserCreationForm
-# Create your views here.
-from django.http import HttpResponse
-from pkg_resources import run_script
-from vacuApp.models import User
 from datetime import date
-from django.dispatch import receiver
 from .forms import RegisterCovid
+
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -35,7 +18,7 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
-        
+
 
 
 def home(response):
@@ -166,21 +149,3 @@ def enviaremail(response):
                 ##DNI = data, email = data,
                 ##surname =data
 
-from .forms import UserLoginForm
-def validar2(request): #no se esta usandp
-    if(request.method == "POST"):
-        login_form = UserLoginForm(request.POST)
-        if login_form.is_valid():
-            email= login_form.cleaned_data.get('email')
-            password = login_form.cleaned_data.get('password')
-            token=login_form.cleaned_data.get('token')
-            auth_user = authenticate(request, email=email, password=password, token=token)
-            if auth_user is not None:
-                login(request,auth_user) 
-                messages.success(request, 'Has iniciado sesion correctamente') 
-                return redirect('vinfoPersonal/1')
-            else:   
-                messages.warning(request, 'Ocurrio un problema')
-        else:
-            messages.warning(request, 'problema')
-    return redirect('http://127.0.0.1:8000/login') 
