@@ -1,32 +1,15 @@
-import email
 import smtplib
 import random
-from urllib import response
-from django.shortcuts import render, redirect
 from vacuApp.models import *
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
 from django.http.response import HttpResponse
-# Create your views here.
 from django.http import HttpResponse
-from vacuApp.models import *
 from asyncio.windows_events import NULL
-import smtplib
-import random
-from hashlib import scrypt
-from subprocess import call
-from unicodedata import name
-from django.shortcuts import render
 from django.shortcuts import redirect, render
-from vacuApp.models import *
 from .admin import UserCreationForm
-# Create your views here.
-from django.http import HttpResponse
-from pkg_resources import run_script
-from vacuApp.models import User
 from datetime import date
-from django.dispatch import receiver
 from .forms import RegisterCovid
+
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -35,6 +18,9 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
     
+
+
+
 def home(response):
     return render(response,'home.html')
 
@@ -164,3 +150,5 @@ def enviaremail(response):
                 ##sex = data, birthDate = data,
                 ##DNI = data, email = data,
                 ##surname =data
+                ##surname =data
+
