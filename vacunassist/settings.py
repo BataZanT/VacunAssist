@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'vacuApp',
     'django_simple_bulma',
-    'crispy_forms',
-    'django_crispy_bulma',
 ]
 
 MIDDLEWARE = [
