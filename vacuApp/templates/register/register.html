@@ -3,6 +3,7 @@
   {% load django_simple_bulma %}
   {% bulma %}
   {% font_awesome %}
+  {% load crispy_forms_tags %}
 </head>
 
 <body class="has-background-success-light">
@@ -14,7 +15,7 @@
     <section class="section">
       <form method="post" action="/register" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy}}
         <button class="button" type="submit", name="registro">Continuar</button>
       </form>
     </section>
