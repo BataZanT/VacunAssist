@@ -12,7 +12,17 @@
       <h2 class="title">Datos Personales</h2>
     </section>
     <section class="section">
-    <form action="http://127.0.0.1:8000/registerCovid" class="form">
+      <form method="post" action="/register" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit", name="registro">Continuar</button>
+      </form>
+    </section>
+  </div>  
+</body>
+
+    <!--
+      <form action="http://127.0.0.1:8000/registerCovid" class="form">
       
       <div class="field is-grouped">
       
@@ -94,8 +104,8 @@
       </div>
       <input class="button" type="submit" value="Continuar"></input>
     </form>
-    </section>
+    -->
+  
 
-  </div>  
-</body>
+
 

@@ -7,13 +7,25 @@
     {% include 'base.html' %}
       <div class= "ml-3 mt-6"> <h2 class="title"> Iniciar Sesion </h2> </div>
       <div class=" box pt-2 background-success-light" >
-        <p class="mt-5"> Ingrese Mail:</p>
-        <input class="input is-primary " style="width: 35% ;" type="text" placeholder="Mail" required=""> <br/>
-        <p class="mt-5"> Ingrese Contraseña:</p>
-        <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña" required="" minlength="8"><br/>  
-        <p class="mt-5">Ingrese Token:</p>
-        <input class="input is-primary mt-3" style="width: 35% ;" type="text" placeholder="Contraseña Nueva" required="" minlength="4" maxlength="4"><br/>
-        <br/>
-        <div class=" mt  -5">  <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>   <button class="button"> Continuar</button></div> 
+        <form action="/validar" method="post">
+          {% csrf_token %}
+          <label for="email" class="mt-5">Ingrese Mail:</label> <br/>
+          {{ loginform.email }}
+          <input class="input is-primary mt-3 " name="mail" style="width: 35%" type="email" placeholder="Mail" required="" > <br/> <br/> 
+          <label for="password" class="mt-5">Ingrese Contraseña:</label><br/>
+          {{ singupForm.password }}
+          <input class="input is-primary mt-3" name="contraseña" style="width: 35% ;" type="password" placeholder="Contraseña" required="" minlength="8" > <br/> <br/>
+          <label for="token" class="mt-5">Ingrese Token:</label><br/> 
+          {{ loginform.token }}
+          <input class="input is-primary mt-3" name="token" style="width: 35% ;" type="text" placeholder="Contraseña Nueva" required="" minlength="4" maxlength="4" > <br/>
+          <br/>{% for message in messages %}
+        <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+                 {{ message }}
+        </div>
+        {% endfor %}
+          <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>  <button type="submit" class="button"> Continuar</button>
+        </form>
+      </form>
     </div>
   </body>
