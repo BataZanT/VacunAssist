@@ -15,7 +15,8 @@ class UserCreationForm(ModelForm):
     surname = CharField(label="Apellido",max_length=90)
     email = forms.EmailField()
     DNI = forms.IntegerField(label="DNI",max_value=99999999,min_value=1000000)
-    birthDate = forms.DateField(label="Fecha de Nacimiento")
+    birthDate = forms.DateField(label="Fecha de Nacimiento",widget= forms.TextInput
+                           (attrs={'type':'date'}))
     SEX = [
         ('F','F'),
         ('M','M')

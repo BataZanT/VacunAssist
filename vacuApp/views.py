@@ -17,6 +17,7 @@ from hashlib import scrypt
 from subprocess import call
 from unicodedata import name
 from django.shortcuts import render
+from django.shortcuts import redirect, render
 from vacuApp.models import *
 from .admin import UserCreationForm
 # Create your views here.
@@ -25,6 +26,7 @@ from pkg_resources import run_script
 from vacuApp.models import User
 from datetime import date
 from django.dispatch import receiver
+from .forms import RegisterCovid
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -50,6 +52,8 @@ def register(response):
         else:
             form = UserCreationForm()
             return render(response,'register/register.html',{"form":form})
+
+        
 
 
 def home(response):
@@ -78,9 +82,39 @@ def recuContraseña(response):
 def camContraseñaRecu(response):
     return render(response,'cambiarContraseñaRecuperada.html')
 
+def register(response):
+        if(response.method == "POST"):
+            form = UserCreationForm(response.POST)
+            if form.is_valid():
+                response.session["user_id"] = form.save().id   #Se crea el usuario aqui
+                return redirect("/registerCovid")
+
+            else:
+                form = UserCreationForm()
+                return render(response,'register/register.html',{"form":form})
+        else:
+            form = UserCreationForm()
+            return render(response,'register/register.html',{"form":form})
+            return enviaremail()
+
 def registerCovid(response):
-     return enviaremail()
-     return render(response,'register/registerCovid.html')
+    form = RegisterCovid()
+    if(response.method == "POST"):
+            form = RegisterCovid(response.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                response.session["covid"] = data["covid"]
+                if (data["covid_date"]):
+                    response.session["covid_date"] = str(data["covid_date"])
+                print(response.session["covid"])
+                return redirect("/registerGripe")
+
+            else:
+                form = RegisterCovid()
+                return render(response,'register/registerCovid.html',{"form":form})
+    else:
+        form = RegisterCovid()
+        return render(response,'register/registerCovid.html',{"form":form})
 
     
 
@@ -121,16 +155,19 @@ def validar(response):
         return redirect('http://127.0.0.1:8000/login')    
  
 
-def enviaremail(user): 
+def enviaremail(response): 
     
     #user = request.session["user"]
     
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                       #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp   
+        user = User.objects.get(id=response.session["user_id"]) 
         smtp.ehlo()                                                         #Nos identifica con gmail
         smtp.starttls()                                                     #Encripta algo que no se como se llama
         smtp.ehlo()                                                         #Nos identificamos de nuevo porque nos encriptamos    
         smtp.login(EMAIL, PASSW)                                            #Nos logeamos (xoejdavfzdfnoigf)
         TOKEN = random.randint(1000, 9999)
+        user.token = TOKEN
+        user.save()
         subject = 'Confirmacion de cuenta'                                  #Asunto del email
         body = 'Este es un mensage autogenerado por VacunAssist, tu TOKEN de ingreso es ' + str(TOKEN)          #Cuerpo del email
 
