@@ -63,6 +63,9 @@ def registerCentro(response):
 def login(response):
     return render(response,'login.html')
 
+def visualizar(response):
+    return render(response,'visualizarInfoPersonal.html')
+
 def enviaremail(request): 
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                       #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp
         smtp.ehlo()                                                         #Nos identifica con gmail
