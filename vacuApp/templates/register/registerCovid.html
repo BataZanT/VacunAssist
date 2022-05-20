@@ -23,6 +23,12 @@
         <br>
         <button class="button" type="submit", name="registro">Continuar</button>
       </form>
+      {% for message in messages %}
+      <div class="alert alert-success">
+      <a class="close" href="#" data-dismiss="alert">×</a>
+               {{ message }}
+      </div>
+      {% endfor %}
     </section>
 
   </div>  
