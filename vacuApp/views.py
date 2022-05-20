@@ -28,7 +28,6 @@ def home(response):
 def infoPersonal(response):
     o= User.objects.all()
     idu=response.session["user_id"]
-    messages.success(response, 'Has iniciado sesion correctamente')
     usu=o.get(id=idu)
     edad = calculate_age(usu.birthDate)
     return render(response,'visualizarInfoPersonal.html', {"usuario":usu,"edad":edad})
@@ -140,6 +139,13 @@ def login(response):
     return render(response,'login.html')
     
 from django.contrib.auth.hashers import check_password
+from django.contrib import auth
+
+def cerrarSesion(respose):
+    respose.session.flush()
+    return redirect('http://127.0.0.1:8000/')
+
+
 def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
@@ -152,6 +158,7 @@ def validar(response):
                 usu=o.get(email=mail)
                 if check_password(contraseña, usu.password):
                     if usu.token==token:
+                            auth.login(response,usu)
                             response.session["user_id"]=usu.id
                             return redirect('/infoPersonal')
                     else:
@@ -192,6 +199,7 @@ def enviaremail(response):
                 ##token = None, password = data["password"],
                 ##sex = data, birthDate = data,
                 ##DNI = data, email = data,
+                ##surname =data
                 ##surname =data
 
 def completarUsuario(response):
