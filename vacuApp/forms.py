@@ -1,4 +1,4 @@
-
+from .models import Center
 from django import forms
 class UserLoginForm(forms.Form):
     email=forms.EmailField()
@@ -36,6 +36,32 @@ class RegisterCovid(forms.Form):
         ('2','Dos dosis'),
         ('0','Ninguna')
     ]
-    covid_date = forms.DateField(label="Cuando se aplico la ultima dosis?",widget= forms.TextInput
+    covid = forms.ChoiceField(label="¿Cuantas dosis se ha aplicado?",choices = DOSIS,initial=0)
+    covid_date = forms.DateField(label="Si se ha dado alguna ¿Cuando se aplico la ultima dosis?",widget= forms.TextInput
                            (attrs={'type':'date'}),required=False)
-    covid = forms.ChoiceField(label="Cuantas dosis se ha aplicado?",choices = DOSIS,initial=2)
+    
+class RegisterGripe(forms.Form):
+    APLICADA = [
+        ('1','Si'),
+        ('0','No'),
+    ]
+    gripe = forms.ChoiceField(label="¿Se ha aplicado la vacuna contra la gripe en el ultimo año?", widget=forms.RadioSelect,choices = APLICADA,initial=0)
+    gripe_date = forms.DateField(label="Si se la ha dado en el ultimo año ¿Cuando se aplico la vacuna?",widget= forms.TextInput
+                           (attrs={'type':'date'}),required=False)
+
+
+class RegisterFiebreA(forms.Form):
+    APLICADA = [
+        ('1','Si'),
+        ('0','No'),
+    ]
+    fiebreA = forms.ChoiceField(label="¿Se ha aplicado la vacuna contra la fiebre Amarilla?", widget=forms.RadioSelect,choices = APLICADA,initial=0)
+    fiebreA_date = forms.DateField(label="Si se la ha dado ¿Cuando se aplico la vacuna?",widget= forms.TextInput
+                           (attrs={'type':'date'}),required=False)
+
+class RegisterCentro(forms.Form):
+    CENTROS = []
+    for c in Center.objects.all():
+        CENTROS.append((c.id,c.name))
+            
+    center = forms.ChoiceField(label="¿Cual centro desea seleccionar para que le lleguen sus turnos?", widget=forms.RadioSelect,choices = CENTROS)

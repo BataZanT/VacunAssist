@@ -13,37 +13,11 @@
     </section>
     <section class="section">
       <h2 class="subtitle"></h2>
-      <form action="http://127.0.0.1:8000/registerGripe" class="form">
+      <form method="post" action="/registerFiebreA" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
         
-        <div class="field">
-          <div class="control">
-            <div class="label">Se ha aplicado la vacuna contra la fiebre amarilla?</div>
-            <label class="radio">
-              <input type="radio" name="aplico">
-              Yes
-            </label>
-            <label class="radio">
-              <input type="radio" name="aplico">
-              No
-            </label>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <div class="label">Desea aplicarse esta vacuna?</div>
-            <label class="radio">
-              <input type="radio" name="desea">
-              Yes
-            </label>
-            <label class="radio">
-              <input type="radio" name="desea">
-              No
-            </label>
-          </div>
-        </div>
-
-        <input class="button" type="submit" value="Continuar"></input>
+        <button class="button" type="submit" name="registro">Continuar</button>
       </form>
 
       
