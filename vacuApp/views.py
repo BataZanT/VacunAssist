@@ -8,7 +8,7 @@ from asyncio.windows_events import NULL
 from django.shortcuts import redirect, render
 from .admin import UserCreationForm
 from datetime import date
-from .forms import RegisterCovid
+from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 
 
 EMAIL = 'vacunassist.contacto@gmail.com'
@@ -51,7 +51,8 @@ def register(response):
         if(response.method == "POST"):
             form = UserCreationForm(response.POST)
             if form.is_valid():
-                response.session["user_id"] = form.save().id   #Se crea el usuario aqui
+                user = form.save()
+                response.session["reg_user_id"] = user.id
                 return redirect("/registerCovid")
 
             else:
@@ -60,7 +61,6 @@ def register(response):
         else:
             form = UserCreationForm()
             return render(response,'register/register.html',{"form":form})
-            return enviaremail()
 
 def registerCovid(response):
     form = RegisterCovid()
@@ -71,7 +71,6 @@ def registerCovid(response):
                 response.session["covid"] = data["covid"]
                 if (data["covid_date"]):
                     response.session["covid_date"] = str(data["covid_date"])
-                print(response.session["covid"])
                 return redirect("/registerGripe")
 
             else:
@@ -84,13 +83,57 @@ def registerCovid(response):
     
 
 def registerGripe(response):
-    return render(response,'register/registerGripe.html')
+    form = RegisterGripe()
+    if(response.method == "POST"):
+            form = RegisterGripe(response.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                response.session["gripe"] = data["gripe"]
+                if (data["gripe_date"]):
+                    response.session["gripe_date"] = str(data["gripe_date"])
+                return redirect("/registerFiebreA")
+
+            else:
+                form = RegisterGripe()
+                return render(response,'register/registerGripe.html',{"form":form})
+    else:
+        form = RegisterGripe()
+        return render(response,'register/registerGripe.html',{"form":form})
 
 def registerFiebreA(response):
-    return render(response,'register/registerFiebreA.html')
+    form = RegisterFiebreA()
+    if(response.method == "POST"):
+            form = RegisterFiebreA(response.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                response.session["fiebreA"] = data["fiebreA"]
+                if (data["fiebreA_date"]):
+                    response.session["fiebreA_date"] = str(data["fiebreA_date"])
+                return redirect("/registerCentro")
+
+            else:
+                form = RegisterFiebreA()
+                return render(response,'register/registerfiebreA.html',{"form":form})
+    else:
+        form = RegisterFiebreA()
+        return render(response,'register/registerfiebreA.html',{"form":form})
 
 def registerCentro(response):
-    return render(response,'register/registerCentro.html')
+    form = RegisterCentro()
+    if(response.method == "POST"):
+            form = RegisterCentro(response.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                response.session["center"] = data["center"]
+                completarUsuario(response)
+                return enviaremail(response)
+
+            else:
+                form = RegisterCentro()
+                return render(response,'register/registerCentro.html',{"form":form})
+    else:
+        form = RegisterCentro()
+        return render(response,'register/registerCentro.html',{"form":form})
 
 def login(response):
     return render(response,'login.html')
@@ -100,6 +143,7 @@ def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
         token=response.POST['token']
+
         o= User.objects.all()
         if o!=None:
             usu=o.filter(email=mail)
@@ -125,7 +169,7 @@ def enviaremail(response):
     #user = request.session["user"]
     
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                       #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp   
-        user = User.objects.get(id=response.session["user_id"]) 
+        user = User.objects.get(id=response.session["reg_user_id"]) 
         smtp.ehlo()                                                         #Nos identifica con gmail
         smtp.starttls()                                                     #Encripta algo que no se como se llama
         smtp.ehlo()                                                         #Nos identificamos de nuevo porque nos encriptamos    
@@ -139,7 +183,7 @@ def enviaremail(response):
         msg = f'Subject: {subject}\n\n{body}'                               #Es necesario formatear el mensaje (f) para que lo tome gmail
         smtp.sendmail(EMAIL, user.email, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
 
-          
+    response.session.flush()
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
 
 
@@ -149,3 +193,17 @@ def enviaremail(response):
                 ##DNI = data, email = data,
                 ##surname =data
 
+def completarUsuario(response):
+    u = User.objects.get(id=response.session["reg_user_id"])
+    c = Center.objects.get(id=response.session["center"])
+    u.center = c
+    h = History(covid_doses = response.session["covid"],gripe = response.session["gripe"],fiebreA = response.session["fiebreA"],fiebreA_eleccion = False,user = u)
+    if (response.session["covid_date"]):
+        h.covid_date = response.session["covid_date"]
+    if (response.session["gripe_date"]):
+        h.gripe_date = response.session["gripe_date"]
+    if (response.session["fiebreA_date"]):
+        h.fiebreA_date = response.session["fiebreA_date"]
+    u.save()
+    h.save()
+    return str(u.history)
