@@ -1,4 +1,3 @@
-
 <head>
   {% load django_simple_bulma %}
   {% bulma %}
@@ -16,15 +15,15 @@
       <form method="post" action="/registerFiebreA" class="form">
         {% csrf_token %}
         {{ form.as_p }}
-        
         <button class="button" type="submit" name="registro">Continuar</button>
       </form>
-
-      
-
-      
+      {% for message in messages %}
+      <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+        {{ message }}
+      </div>
+      {% endfor %}
     </section>
 
-  </div>  
+  </div>
 </body>
-

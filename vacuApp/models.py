@@ -50,7 +50,7 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField()
     is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
-
+    
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
 
@@ -87,8 +87,8 @@ class Vaccine(models.Model):
 
 class Appointment(models.Model):
     state = models.IntegerField()
-    date = models.DateField()
-    center = models.ForeignKey(Center, on_delete=models.CASCADE, null=True)
+    date = models.DateField(null = True)
+    center = models.ForeignKey(Center, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
 

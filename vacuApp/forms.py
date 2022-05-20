@@ -19,14 +19,10 @@ class Register(forms.Form):
         ('F','F'),
         ('M','M')
     ]
-    sex = forms.ChoiceField(label="Sexo",choices = SEX,)
-    password = CharField(label="Contraseña",max_length=20)
-    repeatPassword = CharField(label="Repetir Contraseña",max_length=20,widget= forms.TextInput
-                           (attrs={'type':'password'}))
     sex = forms.ChoiceField(label="Sexo",choices = SEX)
-    password = CharField(label="Contraseña",max_length=10,widget= forms.TextInput
+    password = CharField(label="Contraseña",min_length=8,max_length=10,widget= forms.TextInput
                            (attrs={'type':'password'}))
-    repeatPassword = CharField(label="Repetir Contraseña",max_length=10,widget= forms.TextInput
+    repeatPassword = CharField(label="Repetir Contraseña",min_length=8,max_length=10,widget= forms.TextInput
                            (attrs={'type':'password'}))
 
 
@@ -36,7 +32,7 @@ class RegisterCovid(forms.Form):
         ('2','Dos dosis'),
         ('0','Ninguna')
     ]
-    covid = forms.ChoiceField(label="¿Cuantas dosis se ha aplicado?",choices = DOSIS,initial=0)
+    covid = forms.ChoiceField(label="¿Cuantas dosis se ha aplicado?",choices = DOSIS)
     covid_date = forms.DateField(label="Si se ha dado alguna ¿Cuando se aplico la ultima dosis?",widget= forms.TextInput
                            (attrs={'type':'date'}),required=False)
     
@@ -45,8 +41,8 @@ class RegisterGripe(forms.Form):
         ('1','Si'),
         ('0','No'),
     ]
-    gripe = forms.ChoiceField(label="¿Se ha aplicado la vacuna contra la gripe en el ultimo año?", widget=forms.RadioSelect,choices = APLICADA,initial=0)
-    gripe_date = forms.DateField(label="Si se la ha dado en el ultimo año ¿Cuando se aplico la vacuna?",widget= forms.TextInput
+    gripe = forms.ChoiceField(label="¿Se ha aplicado la vacuna contra la gripe?", widget=forms.RadioSelect,choices = APLICADA)
+    gripe_date = forms.DateField(label="¿Cuando se aplico la vacuna?",widget= forms.TextInput
                            (attrs={'type':'date'}),required=False)
 
 
@@ -55,7 +51,7 @@ class RegisterFiebreA(forms.Form):
         ('1','Si'),
         ('0','No'),
     ]
-    fiebreA = forms.ChoiceField(label="¿Se ha aplicado la vacuna contra la fiebre Amarilla?", widget=forms.RadioSelect,choices = APLICADA,initial=0)
+    fiebreA = forms.ChoiceField(label="¿Se ha aplicado la vacuna contra la fiebre Amarilla?", widget=forms.RadioSelect,choices = APLICADA)
     fiebreA_date = forms.DateField(label="Si se la ha dado ¿Cuando se aplico la vacuna?",widget= forms.TextInput
                            (attrs={'type':'date'}),required=False)
 

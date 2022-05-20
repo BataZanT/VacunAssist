@@ -1,8 +1,9 @@
-
 <head>
   {% load django_simple_bulma %}
   {% bulma %}
   {% font_awesome %}
+  {% csrf_token %}
+  <script src="../../scripts/pruebaemails.py" language="python"></script>
 </head>
 
 <body class="has-background-success-light">
@@ -19,7 +20,6 @@
       <button class="button" type="submit" name="registro">Finalizar Registro</button>
       </form> 
     </section>
-
   </div>  
 </body>
 

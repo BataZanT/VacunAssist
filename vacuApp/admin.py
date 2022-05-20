@@ -22,8 +22,8 @@ class UserCreationForm(ModelForm):
         ('M','M')
     ]
     sex = forms.ChoiceField(label="Sexo",choices = SEX,)
-    password1 = CharField(label="Contraseña",max_length=10,widget= forms.PasswordInput)
-    password2 = CharField(label="Repetir Contraseña",max_length=10,widget= forms.PasswordInput)
+    password1 = CharField(label="Contraseña",max_length=20,min_length=8,widget= forms.PasswordInput)
+    password2 = CharField(label="Repetir Contraseña",max_length=20,widget= forms.PasswordInput)
 
     class Meta:
         model = User
