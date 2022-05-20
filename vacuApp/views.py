@@ -1,6 +1,10 @@
 from email import message
 import smtplib
 import random
+from hashlib import scrypt
+from subprocess import call
+from django.shortcuts import render
+from django.http import HttpResponse
 from vacuApp.models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
@@ -11,7 +15,7 @@ from .admin import UserCreationForm
 from datetime import date
 from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
-
+from django.contrib.auth.hashers import check_password
 
 
 EMAIL = 'vacunassist.contacto@gmail.com'
@@ -156,13 +160,6 @@ def registerCentro(response):
 
 def login(response):
     return render(response,'login.html')
-    
-from django.contrib.auth.hashers import check_password
-from django.contrib import auth
-
-def cerrarSesion(respose):
-    respose.session.flush()
-    return redirect('http://127.0.0.1:8000/')
 
 
 def validar(response):
@@ -195,20 +192,27 @@ def enviaremail(response):
     
     #user = request.session["user"]
     
-    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                       #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp   
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
         user = User.objects.get(id=response.session["reg_user_id"]) 
-        smtp.ehlo()                                                         #Nos identifica con gmail
-        smtp.starttls()                                                     #Encripta algo que no se como se llama
-        smtp.ehlo()                                                         #Nos identificamos de nuevo porque nos encriptamos    
-        smtp.login(EMAIL, PASSW)                                            #Nos logeamos (xoejdavfzdfnoigf)
-        TOKEN = random.randint(1000, 9999)
-        user.token = TOKEN
+        NAME = user.name
+        SURNAME =  user.surname
+        TOKEN = user.token
+        NCOMPLETO = str(NAME) + ' ' + str(SURNAME)
+        DESTINATARIO = user.email
         user.save()
-        subject = 'Confirmacion de cuenta'                                  #Asunto del email
-        body = 'Este es un mensage autogenerado por VacunAssist, tu TOKEN de ingreso es ' + str(TOKEN)          #Cuerpo del email
 
-        msg = f'Subject: {subject}\n\n{body}'                               #Es necesario formatear el mensaje (f) para que lo tome gmail
-        smtp.sendmail(EMAIL, user.email, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
+        smtp.ehlo()                                                                 #Nos identifica con gmail
+        smtp.starttls()                                                             #Encripta algo que no se como se llama
+        smtp.ehlo()                                                                 #Nos identificamos de nuevo porque nos encriptamos    
+        smtp.login(EMAIL, PASSW)                                                    #Nos logeamos (xoejdavfzdfnoigf)
+        TOKEN = random.randint(1000, 9999)
+
+        subject = 'Confirmacion de cuenta'                                          #Asunto del email
+        body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta su TOKEN es ' + str(TOKEN)          
+        msg = f'Subject: {subject}\n\n{body}'                                       #Es necesario formatear el mensaje (f) para que lo tome gmail
+
+        smtp.sendmail(EMAIL, DESTINATARIO, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
+
 
     response.session.flush()
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
@@ -253,3 +257,5 @@ def asignarVacunas(user):
             turnoF = Appointment(state=0,center=user.center,vaccine=vac,patient=user)
             turnoF.save()
     
+def visualizar(response):
+    return render(response,'visualizarInfoPersonal.html')

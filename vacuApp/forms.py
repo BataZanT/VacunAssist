@@ -19,14 +19,10 @@ class Register(forms.Form):
         ('F','F'),
         ('M','M')
     ]
-    sex = forms.ChoiceField(label="Sexo",choices = SEX,)
-    password = CharField(label="Contraseña",max_length=20)
-    repeatPassword = CharField(label="Repetir Contraseña",max_length=20,widget= forms.TextInput
-                           (attrs={'type':'password'}))
     sex = forms.ChoiceField(label="Sexo",choices = SEX)
-    password = CharField(label="Contraseña",max_length=10,widget= forms.TextInput
+    password = CharField(label="Contraseña",min_length=8,max_length=10,widget= forms.TextInput
                            (attrs={'type':'password'}))
-    repeatPassword = CharField(label="Repetir Contraseña",max_length=10,widget= forms.TextInput
+    repeatPassword = CharField(label="Repetir Contraseña",min_length=8,max_length=10,widget= forms.TextInput
                            (attrs={'type':'password'}))
 
 
