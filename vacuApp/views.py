@@ -17,18 +17,12 @@ from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
 
-
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
-YO = 'agustinferrrr@gmail.com'                                              #Esto es para la prueba, despues se va
-
 
 def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
-
-
-
 
 def home(response):
     return render(response,'home.html')
@@ -174,7 +168,6 @@ def validar(response):
                 usu=o.get(email=mail)
                 if check_password(contraseña, usu.password):
                     if usu.token==token:
-                            auth.login(response,usu)
                             response.session["user_id"]=usu.id
                             return redirect('/infoPersonal')
                     else:
@@ -238,7 +231,7 @@ def completarUsuario(response):
         h.fiebreA_date = response.session["fiebreA_date"]
     u.save()
     h.save()
-    asignarVacunas(u)
+    #asignarVacunas(u)
     return str(u.history)
 
 
