@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vacuApp',
-    'django_simple_bulma'
+    'django_simple_bulma',
+    'crispy_forms',
+    'django_crispy_bulma',
 ]
 
 MIDDLEWARE = [
@@ -143,3 +147,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'vacuApp\static')
 ]
 
+AUTH_USER_MODEL = 'vacuApp.User'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = (
+    "bootstrap",
+    "uni_form",
+    "bootstrap3",
+    "bootstrap4",
+    "bulma",
+)
+
+CRISPY_TEMPLATE_PACK = "bulma"
