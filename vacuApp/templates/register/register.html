@@ -3,6 +3,7 @@
   {% load django_simple_bulma %}
   {% bulma %}
   {% font_awesome %}
+  
 </head>
 
 <body class="has-background-success-light">
@@ -15,8 +16,14 @@
       <form method="post" action="/register" class="form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit", name="registro">Continuar</button>
+        <button class="button" type="submit", name="registro">Continuar</button>
       </form>
+      {% for message in messages %}
+        <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+                 {{ message }}
+        </div>
+        {% endfor %}
     </section>
   </div>  
 </body>

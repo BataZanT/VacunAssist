@@ -48,8 +48,9 @@ class User(AbstractBaseUser):
     token = CharField(max_length=4, null=True,default='1111')
     center = models.ForeignKey(Center, on_delete=models.CASCADE, null=True)
     is_staff = models.BooleanField()
+    is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
-
+    
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
 
@@ -57,7 +58,7 @@ class User(AbstractBaseUser):
     def is_staff(self):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
-        return True
+        return self.is_admin 
     
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
@@ -85,21 +86,20 @@ class Vaccine(models.Model):
 
 
 class Appointment(models.Model):
-    state = models.IntegerField
-    date = models.DateField
-    center = models.ForeignKey(Center, on_delete=models.CASCADE, null=True)
+    state = models.IntegerField()
+    date = models.DateField(null = True)
+    center = models.ForeignKey(Center, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class History(models.Model):
-    covid_1 = models.BooleanField()
-    covid_2 = models.BooleanField()
-    covid_date = models.DateField()
+    covid_doses = models.IntegerField()
+    covid_date = models.DateField(null=True)
     gripe = models.BooleanField()
-    gripe_date = models.DateField()
+    gripe_date = models.DateField(null=True)
     fiebreA = models.BooleanField()
-    fiebreA_date = models.DateField()
+    fiebreA_date = models.DateField(null=True)
     fiebreA_eleccion = models.BooleanField()
     user = models.OneToOneField(
         User,

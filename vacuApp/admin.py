@@ -15,14 +15,15 @@ class UserCreationForm(ModelForm):
     surname = CharField(label="Apellido",max_length=90)
     email = forms.EmailField()
     DNI = forms.IntegerField(label="DNI",max_value=99999999,min_value=1000000)
-    birthDate = forms.DateField(label="Fecha de Nacimiento")
+    birthDate = forms.DateField(label="Fecha de Nacimiento",widget= forms.TextInput
+                           (attrs={'type':'date'}))
     SEX = [
         ('F','F'),
         ('M','M')
     ]
     sex = forms.ChoiceField(label="Sexo",choices = SEX,)
-    password1 = CharField(label="Contraseña",max_length=10,widget= forms.PasswordInput)
-    password2 = CharField(label="Repetir Contraseña",max_length=10,widget= forms.PasswordInput)
+    password1 = CharField(label="Contraseña",max_length=20,min_length=8,widget= forms.PasswordInput)
+    password2 = CharField(label="Repetir Contraseña",max_length=20,widget= forms.PasswordInput)
 
     class Meta:
         model = User
