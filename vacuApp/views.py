@@ -140,6 +140,10 @@ def registerFiebreA(response):
     else:
         form = RegisterFiebreA()
         return render(response,'register/registerfiebreA.html',{"form":form})
+        
+def CerrarSesion(response):
+    response.session.flush()
+    return redirect('http://127.0.0.1:8000/')
 
 def registerCentro(response):
     form = RegisterCentro()
