@@ -93,8 +93,6 @@ def registerCovid(response):
         form = RegisterCovid()
         return render(response,'register/registerCovid.html',{"form":form})
 
-    
-
 def registerGripe(response):
     form = RegisterGripe()
     if(response.method == "POST"):
@@ -159,7 +157,6 @@ def registerCentro(response):
 def login(response):
     return render(response,'login.html')
 
-
 def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
@@ -182,8 +179,7 @@ def validar(response):
                 messages.warning(response, ' Mail invalido')
         else:
             messages.warning(response, 'No hay usuarios cargdos en la base')
-        return redirect('http://127.0.0.1:8000/login')    
- 
+        return redirect('http://127.0.0.1:8000/login')     
 
 def enviaremail(response): 
     
@@ -259,7 +255,6 @@ def visualizar(response):
 def CerrarSesion(response):
     response.session.flush()
     return redirect('http://127.0.0.1:8000/')
-
 
 def homeUsuario(response):
     o= User.objects.all()

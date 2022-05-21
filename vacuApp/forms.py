@@ -9,8 +9,9 @@ class UserLoginForm(forms.Form):
 from random import choices
 from django import forms
 from django.forms import CharField
+
 class Register(forms.Form):
-    name = CharField(label="Nombre", max_length="50")
+    name = CharField(label="Nombre", max_length=50)
     surname = CharField(label="Apellido",max_length=90)
     email = forms.EmailField()
     DNI = forms.IntegerField(label="DNI",max_value=99999999,min_value=1000000)
@@ -24,7 +25,6 @@ class Register(forms.Form):
                            (attrs={'type':'password'}))
     repeatPassword = CharField(label="Repetir Contraseña",min_length=8,max_length=10,widget= forms.TextInput
                            (attrs={'type':'password'}))
-
 
 class RegisterCovid(forms.Form):
     DOSIS = [
