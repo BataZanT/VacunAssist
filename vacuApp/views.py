@@ -235,7 +235,7 @@ def completarUsuario(response):
     return str(u.history)
 
 def asignarVacunas(user):
-    if (user.history.covid < 2):
+    if (user.history.covid_doses < 2 ):
         vac = Vaccine.objects.get(name="covid")
         turnoC = Appointment(state=0,center=user.center,vaccine=vac,patient=user)
         turnoC.save()
