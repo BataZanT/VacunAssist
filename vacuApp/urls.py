@@ -23,7 +23,12 @@ urlpatterns = [
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+    path('cerrarSesion',views.CerrarSesion),
+    path('homeUsuario',views.homeUsuario),
+>>>>>>> 2d576cafb784f7668dd8f1af7da40eaca72147be
 =======
     path('cerrarSesion',views.CerrarSesion),
     path('homeUsuario',views.homeUsuario),
