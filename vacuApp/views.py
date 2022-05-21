@@ -193,7 +193,6 @@ def enviaremail(response):
         user = User.objects.get(id=response.session["reg_user_id"]) 
         NAME = user.name
         SURNAME =  user.surname
-        TOKEN = user.token
         NCOMPLETO = str(NAME) + ' ' + str(SURNAME)
         DESTINATARIO = user.email
         user.save()
@@ -203,6 +202,8 @@ def enviaremail(response):
         smtp.ehlo()                                                                 #Nos identificamos de nuevo porque nos encriptamos    
         smtp.login(EMAIL, PASSW)                                                    #Nos logeamos (xoejdavfzdfnoigf)
         TOKEN = random.randint(1000, 9999)
+        user.token = TOKEN
+        user.save()
 
         subject = 'Confirmacion de cuenta'                                          #Asunto del email
         body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta su TOKEN es ' + str(TOKEN)          
@@ -213,7 +214,6 @@ def enviaremail(response):
 
     response.session.flush()
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
-
 
 ## User(name=data["name"] data,center = None, 
                 ##token = None, password = data["password"],
@@ -237,7 +237,6 @@ def completarUsuario(response):
     h.save()
     #asignarVacunas(u)
     return str(u.history)
-
 
 def asignarVacunas(user):
     if (user.history.covid < 2):
