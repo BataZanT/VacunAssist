@@ -8,12 +8,14 @@
   {% include 'base.html' %}
   <div class="page mt-6 pt-3 mx-3 is-flex-column">
     <section class="section">
-      <h2 class="title">Vacuna contra la Fiebre Amarilla</h2>
-      <h2 class="subtitle"></h2>
+      <h2 class="title pb-4">Vacuna contra la Fiebre Amarilla</h2>
       <form method="post" action="/registerFiebreA" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="button" type="submit" name="registro">Continuar</button>
+        <div class="field is-size-5">{{ form.fiebreA.label }}</div>
+        <div class="field is-size-5">{{ form.fiebreA }}</div>
+        <div class="field is-size-5">{{ form.fiebreA_date.label }}</div>
+        <div class="field is-size-5"> {{ form.fiebreA_date }}</div>
+        <button class="button is-size-5" type="submit" name="registro">Continuar</button>
       </form>
       {% for message in messages %}
       <div class="alert alert-success">
