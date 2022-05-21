@@ -6,22 +6,26 @@
 
 <body class= "mt-6 pt-3 background-success-light">
   {% include 'base.html' %}
-  <div class="page mt-6 pt-3 mx-3 is-flex-column">
+  <div class="page mt-6 pt-3 mx-3">
     <section class="section">
       <h2 class="title">Datos Personales</h2>
-    </section>
-    <section class="section">
       <form method="post" action="/register" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="field is-size-5">{{ form.name.label }} {{ form.name }} {{ form.surname.label }} {{ form.surname }}</div>
+        <div class="field is-size-5">{{ form.email.label }} {{ form.email }}</div>
+        <div class="field is-size-5">{{ form.DNI.label }} {{ form.DNI }}</div>
+        <div class="field is-size-5">{{ form.birthDate.label }} {{ form.birthDate }}</div>
+        <div class="field is-size-5">{{ form.sex.label }}{{ form.sex }}</div>
+        <div class="field is-size-5">{{ form.password1.label }} {{ form.password1 }}</div>
+        <div class="field is-size-5">{{ form.password2.label }} {{ form.password2 }}</div>
         <button class="button" type="submit", name="registro">Continuar</button>
       </form>
       {% for message in messages %}
-        <div class="alert alert-success">
+      <div class="alert alert-success">
         <a class="close" href="#" data-dismiss="alert">×</a>
-                 {{ message }}
-        </div>
-        {% endfor %}
+          {{ message }}
+      </div>
+      {% endfor %}
     </section>
   </div>  
 </body>
