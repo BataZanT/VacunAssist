@@ -231,7 +231,7 @@ def completarUsuario(response):
         h.fiebreA_date = response.session["fiebreA_date"]
     u.save()
     h.save()
-    asignarVacunas(u)
+    #asignarVacunas(u)
     return str(u.history)
 
 def asignarVacunas(user):
