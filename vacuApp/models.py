@@ -46,7 +46,7 @@ class User(AbstractBaseUser):
     sex = CharField(max_length=1)
     password = CharField(max_length=20)
     token = CharField(max_length=4, null=True,default='1111')
-    center = models.ForeignKey(Center, null=True,on_delete=models.SET_NULL)
+    center = models.ForeignKey(Center, null=True,on_delete=models.CASCADE)
     is_staff = models.BooleanField()
     is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
@@ -106,7 +106,7 @@ class History(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        primary_key=True,
+        primary_key=True
     )
 
     
