@@ -4,13 +4,11 @@
   {% font_awesome %}
 </head>
 
-<body class="has-background-success-light">
+<body class= "mt-6 pt-3 background-success-light">
   {% include 'base.html' %}
   <div class="page mt-6 pt-3 mx-3 is-flex-column">
     <section class="section">
       <h2 class="title">Vacuna contra la Fiebre Amarilla</h2>
-    </section>
-    <section class="section">
       <h2 class="subtitle"></h2>
       <form method="post" action="/registerFiebreA" class="form">
         {% csrf_token %}

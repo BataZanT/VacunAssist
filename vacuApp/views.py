@@ -17,18 +17,12 @@ from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
 
-
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
-YO = 'agustinferrrr@gmail.com'                                              #Esto es para la prueba, despues se va
-
 
 def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
-
-
-
 
 def home(response):
     return render(response,'home.html')
@@ -99,8 +93,6 @@ def registerCovid(response):
         form = RegisterCovid()
         return render(response,'register/registerCovid.html',{"form":form})
 
-    
-
 def registerGripe(response):
     form = RegisterGripe()
     if(response.method == "POST"):
@@ -165,7 +157,6 @@ def registerCentro(response):
 def login(response):
     return render(response,'login.html')
 
-
 def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
@@ -178,9 +169,8 @@ def validar(response):
                 usu=o.get(email=mail)
                 if check_password(contraseña, usu.password):
                     if usu.token==token:
-                            auth.login(response,usu)
-                            response.session["user_id"]=usu.id
-                            return redirect('/infoPersonal')
+                            response.session["user_id"] = usu.id
+                            return redirect('/homeUsuario')                           
                     else:
                         messages.warning(response, 'Token invalido')
                 else:
@@ -189,8 +179,7 @@ def validar(response):
                 messages.warning(response, ' Mail invalido')
         else:
             messages.warning(response, 'No hay usuarios cargdos en la base')
-        return redirect('http://127.0.0.1:8000/login')    
- 
+        return redirect('http://127.0.0.1:8000/login')     
 
 def enviaremail(response): 
     
@@ -200,7 +189,6 @@ def enviaremail(response):
         user = User.objects.get(id=response.session["reg_user_id"]) 
         NAME = user.name
         SURNAME =  user.surname
-        TOKEN = user.token
         NCOMPLETO = str(NAME) + ' ' + str(SURNAME)
         DESTINATARIO = user.email
         user.save()
@@ -210,6 +198,8 @@ def enviaremail(response):
         smtp.ehlo()                                                                 #Nos identificamos de nuevo porque nos encriptamos    
         smtp.login(EMAIL, PASSW)                                                    #Nos logeamos (xoejdavfzdfnoigf)
         TOKEN = random.randint(1000, 9999)
+        user.token = TOKEN
+        user.save()
 
         subject = 'Confirmacion de cuenta'                                          #Asunto del email
         body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta su TOKEN es ' + str(TOKEN)          
@@ -220,7 +210,6 @@ def enviaremail(response):
 
     response.session.flush()
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
-
 
 ## User(name=data["name"] data,center = None, 
                 ##token = None, password = data["password"],
@@ -242,9 +231,8 @@ def completarUsuario(response):
         h.fiebreA_date = response.session["fiebreA_date"]
     u.save()
     h.save()
-    asignarVacunas(u)
+    #asignarVacunas(u)
     return str(u.history)
-
 
 def asignarVacunas(user):
     if (user.history.covid < 2):
@@ -263,3 +251,16 @@ def asignarVacunas(user):
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
+
+def CerrarSesion(response):
+    response.session.flush()
+    return redirect('http://127.0.0.1:8000/')
+
+def homeUsuario(response):
+    o= User.objects.all()
+    idu=response.session["user_id"]
+    usu=o.get(id=idu)
+    NOMBRE = usu.name
+    APELLIDO = usu.surname
+    NCOMPLETO = NOMBRE + ' ' + APELLIDO
+    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO})

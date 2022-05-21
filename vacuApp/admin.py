@@ -11,7 +11,7 @@ admin.site.register(Appointment)
 class UserCreationForm(ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    name = CharField(label="Nombre", max_length="50")
+    name = CharField(label="Nombre", max_length=50)
     surname = CharField(label="Apellido",max_length=90)
     email = forms.EmailField()
     DNI = forms.IntegerField(label="DNI",max_value=99999999,min_value=1000000)
