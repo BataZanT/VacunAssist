@@ -1,0 +1,25 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}  
+    {% load static %}  
+  
+  </head>
+  <body class= "mt-6 pt-3 background-success-light">
+    <div>
+      {% include 'barraUsuarioLogeadoNormal.html' %}
+      <h1>
+        <p class= 'ml-6 pt-3' style="text-align: left; font-size:25px">
+            Bienvenido a VacunAssist {{NOMBRE}}
+        </p>
+        <p style="text-align:center;">
+          <br>
+          <br>
+          <br>
+          <br>
+          Aca van a ir las vacunas pendientes
+          <br>
+          <br>
+        </p>
+      </h1>
+    </div>
+  </body>

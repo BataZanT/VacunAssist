@@ -14,8 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='History',
             fields=[
-                ('covid_1', models.BooleanField()),
-                ('covid_2', models.BooleanField()),
+                ('covid', models.BooleanField()),
                 ('gripe', models.BooleanField()),
                 ('fiebreA', models.BooleanField()),
                 ('fiebreA_eleccion', models.BooleanField()),

@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'vacuApp',
     'django_simple_bulma',
+#    'crispy_forms',
+#    'django_crispy_bulma',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +149,6 @@ STATICFILES_DIRS = [
 
 AUTH_USER_MODEL = 'vacuApp.User'
 
+
+
+TEMPLATE_CONTEXT_PROCESSORS= ("vacu.context_processors.loquequeremos", )

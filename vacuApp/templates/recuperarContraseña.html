@@ -1,18 +1,18 @@
 <head>
     {% load django_simple_bulma %}
     {% bulma %}
-  
   </head>
 
-<body class= "mt-6 pt-3">
+<body class="mt-6 pt-3 has-background-success-light">
     {% include 'base.html' %}
     <div class= ml-4><h2 class="title"> Recuperar Contraseña</h2></div>
     <div class="box mt-3 background-success-light" >
-        <p>Ingrese si Mail:</p>
+        <p>Ingrese su Mail:</p>
         <input class="input is-primary mt-3" style="width: 35% ;" type="text" placeholder="Mail" required="" minlength="8"><br/>
         <p>Ingrese su Token:</p>
         <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Token" required="" minlength="8"><br/>
-        <div class=" mt-5"> <button class="button"> Atras</button>      <button class="button"> <a class="navbar-item" href="http://127.0.0.1:8000/camContraseñaRecu" target="_self">Confirmar</a></button></div>
-
+        <div class=" mt-5">
+        <button class="button"> <a class="navbar-item" href="http://127.0.0.1:8000/login/" target="_self">Atras</a></button>
+        <button class="button"> <a class="navbar-item" href="http://127.0.0.1:8000/camContraseñaRecu" target="_self">Confirmar</a></button></div>
     </div>
 </body>

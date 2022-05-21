@@ -5,12 +5,11 @@
   {% font_awesome %}
 </head>
 
-<body class="has-background-success-light">
+<body class= "mt-6 pt-3 background-success-light">
   {% include 'base.html' %}
   <div class="page mt-6 pt-3 mx-3 is-flex-column">
     <section class="section">
-      <h2 class="title">Vacuna Covid-19</h2>
-    
+      <h2 class="title">Vacuna Covid-19</h2> 
       <br>
       <h2 class="subtitle is-size-4">¿Se ha aplicado alguna vacuna contra el covid-19?</h2>
       <form method="post" action="/registerCovid" class="form">
@@ -25,12 +24,11 @@
       </form>
       {% for message in messages %}
       <div class="alert alert-success">
-      <a class="close" href="#" data-dismiss="alert">×</a>
+        <a class="close" href="#" data-dismiss="alert">×</a>
                {{ message }}
       </div>
       {% endfor %}
     </section>
-
   </div>  
 </body>
 
