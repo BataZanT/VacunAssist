@@ -168,8 +168,8 @@ def validar(response):
                 usu=o.get(email=mail)
                 if check_password(contraseña, usu.password):
                     if usu.token==token:
-                            response.session["user_id"]=usu.id
-                            return redirect('/infoPersonal')
+                            response.session["user_id"] = usu.id
+                            return redirect('/homeUsuario')                           
                     else:
                         messages.warning(response, 'Token invalido')
                 else:
@@ -252,3 +252,17 @@ def asignarVacunas(user):
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
+
+def CerrarSesion(response):
+    response.session.flush()
+    return redirect('http://127.0.0.1:8000/')
+
+
+def homeUsuario(response):
+    o= User.objects.all()
+    idu=response.session["user_id"]
+    usu=o.get(id=idu)
+    NOMBRE = usu.name
+    APELLIDO = usu.surname
+    NCOMPLETO = NOMBRE + ' ' + APELLIDO
+    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO})

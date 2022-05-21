@@ -17,4 +17,6 @@ urlpatterns = [
     path('registerCentro',views.registerCentro,name="registerCentro"),
     path('enviaremail', views.enviaremail),
     path('validar',views.validar),
+    path('cerrarSesion',views.CerrarSesion),
+    path('homeUsuario',views.homeUsuario),
 ]
