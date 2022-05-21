@@ -11,16 +11,14 @@
     <section class="section">
       <h2 class="title">Vacuna Covid-19</h2> 
       <br>
-      <h2 class="subtitle is-size-4">¿Se ha aplicado alguna vacuna contra el covid-19?</h2>
       <form method="post" action="/registerCovid" class="form">
         {% csrf_token %}
-        <div class="field is-size-5">{{ form.covid.label }}</div>
-        <div class="field">{{ form.covid }}</div>
+        <div class="field is-size-4">{{ form.covid.label }}</div>
+        <div class="field is-size-5">{{ form.covid }}</div>
+        <div class="field is-size-4">{{ form.covid_date.label }}</div>
+        <div class="field is-size-5">{{ form.covid_date }}</div>
         <br>
-        <div class="field is-size-5">{{ form.covid_date.label }}</div>
-        <div class="field">{{ form.covid_date }}</div>
-        <br>
-        <button class="button" type="submit", name="registro">Continuar</button>
+        <button class="button is-size-5" type="submit", name="registro">Continuar</button>
       </form>
       {% for message in messages %}
       <div class="alert alert-success">

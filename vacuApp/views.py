@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from asyncio.windows_events import NULL
 from django.shortcuts import redirect, render
 from .admin import UserCreationForm
-from datetime import date
+from datetime import date, datetime
 from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
@@ -231,23 +231,28 @@ def completarUsuario(response):
         h.fiebreA_date = response.session["fiebreA_date"]
     u.save()
     h.save()
-    #asignarVacunas(u)
+    asignarVacunas(u)
     return str(u.history)
 
 def asignarVacunas(user):
-    if (user.history.covid_doses < 2):
-        vac = Vaccine.objects.get(name="covid")
-        turnoC = Appointment(state=0,center=user.center,vaccine=vac,patient=user)
-        turnoC.save()
-    if (user.history.gripe == False):
-        vac = Vaccine.objects.get(name="gripe")
-        turnoG = Appointment(state=0,center=user.center,vaccine=vac,patient=user)
-        turnoG.save()
-    if (user.history.fiebreA == False):
-        if (calculate_age(user.birthDate) < 60):
-            vac = Vaccine.objects.get(name="fiebreA")
-            turnoF = Appointment(state=0,center=user.center,vaccine=vac,patient=user)
-            turnoF.save()
+    if (int(user.history.covid_doses) < 2):
+        vacC = Vaccine.objects.get(name="Covid")
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacC)
+    
+    print(user.history.gripe)
+    if (user.history.gripe == '0'):
+        vacG = Vaccine.objects.get(name="Gripe")
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
+    elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
+        vacG = Vaccine.objects.get(name="Gripe")
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
+    for turno in user.appointment_set.all():
+        print(turno.__str__())
+    #if (user.history.fiebreA == False): 
+    #    if (calculate_age(user.birthDate) < 60):
+    #        vacF = Vaccine.objects.get(name="Fiebre Amarilla")
+    #        turnoF = Appointment(state=0,center=user.center,vaccine=vacF,patient=user)
+    #        turnoF.save()
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')

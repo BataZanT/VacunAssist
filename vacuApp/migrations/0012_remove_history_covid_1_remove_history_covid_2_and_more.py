@@ -12,11 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='history',
-            name='covid_1',
-        ),
-        migrations.RemoveField(
-            model_name='history',
-            name='covid_2',
+            name='covid_doses',
         ),
         migrations.AddField(
             model_name='appointment',

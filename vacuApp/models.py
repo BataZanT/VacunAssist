@@ -46,7 +46,7 @@ class User(AbstractBaseUser):
     sex = CharField(max_length=1)
     password = CharField(max_length=20)
     token = CharField(max_length=4, null=True,default='1111')
-    center = models.ForeignKey(Center, on_delete=models.CASCADE, null=True)
+    center = models.ForeignKey(Center, null=True,on_delete=models.SET_NULL)
     is_staff = models.BooleanField()
     is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
@@ -92,6 +92,8 @@ class Appointment(models.Model):
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(str(self.vaccine) + ' ' + str(self.patient) + ' ' + str(self.state))
 
 class History(models.Model):
     covid_doses = models.IntegerField()

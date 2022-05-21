@@ -15,10 +15,10 @@
         <div class="field is-size-5">{{ form.email.label }} {{ form.email }}</div>
         <div class="field is-size-5">{{ form.DNI.label }} {{ form.DNI }}</div>
         <div class="field is-size-5">{{ form.birthDate.label }} {{ form.birthDate }}</div>
-        <div class="field is-size-5">{{ form.sex.label }}{{ form.sex }}</div>
-        <div class="field is-size-5">{{ form.password1.label }} {{ form.password1 }}</div>
-        <div class="field is-size-5">{{ form.password2.label }} {{ form.password2 }}</div>
-        <button class="button" type="submit", name="registro">Continuar</button>
+        <div class="field is-size-5">{{ form.sex.label }} {{ form.sex }}</div>
+        <div class="field is-size-5">{{ form.password1.label }}  {{ form.password1 }}</div>
+        <div class="field is-size-5">{{ form.password2.label }}  {{ form.password2 }}</div>
+        <button class="button is-size-5" type="submit", name="registro">Continuar</button>
       </form>
       {% for message in messages %}
       <div class="alert alert-success">
