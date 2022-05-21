@@ -19,6 +19,9 @@ urlpatterns = [
     path('validar',views.validar),
     path('cerrarSesion',views.CerrarSesion),
     path('homeUsuario',views.homeUsuario),
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2d576cafb784f7668dd8f1af7da40eaca72147be
 ]
 
