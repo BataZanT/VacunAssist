@@ -19,3 +19,4 @@ urlpatterns = [
     path('validar',views.validar),
     path('cerrar',views.CerrarSesion)
 ]
+
