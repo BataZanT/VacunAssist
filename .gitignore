@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 vacuApp/__pycache__/
 vacunassist/__pycache__/
 vacuApp/migrations/__pycache__/0001_initial.cpython-310.pyc
@@ -20,3 +21,7 @@ vacunassist/__pycache__/settings.cpython-310.pyc
 vacunassist/__pycache__/__init__.cpython-310.pyc
 vacuApp/urls.py
 vacuApp/urls.py
+=======
+
+*.sqlite3
+>>>>>>> Stashed changes
