@@ -32,7 +32,7 @@ class RegisterCovid(forms.Form):
         ('2','Dos dosis'),
         ('0','Ninguna')
     ]
-    covid = forms.ChoiceField(label="¿Cuantas dosis se ha aplicado?",choices = DOSIS)
+    covid = forms.ChoiceField(label="¿Cuantas dosis cotra el covid-19 se ha aplicado?",choices = DOSIS,widget=forms.RadioSelect)
     covid_date = forms.DateField(label="Si se ha dado alguna ¿Cuando se aplico la ultima dosis?",widget= forms.TextInput
                            (attrs={'type':'date'}),required=False)
     

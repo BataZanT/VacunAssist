@@ -9,11 +9,19 @@
   {% include 'base.html' %}
   <div class="page mt-6 pt-3 mx-3 is-flex-column">
     <section class="section">
+<<<<<<< HEAD
       <h2 class="title">Vacuna contra la Gripe</h2>
+=======
+      <h2 class="title pb-4">Vacuna contra la Gripe</h2>
+>>>>>>> 5817fe8297451cfdfc363dc1372371ef57954743
       <form method="post" action="/registerGripe" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="button" type="submit" name="registro">Continuar</button>
+        <div class="field is-size-5">{{ form.gripe.label }}</div>
+        <div class="field is-size-5">{{ form.gripe }}</div>
+        <div class="field is-size-5">{{ form.gripe_date.label }}</div>
+        <div class="field is-size-5">{{ form.gripe_date }}</div>
+
+        <button class="button is-size-5" type="submit" name="registro">Continuar</button>
       </form>
       {% for message in messages %}
       <div class="alert alert-success">
