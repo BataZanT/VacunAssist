@@ -10,11 +10,11 @@
         <p class="subtitle is-5">Mail: </p>
         <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modMail" target="_self" >Modificar Mail</a></button>
         <div class=" mt-5"> <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modContraseña" target="_self">Modificar Contraseña</a></button></div> 
-    </div>
-    <br/>{% for message in messages %}
+        <br/>{% for message in messages %}
         <div class="alert alert-success">
         <a class="close" href="#" data-dismiss="alert">×</a>
                  {{ message }}
         </div>
         {% endfor %}
+    </div>
 </body>

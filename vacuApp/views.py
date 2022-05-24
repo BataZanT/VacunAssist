@@ -282,12 +282,14 @@ def modificarContraseña(response):
                     upper = True
         if(not upper):
             messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
+        elif ca==cn:
+            messages.warning(response, 'La contraseña actual y la contraseña nueva son iguales')
         else:
             cnr=response.POST["contNuevaR"]
             if (not cn== cnr):
                 messages.warning(response, 'Las contraseñas no coinciden')
             else:
-                user.password=cn
+                user.set_password(cn)
                 user.save()
                 messages.warning(response, 'Las contraseñas se ha modificado correctamente')
                 return redirect('http://127.0.0.1:8000/modificarInfo') 
