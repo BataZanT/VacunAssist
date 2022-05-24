@@ -161,7 +161,6 @@ def validar(response):
         mail=response.POST['mail']
         contraseña=response.POST['contraseña']
         token=response.POST['token']
-
         o= User.objects.all()
         if o!=None:
             usu=o.filter(email=mail)
@@ -269,3 +268,29 @@ def homeUsuario(response):
     APELLIDO = usu.surname
     NCOMPLETO = NOMBRE + ' ' + APELLIDO
     return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO})
+
+def modificarContraseña(response):
+    ca=response.POST["contActual"]
+    idu=response.session["user_id"]
+    o=User.objects.all()
+    user=o.get(id=idu)
+    if check_password(ca, user.password):
+        cn=response.POST["contNueva"]
+        upper = False
+        for character in cn:
+            if character.isupper():
+                    upper = True
+        if(not upper):
+            messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
+        else:
+            cnr=response.POST["contNuevaR"]
+            if (not cn== cnr):
+                messages.warning(response, 'Las contraseñas no coinciden')
+            else:
+                user.password=cn
+                user.save()
+                messages.warning(response, 'Las contraseñas se ha modificado correctamente')
+                return redirect('http://127.0.0.1:8000/modificarInfo') 
+    else:
+        messages.warning(response, 'La contraseña actual no es correcta.')
+    return redirect('http://127.0.0.1:8000/modContraseña') 
