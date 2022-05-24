@@ -8,7 +8,13 @@
     <div class= ml-4><h2 class="title"> Modificar Informacion Personal</h2></div>
     <div class="box mt-3 background-success-light" >
         <p class="subtitle is-5">Mail: </p>
-        <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modMail" target="_self">Modificar Mail</a></button>
+        <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modMail" target="_self" >Modificar Mail</a></button>
         <div class=" mt-5"> <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modContraseña" target="_self">Modificar Contraseña</a></button></div> 
     </div>
+    <br/>{% for message in messages %}
+        <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+                 {{ message }}
+        </div>
+        {% endfor %}
 </body>
