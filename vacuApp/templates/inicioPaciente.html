@@ -16,7 +16,16 @@
           <br>
           <br>
           <br>
-          Aca van a ir las vacunas pendientes
+          {% if turnos|length > 0 %}
+            {% for turno in turnos %}
+              <p>{{ turno }}</p>
+            {% endfor %}
+          
+          {% else %}
+            No hay turnos :(
+          
+          
+          {% endif %}
           <br>
           <br>
         </p>

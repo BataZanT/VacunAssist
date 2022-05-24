@@ -79,7 +79,6 @@ def registerCovid(response):
             form.is_valid()
             data = form.cleaned_data
             message = validators.validarCovid(data)
-            print(message)
             if message == '':
                 response.session["covid"] = data["covid"]
                 if (data["covid_date"]):
@@ -231,15 +230,14 @@ def completarUsuario(response):
         h.fiebreA_date = response.session["fiebreA_date"]
     u.save()
     h.save()
-    #asignarVacunas(u)
+    asignarVacunas(u)
     return str(u.history)
 
 def asignarVacunas(user):
     if (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacC)
-    
-    print(user.history.gripe)
+
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
@@ -265,7 +263,6 @@ def homeUsuario(response):
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
-    NOMBRE = usu.name
-    APELLIDO = usu.surname
-    NCOMPLETO = NOMBRE + ' ' + APELLIDO
-    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO})
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    turnos = usu.appointment_set.all()
+    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos})
