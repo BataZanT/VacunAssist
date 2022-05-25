@@ -77,12 +77,10 @@ def register(response):
 def registerCovid(response):
     form = RegisterCovid()
     if(response.method == "POST"):
-
             form = RegisterCovid(response.POST)
             form.is_valid()
             data = form.cleaned_data
             message = validators.validarCovid(data)
-            print(message)
             if message == '':
                 response.session["covid"] = data["covid"]
                 if (data["covid_date"]):
@@ -102,6 +100,7 @@ def registerGripe(response):
             form = RegisterGripe(response.POST)
             form.is_valid()
             data = form.cleaned_data
+
             message = validators.validarGripe(data)
             if message == '' :
                 response.session["gripe"] = data["gripe"]
@@ -233,28 +232,20 @@ def completarUsuario(response):
         h.fiebreA_date = response.session["fiebreA_date"]
     u.save()
     h.save()
-    #asignarVacunas(u)
+    asignarVacunas(u)
     return str(u.history)
 
 def asignarVacunas(user):
-    if (int(user.history.covid_doses) < 2):
+    if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacC)
-    
-    print(user.history.gripe)
+
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
-    for turno in user.appointment_set.all():
-        print(turno.__str__())
-    #if (user.history.fiebreA == False): 
-    #    if (calculate_age(user.birthDate) < 60):
-    #        vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-    #        turnoF = Appointment(state=0,center=user.center,vaccine=vacF,patient=user)
-    #        turnoF.save()
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -267,11 +258,16 @@ def homeUsuario(response):
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
-    NOMBRE = usu.name
-    APELLIDO = usu.surname
-    NCOMPLETO = NOMBRE + ' ' + APELLIDO
-    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO})
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    turnos = usu.appointment_set.all()
+    fiebre_disp = False
+    vacF = Vaccine.objects.get(name="Fiebre Amarilla")
+    if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
+        if( not tieneTurno(usu,vacF)):
+            fiebre_disp = True            
+    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
 
+    
 def modificarContraseña(response):
     ca=response.POST["contActual"]
     idu=response.session["user_id"]
@@ -299,3 +295,20 @@ def modificarContraseña(response):
     else:
         messages.warning(response, 'La contraseña actual no es correcta.')
     return redirect('http://127.0.0.1:8000/modContraseña') 
+    
+
+def asignarTurnoFiebreA(response):
+    o= User.objects.all()
+    idu=response.session["user_id"]
+    usu=o.get(id=idu)
+    vacF = Vaccine.objects.get(name="Fiebre Amarilla")
+    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu)
+    turnoF.save()
+    return redirect('/homeUsuario')
+
+def tieneTurno(user,vacuna):  # se puede usar con cualquier vacuna, el segundo parametro tiene que ser el objeto de la vacuna
+    tiene = False
+    for turno in user.appointment_set.all():
+        if turno.vaccine == vacuna:
+            tiene = True
+    return tiene
