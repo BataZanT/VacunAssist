@@ -19,7 +19,7 @@ urlpatterns = [
     path('validar',views.validar),
     path('cerrarSesion',views.CerrarSesion),
     path('homeUsuario',views.homeUsuario),
-    path('validarContraseñaAModificar',views.modificarContraseña)
-    path('turnoFiebreA',views.asignarTurnoFiebreA)
+    path('validarContraseñaAModificar',views.modificarContraseña),
+    path('turnoFiebreA',views.asignarTurnoFiebreA),
 ]
 
