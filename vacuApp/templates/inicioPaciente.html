@@ -8,23 +8,44 @@
     <div>
       {% include 'barraUsuarioLogeadoNormal.html' %}
       <h1>
+        {% if sex == M %}
+        <p class= 'ml-6 pt-3' style="text-align: left; font-size:25px">
+            Bienvenida a VacunAssist {{NOMBRE}}
+        </p>
+        {% else %}
         <p class= 'ml-6 pt-3' style="text-align: left; font-size:25px">
             Bienvenido a VacunAssist {{NOMBRE}}
         </p>
+        {% endif %}
         <p style="text-align:center;">
           <br>
           <br>
           <br>
           <br>
-          {% if turnos|length > 0 %}
-            {% for turno in turnos %}
-              <p>{{ turno }}</p>
-            {% endfor %}
+       
+            {% if turnos|length > 0 %}
+              {% for turno in turnos %}
+                <div class="box">
+                  <p>{{ turno.state }}</p>
+                  <p>{{ turno.vaccine }}</p>
+                  <p>{{ turno.center }}</p>
+                </div>
+              {% endfor %}
+            
+            {% else %}
+              <div class="box"> No hay turnos :(
+              </div>
+            
+            
+            {% endif %}
           
-          {% else %}
-            No hay turnos :(
-          
-          
+          <section class="section">
+            {% if fiebre_disp %}
+              <div class="box">
+                <p> Date el turno de la fiebre Pa</p>
+                <a href="/turnoFiebreA">ACA</a>
+            </div>
+          </section>
           {% endif %}
           <br>
           <br>

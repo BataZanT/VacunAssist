@@ -19,4 +19,5 @@ urlpatterns = [
     path('validar',views.validar),
     path('cerrarSesion',views.CerrarSesion),
     path('homeUsuario',views.homeUsuario),
+    path('turnoFiebreA',views.asignarTurnoFiebreA)
 ]
