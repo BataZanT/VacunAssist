@@ -35,7 +35,10 @@ def infoPersonal(response):
     return render(response,'visualizarInfoPersonal.html', {"usuario":usu,"edad":edad})
 
 def modificarInfo(response):
-    return render(response,'modificarInfoPersonal.html')
+    idu=response.session['user_id']
+    o=User.objects.all()
+    usu=o.get(id=idu)
+    return render(response,'modificarInfoPersonal.html',{"usuario":usu})
 
 def modContraseña(response):
     return render(response,'modificarContraseña.html')
