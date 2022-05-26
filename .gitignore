@@ -17,4 +17,12 @@ db.sqlite3
 *.pyc
 vacunassist/__pycache__/settings.cpython-310.pyc
 *.pyc
+<<<<<<< HEAD
+vacunassist/__pycache__/__init__.cpython-310.pyc
+vacuApp/urls.py
+vacuApp/urls.py
+=======
 *.pyc
+>>>>>>> 5817fe8297451cfdfc363dc1372371ef57954743
+db.sqlite3
+*.sqlite3

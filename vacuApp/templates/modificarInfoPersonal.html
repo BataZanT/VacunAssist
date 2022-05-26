@@ -7,10 +7,13 @@
     {% include 'barraUsuarioLogeadoNormal.html' %}
     <div class= ml-4><h2 class="title"> Modificar Informacion Personal</h2></div>
     <div class="box mt-3 background-success-light" >
-        <p class="subtitle is-5">Mail: </p>
-        <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modMail" target="_self">Modificar Mail</a></button>
-        <div class=" mt-5"> <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modContraseña" target="_self">Modificar Contraseña</a></button></div>
-        <br>
-        <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/modCentro" target="_self">Modificar Centro</a></button> 
+        <p class="subtitle is-6">Mail Actual: {{usuario.email}}   
+        <p class=" mt-5 subtitle is-6"> Centro Actual: {{usuario.center}}
+        <div class=" mt-6">
+        <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modMail" target="_self" >Modificar Mail</a></button></div><br/>
+        <div> <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modContraseña" target="_self">Modificar Contraseña</a></button></div> 
+        <div class=" mt-5"> <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modCentro" target="_self">Cambiar mi centro de preferencia</a></button></div><br/>
+        <br/>  
+        {% include 'messages.html' %}
     </div>
 </body>
