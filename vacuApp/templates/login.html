@@ -3,11 +3,12 @@
     {% bulma %}  
   
   </head>
-  <body class= "mt-6 pt-3 background-success-light">
+
+  <body class= "mt-6 pt-3 has-background-success-light">
     {% include 'base.html' %}
-      <div class= "ml-3 mt-6"> <h2 class="title"> Iniciar Sesion </h2> </div>
-      <div class=" box pt-2 background-success-light" >
-        <form action="/validar" method="post">
+      <div class=" box mt-4 pt-2 background-success-light" >
+        <div class= "mt-2"> <h2 class="title"> Iniciar Sesion </h2> </div>
+        <form  class= "mt-4 " action="/validar" method="post">
           {% csrf_token %}
           <label for="email" class="mt-5">Ingrese Mail:</label> <br/>
           {{ loginform.email }}
@@ -26,7 +27,7 @@
         {% endfor %}
           <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>  <button type="submit" class="button"> Continuar</button>
         </form>
-        <a class="navbar-item" href="http://127.0.0.1:8000/recuContraseña" target="_self">Recuperar Contraseña</a>
+        <button class="button"> <a class="navbar-item" href="http://127.0.0.1:8000/recuContraseña" target="_self">Recuperar Contraseña</a></button>
       </form>
     </div>
   </body>

@@ -312,3 +312,44 @@ def tieneTurno(user,vacuna):  # se puede usar con cualquier vacuna, el segundo p
         if turno.vaccine == vacuna:
             tiene = True
     return tiene
+
+def validarUsuRecuperar(response):
+    mail=response.POST['mail']
+    o=User.objects.all()
+    usu=o.filter(email=mail).exists()
+    if usu:
+        token=response.POST['token']
+        usu=o.get(email=mail)
+        if usu.token==token:
+            response.session['email']=mail
+            return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+        else:
+            messages.warning(response, 'El token no es el correcto.')
+    else:
+        messages.warning(response, 'El mail ingresado no pertenece a ningun usuario.')
+    return redirect('http://127.0.0.1:8000/recuContraseña') 
+
+def validarCambioContraseñaRecuperada(response):
+    cn=response.POST['contNueva']
+    cnr=response.POST['contNuevaR']
+    upper = False
+    for character in cn:
+        if character.isupper():
+            upper = True
+    if(not upper):
+        messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
+    else:
+        m=response.session['email']
+        o=User.objects.all()
+        user=o.get(email=m)
+        if check_password(cn, user.password):
+            messages.warning(response, 'La contraseña ingreso es igual a la anterior.')
+        elif cn==cnr:
+            user.set_password(cn)
+            user.save()
+            response.session.flush()
+            messages.warning(response, 'La contraseña se a cambiado de manera exitosa.')
+            return redirect('http://127.0.0.1:8000/login') 
+        else:
+            messages.warning(response, 'La contraseña nueva y la repetida deben ser iguales.')
+    return redirect('http://127.0.0.1:8000/camContraseñaRecu') 

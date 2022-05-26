@@ -21,5 +21,7 @@ urlpatterns = [
     path('homeUsuario',views.homeUsuario),
     path('validarContraseñaAModificar',views.modificarContraseña),
     path('turnoFiebreA',views.asignarTurnoFiebreA),
+    path('validarRecu',views.validarUsuRecuperar),
+    path('modContRecup',views.validarCambioContraseñaRecuperada),
 ]
 
