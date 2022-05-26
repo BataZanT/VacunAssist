@@ -313,7 +313,6 @@ def tieneTurno(user,vacuna):  # se puede usar con cualquier vacuna, el segundo p
         if turno.vaccine == vacuna:
             tiene = True
     return tiene
-<<<<<<< HEAD
 
 def validarUsuRecuperar(response):
     mail=response.POST['mail']
@@ -355,7 +354,7 @@ def validarCambioContraseñaRecuperada(response):
         else:
             messages.warning(response, 'La contraseña nueva y la repetida deben ser iguales.')
     return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
-=======
+
     NOMBRE = usu.name
     APELLIDO = usu.surname
     NCOMPLETO = NOMBRE + ' ' + APELLIDO
@@ -412,4 +411,3 @@ def validarCambioCentro(response):
     else:
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
->>>>>>> Develop

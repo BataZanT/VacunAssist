@@ -1,6 +1,5 @@
 <head>
     {% load django_simple_bulma %}
-<<<<<<< HEAD
     {% bulma %}  
   
   </head>
@@ -10,7 +9,6 @@
       <div class=" box mt-4 pt-2 background-success-light" >
         <div class= "mt-2"> <h2 class="title"> Iniciar Sesion </h2> </div>
         <form  class= "mt-4 " action="/validar" method="post">
-=======
     {% bulma %}
 </head>
 
@@ -20,7 +18,6 @@
       <div class= "ml-3 mt-6"> <h2 class="title"> Iniciar Sesion </h2> </div>
       <div class=" box pt-2 background-success-light" >
         <form action="/validar" method="post">
->>>>>>> Develop
           {% csrf_token %}
           <label for="email" class="mt-5">Ingrese Mail:</label> <br/>
           {{ loginform.email }}
@@ -36,12 +33,10 @@
           <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>  
           <button type="submit" class="button"> Continuar</button>
         </form>
-<<<<<<< HEAD
         <button class="button"> <a class="navbar-item" href="http://127.0.0.1:8000/recuContraseña" target="_self">Recuperar Contraseña</a></button>
       </form>
-=======
         <a class="navbar-item" href="/recuContraseña" target="_self">Recuperar Contraseña</a>
->>>>>>> Develop
+        <a class="navbar-item" href="/recuContraseña" target="_self">Recuperar Contraseña</a>
     </div>
     {% include 'messages.html' %}
   </div>

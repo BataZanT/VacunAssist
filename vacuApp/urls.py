@@ -21,13 +21,13 @@ urlpatterns = [
     path('homeUsuario',views.homeUsuario),
     path('validarContraseñaAModificar',views.modificarContraseña),
     path('turnoFiebreA',views.asignarTurnoFiebreA),
-<<<<<<< HEAD
     path('validarRecu',views.validarUsuRecuperar),
     path('modContRecup',views.validarCambioContraseñaRecuperada),
-=======
     path('validarMail',views.validarCambioMail),    
     path('modCentro',views.modCentro),  
     path('validarCambioCentro',views.validarCambioCentro),     
->>>>>>> Develop
+    path('validarMail',views.validarCambioMail),    
+    path('modCentro',views.modCentro),  
+    path('validarCambioCentro',views.validarCambioCentro),     
 ]
 
