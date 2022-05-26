@@ -20,13 +20,7 @@
         <br>
         <button class="button is-size-5" type="submit", name="registro">Continuar</button>
       </form>
-      {% for message in messages %}
-      <div class="alert alert-success">
-        <a class="close" href="#" data-dismiss="alert">×</a>
-               {{ message }}
-      </div>
-      {% endfor %}
+      {% include 'messages.html' %}
     </section>
   </div>  
 </body>
-

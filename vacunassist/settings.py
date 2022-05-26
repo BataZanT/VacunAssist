@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
-
+from django.contrib.messages import constants as messages
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -152,3 +152,11 @@ AUTH_USER_MODEL = 'vacuApp.User'
 
 
 TEMPLATE_CONTEXT_PROCESSORS= ("vacu.context_processors.loquequeremos", )
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'is-info',
+    messages.INFO: 'is-info',
+    messages.SUCCESS: 'is-success',
+    messages.WARNING: 'is-warning',
+    messages.ERROR: 'is-danger',
+}

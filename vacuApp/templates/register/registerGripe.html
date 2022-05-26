@@ -2,7 +2,7 @@
 <head>
   {% load django_simple_bulma %}
   {% bulma %}
-  {% font_awesome %}
+  {% font_awesome %} 
 </head>
 
 <body class= "mt-6 pt-3 background-success-light">
@@ -16,16 +16,9 @@
         <div class="field is-size-5">{{ form.gripe }}</div>
         <div class="field is-size-5">{{ form.gripe_date.label }}</div>
         <div class="field is-size-5">{{ form.gripe_date }}</div>
-
         <button class="button is-size-5" type="submit" name="registro">Continuar</button>
       </form>
-      {% for message in messages %}
-      <div class="alert alert-success">
-      <a class="close" href="#" data-dismiss="alert">×</a>
-               {{ message }}
-      </div>
-      {% endfor %} 
+      {% include 'messages.html' %}
     </section>
   </div>  
 </body>
-
