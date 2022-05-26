@@ -10,14 +10,10 @@
         <p class="subtitle is-6">Mail Actual: {{usuario.email}}   
         <p class=" mt-5 subtitle is-6"> Centro Actual: {{usuario.center}}
         <div class=" mt-6">
-        <button class="button is-success is-focused"><a class="button is-success is-focused" href="http://127.0.0.1:8000/modMail" target="_self" >Modificar Mail</a></button></div><br/>
-        <div> <button class="button is-success is-focused"><a class="button is-success is-focused" href="http://127.0.0.1:8000/modContraseña" target="_self">Modificar Contraseña</a></button></div> 
-        <div class=" mt-5"> <button class="button is-success is-focused"><a class="button is-success is-focused" href="http://127.0.0.1:8000/" target="_self">Cambiar mi centro de preferencia</a></button></div><br/>
-        <br/>{% for message in messages %}
-        <div class="alert alert-success">
-        <a class="close" href="#" data-dismiss="alert">×</a>
-                 {{ message }}
-        </div>
-        {% endfor %}
+        <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modMail" target="_self" >Modificar Mail</a></button></div><br/>
+        <div> <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modContraseña" target="_self">Modificar Contraseña</a></button></div> 
+        <div class=" mt-5"> <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modCentro" target="_self">Cambiar mi centro de preferencia</a></button></div><br/>
+        <br/>  
+        {% include 'messages.html' %}
     </div>
 </body>
