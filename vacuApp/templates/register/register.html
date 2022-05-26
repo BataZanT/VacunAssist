@@ -1,7 +1,7 @@
 <head>
   {% load django_simple_bulma %}
   {% bulma %}
-  {% font_awesome %} 
+  {% font_awesome %}
 </head>
 
 <body class= "mt-6 pt-3 background-success-light">
@@ -20,97 +20,7 @@
         <div class="field is-size-5">{{ form.password2.label }}  {{ form.password2 }}</div>
         <button class="button is-size-5" type="submit", name="registro">Continuar</button>
       </form>
-      {% for message in messages %}
-      <div class="alert alert-success">
-        <a class="close" href="#" data-dismiss="alert">×</a>
-          {{ message }}
-      </div>
-      {% endfor %}
+      {% include 'messages.html' %}
     </section>
   </div>  
 </body>
-
-    <!--
-      <form action="http://127.0.0.1:8000/registerCovid" class="form">
-      
-      <div class="field is-grouped">
-      
-        <div class="field mr-3">
-        <label class="label">Nombre</label>
-        <div class="control has-icons-left has-icons-right">
-          <input class="input" type="text" placeholder="Nombre">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Apellido</label>
-        <div class="control">
-          <input class="input" type="text" placeholder="Apellido">
-        </div>
-      </div>
-      </div>
-      
-      <div class="field is-grouped">
-      
-        <div class="field mr-3 ">
-        <label class="label">Email</label>
-        <div class="control has-icons-left has-icons-right">
-          <input class="input" type="email" placeholder="Email">
-          <span class="icon is-small is-left">
-            <i class="fas fa-envelope fa-s"></i>
-          </span>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">DNI</label>
-        <div class="control">
-          <input class="input" type="text" placeholder="11111111">
-        </div>
-      </div>
-
-      </div>
-
-      <div class="field is-grouped">
-      
-        <div class="field mr-3 ">
-          <label class="label">Fecha de Nacimiento</label>
-          <div class="control has-icons-left has-icons-right">
-            <input class="input" type="date" >
-          </div>
-        </div>
-
-      <div class="field">
-        <label class="label">Sexo</label>
-        <div class="control">
-          <div class="select">
-            <select name="sexo" id="sexo">
-              <option value="F">F</option>
-              <option value="M">M</option>
-            </select>
-          </div>
-          
-        </div>
-      </div>
-
-      </div>
-
-      <div class="field is-grouped">
-      
-        <div class="field mr-3">
-        <label class="label">Contraseña</label>
-        <div class="control has-icons-left has-icons-right">
-          <input class="input" type="password" >
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Repetir Contraseña</label>
-        <div class="control">
-          <input class="input" type="password" >
-        </div>
-      </div>
-      </div>
-      <input class="button" type="submit" value="Continuar"></input>
-    </form>
-    -->

@@ -7,7 +7,7 @@ urlpatterns = [
     path('modContraseña',views.modContraseña,name='modificarContraseña'),
     path('modMail',views.modMail,name='modificarMail'),
     path('recuContraseña',views.recuContraseña,name='recuperarContraseña'),
-    path('camContraseñaRecu',views.camContraseñaRecu,name='cambiarContraeñaRecuperada'),
+    path('camContraseñaRecu',views.camContraseñaRecu,name='cambiarContraseñaRecuperada'),
     path('register',views.register,name='register'),
     path('',views.home,name='home'),
     path('login/',views.login,name='login'),
@@ -21,5 +21,8 @@ urlpatterns = [
     path('homeUsuario',views.homeUsuario),
     path('validarContraseñaAModificar',views.modificarContraseña),
     path('turnoFiebreA',views.asignarTurnoFiebreA),
+    path('validarMail',views.validarCambioMail),    
+    path('modCentro',views.modCentro),  
+    path('validarCambioCentro',views.validarCambioCentro),     
 ]
 

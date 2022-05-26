@@ -1,10 +1,11 @@
 <head>
     {% load django_simple_bulma %}
-    {% bulma %}  
-  
-  </head>
-  <body class= "mt-6 pt-3 background-success-light">
-    {% include 'base.html' %}
+    {% bulma %}
+</head>
+
+<body class= "mt-3 pt-3 background-success-light" !important>
+    <div>
+      {% include 'base.html' %}
       <div class= "ml-3 mt-6"> <h2 class="title"> Iniciar Sesion </h2> </div>
       <div class=" box pt-2 background-success-light" >
         <form action="/validar" method="post">
@@ -17,16 +18,14 @@
           <input class="input is-primary mt-3" name="contraseña" style="width: 35% ;" type="password" placeholder="Contraseña" required="" minlength="8" > <br/> <br/>
           <label for="token" class="mt-5">Ingrese Token:</label><br/> 
           {{ loginform.token }}
-          <input class="input is-primary mt-3" name="token" style="width: 35% ;" type="text" placeholder="Contraseña Nueva" required="" minlength="4" maxlength="4" > <br/>
-          <br/>{% for message in messages %}
-        <div class="alert alert-success">
-        <a class="close" href="#" data-dismiss="alert">×</a>
-                 {{ message }}
-        </div>
-        {% endfor %}
-          <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>  <button type="submit" class="button"> Continuar</button>
+          <input class="input is-primary mt-3" name="token" style="width: 35% ;" type="text" placeholder="Contraseña Nueva" required="" minlength="4" maxlength="4" >
+          <br>
+          <br>
+          <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000" target="_self">Atras</a></button>  
+          <button type="submit" class="button"> Continuar</button>
         </form>
-        <a class="navbar-item" href="http://127.0.0.1:8000/recuContraseña" target="_self">Recuperar Contraseña</a>
-      </form>
+        <a class="navbar-item" href="/recuContraseña" target="_self">Recuperar Contraseña</a>
     </div>
-  </body>
+    {% include 'messages.html' %}
+  </div>
+</body>

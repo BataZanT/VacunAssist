@@ -45,7 +45,6 @@ class RegisterGripe(forms.Form):
     gripe_date = forms.DateField(label="¿Cuando se aplico la vacuna?",widget= forms.TextInput
                            (attrs={'type':'date'}),required=False)
 
-
 class RegisterFiebreA(forms.Form):
     APLICADA = [
         ('1','Si'),

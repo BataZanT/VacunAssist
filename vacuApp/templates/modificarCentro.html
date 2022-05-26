@@ -1,0 +1,26 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}
+    {% font_awesome %}
+</head>
+
+<body class= "mt-6 pt-3 background-success-light">
+  {% include 'barraUsuarioLogeadoNormal.html' %}
+  <div class= ml-4><h2 class="title"> Modificar Centro</h2></div>
+  <div class="box mt-3 background-success-light" >
+    <form action="/validarCambioCentro" method="post">
+      {% csrf_token %}
+      <h3 class="title" font-size:18px> Tu centro actual es: {{centroActual}} </h3>
+      <select style="width: 125px; height: 25px;" name="elegido">
+        <option value="1" selected> Cementerio </option>
+        <option value="2"> Municipalidad </option>
+        <option value="3"> Terminal </option>
+      </select>
+      <br>
+      <br>
+      <button class="button"> <a class="navbar-item" href="/modificarInfo" target="_self"> Cancelar </a></button>
+      <button class="button" type="submit"> Confirmar </button>
+    </form>
+  </div>   
+  {% include 'messages.html' %}       
+</body>

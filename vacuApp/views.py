@@ -3,6 +3,7 @@ import smtplib
 import random
 from hashlib import scrypt
 from subprocess import call
+from unicodedata import name
 from django.shortcuts import render
 from django.http import HttpResponse
 from vacuApp.models import *
@@ -169,17 +170,17 @@ def validar(response):
             if usu:
                 usu=o.get(email=mail)
                 if check_password(contraseña, usu.password):
-                    if usu.token==token:
+                    if (usu.token == token):
                             response.session["user_id"] = usu.id
                             return redirect('/homeUsuario')                           
                     else:
-                        messages.warning(response, 'Token invalido')
+                        messages.error(response, 'Token invalido')
                 else:
-                    messages.warning(response, ' Contraseña invalido')
+                    messages.error(response, ' Contraseña invalida')
             else: 
-                messages.warning(response, ' Mail invalido')
+                messages.error(response, ' Mail invalido')
         else:
-            messages.warning(response, 'No hay usuarios cargdos en la base')
+            messages.error(response, 'No hay usuarios cargados en la base')
         return redirect('http://127.0.0.1:8000/login')     
 
 def enviaremail(response): 
@@ -312,3 +313,59 @@ def tieneTurno(user,vacuna):  # se puede usar con cualquier vacuna, el segundo p
         if turno.vaccine == vacuna:
             tiene = True
     return tiene
+    NOMBRE = usu.name
+    APELLIDO = usu.surname
+    NCOMPLETO = NOMBRE + ' ' + APELLIDO
+    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO})
+
+def validarCambioMail(response):
+        mailN = response.POST['mailNuevo']
+        mailNRepetido = response.POST['mailNuevoRepetido']
+
+        o= User.objects.all()
+        if o!=None:
+            idUsuario = response.session["user_id"]
+            usu = o.get(id = idUsuario)
+            if (usu.email != mailN):
+                usuCopiado = o.filter(email = mailN)    
+                if usuCopiado:
+                    messages.warning(response, 'El email ingresado ya pertenece a otra cuenta registrada en el sistema')
+                else: 
+                    if (mailN == mailNRepetido):
+                        usu.email = mailN
+                        usu.save() 
+                        messages.success(response, "Informacion actualizada con exito" )                 
+                        return redirect('http://127.0.0.1:8000/infoPersonal') 
+                    else:
+                        messages.error(response, 'Los mails no coinciden')
+            else:  
+                messages.error(response, 'El mail nuevo no puede ser el actual')
+        else:
+            messages.error(response, 'No hay usuarios cargados en la base')  
+        return redirect('http://127.0.0.1:8000/modMail')
+
+def modCentro(response):
+    o= User.objects.all()
+    idu=response.session["user_id"]
+    usu=o.get(id=idu)
+    CENTRO = usu.center
+    return render(response,'modificarCentro.html', {'centroActual': CENTRO})
+
+def validarCambioCentro(response):
+    print (response.POST.get('elegido'))
+    c = Center.objects.get(id = response.POST.get('elegido'))
+    o= User.objects.all()
+    if o!=None:
+        idUsuario = response.session['user_id']
+        usu = o.get(id = idUsuario)
+        if (usu.center != c):
+            usu.center = c
+            usu.save() 
+            messages.success(response, "Informacion actualizada con exito" )                 
+            return redirect('/infoPersonal')
+        else: 
+            messages.error(response, 'El centro elegido no puede ser el actual')
+            return redirect('/modCentro')               
+    else:
+        messages.error(response, 'No hay usuarios cargados en la base')  
+    return redirect('/modCentro')
