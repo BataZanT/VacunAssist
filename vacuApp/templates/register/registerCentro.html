@@ -2,7 +2,6 @@
   {% load django_simple_bulma %}
   {% bulma %}
   {% font_awesome %}
-  {% csrf_token %}
   <script src="../../scripts/pruebaemails.py" language="python"></script>
 </head>
 
@@ -15,10 +14,8 @@
       {% csrf_token %}
       <div class="field is-size-4">{{ form.center.label }}</div>
       <div class="field is-size-5">{{ form.center }}</div>
-      
       <button class="button is-size-5" type="submit" name="registro">Finalizar Registro</button>
       </form> 
     </section>
   </div>  
 </body>
-

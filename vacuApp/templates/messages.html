@@ -1,0 +1,7 @@
+{% for message in messages %}
+  <div class="message {{ message.tags }}">
+    <div class="message-header">
+      {{ message }}
+    </div>
+  </div>
+{% endfor %}
