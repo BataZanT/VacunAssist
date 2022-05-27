@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('sex', models.CharField(max_length=1)),
                 ('password', models.CharField(max_length=20)),
                 ('token', models.CharField(default='1111', max_length=4, null=True)),
-                ('is_admin', models.BooleanField(default=True)),
+                ('is_admin', models.BooleanField(default=False)),
             ],
             options={
                 'abstract': False,
