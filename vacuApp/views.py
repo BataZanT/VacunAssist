@@ -259,14 +259,18 @@ def homeUsuario(response):
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
-    NCOMPLETO = usu.name + ' ' + usu.surname
-    turnos = usu.appointment_set.all()
-    fiebre_disp = False
-    vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-    if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
-        if( not tieneTurno(usu,vacF)):
-            fiebre_disp = True            
-    return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
+    if(usu.is_staff):
+         NCOMPLETO = usu.name + ' ' + usu.surname
+         return render(response,'inicioAdminCentro.html', {'NOMBRE': NCOMPLETO})
+    else:
+        NCOMPLETO = usu.name + ' ' + usu.surname
+        turnos = usu.appointment_set.all()
+        fiebre_disp = False
+        vacF = Vaccine.objects.get(name="Fiebre Amarilla")
+        if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
+            if( not tieneTurno(usu,vacF)):
+                fiebre_disp = True            
+        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
 
     
 def modificarContraseña(response):

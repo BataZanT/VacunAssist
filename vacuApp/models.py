@@ -47,18 +47,13 @@ class User(AbstractBaseUser):
     password = CharField(max_length=20)
     token = CharField(max_length=4, null=True,default='1111')
     center = models.ForeignKey(Center, null=True,on_delete=models.CASCADE)
-    is_staff = models.BooleanField()
-    is_staff = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     
     objects = MyUserManager()
     USERNAME_FIELD = 'email'
 
     @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
-        return self.is_admin 
     
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
