@@ -5,7 +5,6 @@ from hashlib import scrypt
 from subprocess import call
 from unicodedata import name
 from django.shortcuts import render
-from django.http import HttpResponse
 from vacuApp.models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
@@ -17,6 +16,9 @@ from datetime import date, datetime
 from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
+# importing the necessary libraries
+from django.views.generic import View
+from .process import html_to_pdf 
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -415,3 +417,14 @@ def validarCambioCentro(response):
     else:
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
+
+
+#Creating a class based view
+class GeneratePdf(View):
+     def get(self, request, *args, **kwargs):
+         
+        # getting the template
+        pdf = html_to_pdf('certificado.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')

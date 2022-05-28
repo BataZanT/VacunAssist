@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import GeneratePdf
 
 urlpatterns = [
     path('infoPersonal',views.infoPersonal,name='visualizarInfoPersonal'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('validarCambioCentro',views.validarCambioCentro),     
     path('validarMail',views.validarCambioMail),    
     path('modCentro',views.modCentro),  
-    path('validarCambioCentro',views.validarCambioCentro),     
+    path('validarCambioCentro',views.validarCambioCentro),
+    path('descargarCertif', GeneratePdf.as_view()),
 ]
 
