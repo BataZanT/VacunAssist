@@ -1,13 +1,13 @@
 <head>
-    {% load django_simple_bulma %}
-    {% bulma %}
-    {% font_awesome %}
 </head>
 <body>
-    
-    <p>Vamo a imprimir algo</p>
-
-    <p class="is-size-3 text-success">Deberia estar verde</p>
-    
-    <p style="font-size: large; color: blue;"> Python Guides</p>
+    {% if turno is not None %}
+    <div style="background-color: #B6FF7E;">
+        <p style="font-size: xx-large;">Vacuna: {{turno.vaccine}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turno.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turno.date}}</p>
+    {% else %}
+    <p style="font-size: xx-large;"> No se dio la vacuna contra la gripe</p>
+    {% endif %}
+    </div>
 </body>

@@ -18,7 +18,8 @@ from . import validators
 from django.contrib.auth.hashers import check_password
 # importing the necessary libraries
 from django.views.generic import View
-from .process import html_to_pdf 
+from .process import html_to_pdf
+from django.template.loader import render_to_string
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -249,6 +250,7 @@ def asignarVacunas(user):
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
+    print(user.appointment_set.all())
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -421,10 +423,16 @@ def validarCambioCentro(response):
 
 #Creating a class based view
 class GeneratePdf(View):
-     def get(self, request, *args, **kwargs):
-         
+     def get(self, response, *args, **kwargs):
+        turnoG = None 
+        user = User.objects.get(id= response.session["user_id"])
+        if user.history.gripe == 1:
+            turnoG = user.appointment_set.filter(vaccine = 2).order_by('date')[0]
+        open('vacuApp/templates/temp.html', "w").write(render_to_string('certificado.html', {'turno': turnoG}))
+
         # getting the template
-        pdf = html_to_pdf('certificado.html')
+        pdf = html_to_pdf('temp.html')
          
          # rendering the template
         return HttpResponse(pdf, content_type='application/pdf')
+
