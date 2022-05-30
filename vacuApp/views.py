@@ -1,3 +1,4 @@
+from asyncore import write
 from email import message
 import smtplib
 import random
@@ -256,24 +257,7 @@ def homeUsuario(response):
     idu=response.session["user_id"]
     usu=o.get(id=idu)
     if(usu.is_staff):
-         NCOMPLETO = usu.name + ' ' + usu.surname
-         messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
-         t=Appointment.objects.all()
-         today = date.today()
-         #,date=today
-         turnosC=t.filter(vaccine=1, state=1,center=usu.center)
-         if (not turnosC):
-             turnosC=0
-             cantC=0
-         else:
-            cantC=t.filter(vaccine=1, state=1,center=usu.center).cont()
-         turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
-         if (not turnosG):
-             turnosG=0
-         turnosF=t.filter(vaccine=2, state=1,center=usu.center,date=today)
-         if (not turnosF):
-             turnosF=0
-         return render(response,'inicioAdminCentro.html', {'covid':turnosC, 'cantC':cantC 'gripe':turnosG, 'fiebre':turnosF})
+         return redirect('http://127.0.0.1:8000/homeAdminCentro')
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
@@ -442,4 +426,31 @@ def borrarRegistro(response):
     return redirect('/')
 
 def homeAdmin(response):
-    return render(response,'inicioAdminCentro.html')
+    o= User.objects.all()
+    idUsuario = response.session["user_id"]
+    usu = o.get(id = idUsuario)
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
+    t=Appointment.objects.all()
+    today = date.today()
+    #,date=today
+    turnosC=t.filter(vaccine=1, state=1,center=usu.center)
+    if (not turnosC):
+        turnosC=0
+        cantC=0
+    else:
+        cantC=t.filter(vaccine=1, state=1,center=usu.center).count()
+    turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
+    if (not turnosG):
+        turnosG=0
+        cantG=0
+    else:
+        cantG=t.filter(vaccine=2, state=1,center=usu.center,date=today).count()
+    turnosF=t.filter(vaccine=3, state=1,center=usu.center,date=today)
+    if (not turnosF):
+        turnosF=0
+        cantF=0
+    else:
+        cantF=t.filter(vaccine=3, state=1,center=usu.center,date=today).count()
+    tot=cantC+cantG+cantF
+    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
