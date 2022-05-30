@@ -1,3 +1,4 @@
+from asyncore import write
 from email import message
 import smtplib
 import random
@@ -262,18 +263,26 @@ def homeUsuario(response):
          today = date.today()
          #,date=today
          turnosC=t.filter(vaccine=1, state=1,center=usu.center)
+         print(turnosC)
          if (not turnosC):
              turnosC=0
              cantC=0
          else:
-            cantC=t.filter(vaccine=1, state=1,center=usu.center).cont()
+            cantC=t.filter(vaccine=1, state=1,center=usu.center).count()
          turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
+         print(turnosG)
          if (not turnosG):
              turnosG=0
-         turnosF=t.filter(vaccine=2, state=1,center=usu.center,date=today)
+             cantG=0
+         else:
+            cantG=t.filter(vaccine=2, state=1,center=usu.center,date=today).count()
+         turnosF=t.filter(vaccine=3, state=1,center=usu.center,date=today)
          if (not turnosF):
              turnosF=0
-         return render(response,'inicioAdminCentro.html', {'covid':turnosC, 'cantC':cantC 'gripe':turnosG, 'fiebre':turnosF})
+             cantF=0
+         else:
+            cantF=t.filter(vaccine=3, state=1,center=usu.center,date=today).count()
+         return render(response,'inicioAdminCentro.html', {'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
