@@ -426,9 +426,30 @@ class GeneratePdf(View):
      def get(self, response, *args, **kwargs):
         turnoG = None 
         user = User.objects.get(id= response.session["user_id"])
+        #certificado gripe
         if user.history.gripe == 1:
-            turnoG = user.appointment_set.filter(vaccine = 2).order_by('date')[0]
-        open('vacuApp/templates/temp.html', "w").write(render_to_string('certificado.html', {'turno': turnoG}))
+
+            turnoG = user.appointment_set.filter(vaccine = 2).order_by('-date')
+            if len(turnoG) > 0:
+                turnoG = turnoG[0]
+            else:
+                turnoG = None
+        turnoF = None
+        if user.history.fiebreA == 1:
+            turnoF = user.appointment_set.filter(vaccine = 3).order_by('-date')
+            if len(turnoF) > 0:
+                turnoF = turnoF[0]
+            else:
+                turnoF = None
+        
+        turnoC = None
+        if user.history.covid_doses > 0:
+            turnoC = user.appointment_set.filter(vaccine = 1).order_by('-date')
+            if len(turnoC) > 0:
+                turnoC = turnoC[0]
+            else:
+                turnoF = None
+        open('vacuApp/templates/temp.html', "w").write(render_to_string('certificado.html', {'turnoG': turnoG, 'turnoF' : turnoF, 'turnoC':turnoC}))
 
         # getting the template
         pdf = html_to_pdf('temp.html')

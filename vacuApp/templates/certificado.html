@@ -1,13 +1,35 @@
 <head>
 </head>
 <body>
-    {% if turno is not None %}
     <div style="background-color: #B6FF7E;">
-        <p style="font-size: xx-large;">Vacuna: {{turno.vaccine}}</p>
-        <p style="font-size: xx-large;">Centro de vacunacion: {{turno.center}}</p>
-        <p style="font-size: xx-large;">Fecha: {{turno.date}}</p>
+    {% if turnoG is not None %}
+        <p style="font-size: xx-large;">Vacuna: {{turnoG.vaccine}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turnoG.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turnoG.date}}</p>
+    </div>
     {% else %}
     <p style="font-size: xx-large;"> No se dio la vacuna contra la gripe</p>
+    </div>
+    {% endif %}
+    <div style="background-color: #7167e0;">
+    {% if turnoF is not None %}
+        <p style="font-size: xx-large;">Vacuna: {{turnoF.vaccine}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turnoF.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turnoF.date}}</p>
+    </div>
+    {% else %}
+    <p style="font-size: xx-large;"> No se dio la vacuna contra la fiebre amarilla</p>
+    </div>
+    {% endif %}
+    <div style="background-color: #e09367;">
+    {% if turnoC is not None %}
+        <p style="font-size: xx-large;">Vacuna: {{turnoC.vaccine}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turnoC.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turnoC.date}}</p>
+    </div>
+    {% else %}
+    <p style="font-size: xx-large;"> No se dio ninguna vacuna contra el covid-19</p>
+    </div>
     {% endif %}
     </div>
 </body>
