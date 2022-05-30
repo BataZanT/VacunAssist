@@ -443,13 +443,15 @@ class GeneratePdf(View):
                 turnoF = None
         
         turnoC = None
+        dosis = None
         if user.history.covid_doses > 0:
             turnoC = user.appointment_set.filter(vaccine = 1).order_by('-date')
             if len(turnoC) > 0:
                 turnoC = turnoC[0]
+                dosis = user.history.covid_doses
             else:
                 turnoF = None
-        open('vacuApp/templates/temp.html', "w").write(render_to_string('certificado.html', {'turnoG': turnoG, 'turnoF' : turnoF, 'turnoC':turnoC}))
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certificado.html', {'turnoG': turnoG, 'turnoF' : turnoF, 'turnoC':turnoC, 'dosis': dosis}))
 
         # getting the template
         pdf = html_to_pdf('temp.html')
