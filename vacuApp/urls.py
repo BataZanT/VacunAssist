@@ -31,5 +31,6 @@ urlpatterns = [
     path('validarCambioCentro',views.validarCambioCentro), 
     path('cancelarRegistro',views.borrarRegistro),
     path('homeAdminCentro',views.homeAdmin),         
+    path('ausentes',views.marcarAusentes)
 ]
 
