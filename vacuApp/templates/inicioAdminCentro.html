@@ -32,6 +32,7 @@ a{
   <body class= "mt-6 pt-3  has-background-success-light">
     <div>
         {% include 'barraAdminDeCentro.html' %}
+        {% csrf_token %}
         <p class= 'ml-6 pt-3' style="text-align: left; font-size:25px">
           {% include 'messages.html' %}
         </p>       
@@ -48,6 +49,7 @@ a{
         <p style="text-align: center; ">  Cantidad total:&nbsp;&nbsp;&nbsp; {{tot}}   <i class="fa-solid fa-user-large"></i></p></div>
       <div class="m-5 p-2" style="  width: 10%; height: 10%;" ></div>
     </div>
+  <div> <button><a class="navbar-item" href="ausentes/{{covid.id}}" target="_self"> Cancelar </a></button></div>
     <div class="mt-3 has-background-success-light; ">
       <!--vacuna del covid-->
       <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgba(159, 34, 222, 0.508); border: 2px solid; float: left">
@@ -59,7 +61,7 @@ a{
             <th>Nombre completo</th>
             <th style="width: 10%;">DNI</th>
             <th style="width: 8%;">Dosis</th>
-            <th style="width: 20%; border:none"> </th>
+            <th style="width: 20%; border:none"> </th> 
            </tr>
         </thead>
         <tbody>
@@ -67,7 +69,11 @@ a{
           <tr>
             <td>{{ covid.patient.name }} {{ covid.patient.surname }}</td>
             <td style="width: 10%;">{{ covid.patient.DNI }} </td>
-            <td style="width: 8%;">{{ covid.patient.history.covid_doses }} </td>
+            {%if  covid.patient.history.covid_doses == 0 %}
+            <td style="width: 8%;"> 1 </td>
+            {%else%}
+            <td style="width: 8%;"> 2 </td>
+            {%endif%}
             <th style="width: 20%; border:none "> <a href="" target="_self"> Presente </a></th>
           </tr>
           {% endfor %}
@@ -140,6 +146,5 @@ a{
      </div>
     </div>
     <div>
-      <button><a class="navbar-item" href="/modificarInfo" target="_self"> Cancelar </a></button>
     </div>
 </body>
