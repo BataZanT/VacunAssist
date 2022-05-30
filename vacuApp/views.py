@@ -455,5 +455,6 @@ def homeAdmin(response):
     tot=cantC+cantG+cantF
     return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
-def marcarAusentes(response):
+def marcarAusentes(response,id):
+    print(id)
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
