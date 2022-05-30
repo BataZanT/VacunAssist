@@ -1,37 +1,39 @@
 <head>
-    {% load django_simple_bulma %}
-    {% bulma %}
-    {% load static %}    
+  {% load django_simple_bulma %}
+  {% bulma %}
+  {% load static %} 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 
-<body> 
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="http://127.0.0.1:8000/homeUsuario">
-            <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
-          </a>     
-        </div>    
-        <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-start">
-            <a class="navbar-item" href="http://127.0.0.1:8000/homeUsuario" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
-              Inicio
-            </a>
-            <a class="navbar-item" href="http://127.0.0.1:8000/infoPersonal" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
-              Visualizar Informacion Personal
-            </a>
-            <a class="navbar-item" href="http://127.0.0.1:8000/modificarInfo" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
-              Modificar Informacion Personal
-            </a>
-          </div>
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                <a class="button is-light" href="http://127.0.0.1:8000/cerrarSesion" target="_self">                        <!-- Habria que hacer algun cript que cierre sesion en el sistema? -->
-                  <strong>Cerrar Sesion</strong>
-                </a>
-              </div>
+<body>
+  
+  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="http://127.0.0.1:8000/homeUsuario">
+          <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
+        </a>     
+      </div>    
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="http://127.0.0.1:8000/homeUsuario" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
+            Inicio
+          </a>
+          <a class="navbar-item" href="http://127.0.0.1:8000/infoPersonal" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
+            Visualizar Informacion Personal
+          </a>
+          <a class="navbar-item" href="http://127.0.0.1:8000/modificarInfo" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
+            Modificar Informacion Personal
+          </a>
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-light" href="http://127.0.0.1:8000/cerrarSesion" target="_self">                        <!-- Habria que hacer algun cript que cierre sesion en el sistema? -->
+                <strong>Cerrar Sesion</strong>
+              </a>
             </div>
           </div>
         </div>
+      </div>
     </nav>
 </body>
