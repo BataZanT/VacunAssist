@@ -5,37 +5,30 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 
-<body>
-  
-  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="http://127.0.0.1:8000/">
-          <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
-        </a>
-    
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-    
-      <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item" href="http://127.0.0.1:8000/" target="_self"> <!-- Cambiar a la pagina post inicio en un futuro -->
-            Inicio
+<body>   
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="http://127.0.0.1:8000/">
+            <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
           </a>
-        </div>
-    
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-primary" href="http://127.0.0.1:8000/register" target="_self"> <!-- Utilizar el nombre del enlace o la URl-->
-                <strong>Registrarse</strong>
-              </a>
-              <a class="button is-light" href="http://127.0.0.1:8000/login" target="_self">
-                <strong>Iniciar Sesion</strong>
-              </a>
+        </div>   
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="http://127.0.0.1:8000/" target="_self"> <!-- Cambiar a la pagina post inicio en un futuro -->
+              Inicio
+            </a>
+          </div>
+      
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-primary" href="http://127.0.0.1:8000/register" target="_self"> <!-- Utilizar el nombre del enlace o la URl-->
+                  <strong>Registrarse</strong>
+                </a>
+                <a class="button is-light" href="http://127.0.0.1:8000/login" target="_self">
+                  <strong>Iniciar Sesion</strong>
+                </a>
+              </div>
             </div>
           </div>
         </div>
