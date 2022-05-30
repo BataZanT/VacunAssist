@@ -264,13 +264,16 @@ def homeUsuario(response):
          turnosC=t.filter(vaccine=1, state=1,center=usu.center)
          if (not turnosC):
              turnosC=0
-         turnosG=t.filter(vaccine=2, state=1,center=usu.center)
+             cantC=0
+         else:
+            cantC=t.filter(vaccine=1, state=1,center=usu.center).cont()
+         turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
          if (not turnosG):
              turnosG=0
-         turnosF=t.filter(vaccine=2, state=1,center=usu.center)
+         turnosF=t.filter(vaccine=2, state=1,center=usu.center,date=today)
          if (not turnosF):
              turnosF=0
-         return render(response,'inicioAdminCentro.html', {'covid':turnosC, 'gripe':turnosG, 'fiebre':turnosF})
+         return render(response,'inicioAdminCentro.html', {'covid':turnosC, 'cantC':cantC 'gripe':turnosG, 'fiebre':turnosF})
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
