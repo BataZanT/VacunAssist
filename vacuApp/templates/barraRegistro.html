@@ -1,0 +1,27 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}
+    {% load static %} 
+</head>
+
+<body>   
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item">
+            <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
+          </a>
+        </div>
+      
+        <div id="navbarBasicExample" class="navbar-menu">      
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-primary" href="/cancelarRegistro" target="_self"> <!-- Utilizar el nombre del enlace o la URl-->
+                  <strong>Cancelar</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+</body>
