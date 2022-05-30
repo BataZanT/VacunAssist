@@ -135,10 +135,7 @@ def registerFiebreA(response):
     else:
         form = RegisterFiebreA()
         return render(response,'register/registerfiebreA.html',{"form":form})
-        
-def CerrarSesion(response):
-    response.session.flush()
-    return redirect('http://127.0.0.1:8000/')
+
 
 def registerCentro(response):
     form = RegisterCentro()
@@ -261,7 +258,20 @@ def homeUsuario(response):
     usu=o.get(id=idu)
     if(usu.is_staff):
          NCOMPLETO = usu.name + ' ' + usu.surname
-         return render(response,'inicioAdminCentro.html', {'NOMBRE': NCOMPLETO})
+         messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
+         t=Appointment.objects.all()
+         today = date.today()
+         #,date=today
+         turnosC=t.filter(vaccine=1, state=1,center=usu.center)
+         if (not turnosC):
+             turnosC=0
+         turnosG=t.filter(vaccine=2, state=1,center=usu.center)
+         if (not turnosG):
+             turnosG=0
+         turnosF=t.filter(vaccine=2, state=1,center=usu.center)
+         if (not turnosF):
+             turnosF=0
+         return render(response,'inicioAdminCentro.html', {'covid':turnosC, 'gripe':turnosG, 'fiebre':turnosF})
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
@@ -325,11 +335,14 @@ def validarUsuRecuperar(response):
     if usu:
         token=response.POST['token']
         usu=o.get(email=mail)
-        if usu.token==token:
-            response.session['email']=mail
-            return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+        if(not usu.is_staff):
+            if usu.token==token:
+                response.session['email']=mail
+                return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+            else:
+                messages.warning(response, 'El token no es el correcto.')
         else:
-            messages.warning(response, 'El token no es el correcto.')
+             messages.warning(response, 'Un administrador de cento no puede cambiar su contraseña, comuniquese con su superior.')   
     else:
         messages.warning(response, 'El mail ingresado no pertenece a ningun usuario.')
     return redirect('http://127.0.0.1:8000/recuContraseña') 
