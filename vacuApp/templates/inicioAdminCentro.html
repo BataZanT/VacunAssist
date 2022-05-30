@@ -38,12 +38,14 @@ a{
     </div>
     <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; ">
       <p class="ml-5 "> <b> Cantidad de personas para atender el dia de hoy {{hoy}} : </b></p>
-      <div  class="m-5 p-2" style="  width: 10%; height: 10%; background-color: rgba(159, 34, 222, 0.508); border: 1px solid; float: left">
-        <p style=" width: 30%; height: 30%;">{{cantC}}  <i class="fa-solid fa-user-large"></i></p> </div>
-      <div  class="m-5 p-2" style=" width: 10%; height: 10%; background-color: rgb(145, 236, 152); border: 1px solid; float: left">
-        <p>{{cantG}}  <i class="fa-solid fa-user-large"></i></p></div>
-      <div  class="m-5 p-2" style=" overflow:auto; width: 10%; height: 10%; background-color: rgb(193, 219, 126); border: 1px solid; float: left ">
-        <p>{{cantF}}   <i class="fa-solid fa-user-large"></i></p></div>
+      <div  class="m-5 p-2" style="  width: 15%; height: 10%; background-color: rgba(159, 34, 222, 0.508); border: 1px solid; float: left">
+        <p style="text-align: center; "> COVID-19:&nbsp;&nbsp;&nbsp;{{cantC}}  <i class="fa-solid fa-user-large"></i></p> </div>
+      <div  class="m-5 p-2" style=" width: 15%; height: 10%; background-color: rgb(145, 236, 152); border: 1px solid; float: left">
+        <p style="text-align: center; "> Gripe:&nbsp;&nbsp;&nbsp; {{cantG}}  <i class="fa-solid fa-user-large"></i></p></div>
+      <div  class="m-5 p-2" style="  width: 15%; height: 10%; background-color: rgb(193, 219, 126); border: 1px solid; float: left ">
+        <p style="text-align: center; ">Fiebre A:&nbsp;&nbsp;&nbsp;{{cantF}}   <i class="fa-solid fa-user-large"></i></p></div>
+      <div  class="m-5 p-2" style=" width: 15%; height: 10%; background-color: rgba(113, 114, 109, 0.449); border: 1px solid; float: left ">
+        <p style="text-align: center; ">  Cantidad total:&nbsp;&nbsp;&nbsp; {{tot}}   <i class="fa-solid fa-user-large"></i></p></div>
       <div class="m-5 p-2" style="  width: 10%; height: 10%;" ></div>
     </div>
     <div class="mt-3 has-background-success-light; ">
@@ -109,7 +111,7 @@ a{
       </div>
       <!--vacuna de la fiebre-->
       <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgb(193, 219, 126);border: 2px solid;">
-      <p style="text-align: center; "> <b> TURNOS PARA HOY FIEBRE </b></p>
+      <p style="text-align: center; "> <b> TURNOS PARA HOY FIEBRE AMARILLA</b></p>
       {% if fiebre != 0 %}
          <table>
          <thead>
