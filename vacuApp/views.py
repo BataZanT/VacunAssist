@@ -270,7 +270,6 @@ def homeUsuario(response):
             if( not tieneTurno(usu,vacF)):
                 fiebre_disp = True            
         return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
-
     
 def modificarContraseña(response):
     ca=response.POST["contActual"]
