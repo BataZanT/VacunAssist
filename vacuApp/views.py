@@ -369,7 +369,6 @@ def validarCambioCentro(response):
 def borrarRegistro(response):
     o= User.objects.all()
     if o!=None:
-        print (response.session['reg_user_id'])
         idUsuario = response.session['reg_user_id']
         usu = o.get(id = idUsuario)
         usu.delete() 
