@@ -67,7 +67,6 @@ def register(response):
                 user = form.save()
                 response.session["reg_user_id"] = user.id
                 return redirect("/registerCovid")
-
             else:
                 messages.warning(response, message)
                 return render(response,'register/register.html',{"form":form})
@@ -267,8 +266,7 @@ def homeUsuario(response):
         if( not tieneTurno(usu,vacF)):
             fiebre_disp = True            
     return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
-
-    
+   
 def modificarContraseña(response):
     ca=response.POST["contActual"]
     idu=response.session["user_id"]
@@ -296,8 +294,7 @@ def modificarContraseña(response):
     else:
         messages.warning(response, 'La contraseña actual no es correcta.')
     return redirect('http://127.0.0.1:8000/modContraseña') 
-    
-
+ 
 def asignarTurnoFiebreA(response):
     o= User.objects.all()
     idu=response.session["user_id"]
@@ -352,7 +349,6 @@ def modCentro(response):
     return render(response,'modificarCentro.html', {'centroActual': CENTRO})
 
 def validarCambioCentro(response):
-    print (response.POST.get('elegido'))
     c = Center.objects.get(id = response.POST.get('elegido'))
     o= User.objects.all()
     if o!=None:
@@ -369,3 +365,16 @@ def validarCambioCentro(response):
     else:
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
+
+def borrarRegistro(response):
+    o= User.objects.all()
+    if o!=None:
+        print (response.session['reg_user_id'])
+        idUsuario = response.session['reg_user_id']
+        usu = o.get(id = idUsuario)
+        usu.delete() 
+        messages.info(response, "Se ha cancelado el registro" )                 
+        return redirect('/')              
+    else:
+        messages.error(response, 'No hay usuarios cargados en la base')  
+    return redirect('/')
