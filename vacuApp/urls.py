@@ -29,6 +29,7 @@ urlpatterns = [
     path('validarMail',views.validarCambioMail),    
     path('modCentro',views.modCentro),  
     path('validarCambioCentro',views.validarCambioCentro), 
-    path('cancelarRegistro',views.borrarRegistro),       
+    path('cancelarRegistro',views.borrarRegistro),
+    path('homeAdminCentro',views.homeAdmin),         
 ]
 

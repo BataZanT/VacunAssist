@@ -424,3 +424,6 @@ def borrarRegistro(response):
     else:
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/')
+
+def homeAdmin(response):
+    return render(response,'inicioAdminCentro.html')
