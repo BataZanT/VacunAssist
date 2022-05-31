@@ -257,7 +257,8 @@ def homeUsuario(response):
     idu=response.session["user_id"]
     usu=o.get(id=idu)
     if(usu.is_staff):
-         return redirect('http://127.0.0.1:8000/homeAdminCentro')
+         response.session["ok"]=0
+         return redirect('http://127.0.0.1:8000/homeAdminCentro')     
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
@@ -434,12 +435,12 @@ def homeAdmin(response):
     t=Appointment.objects.all()
     today = date.today()
     #,date=today
-    turnosC=t.filter(vaccine=1, state=1,center=usu.center)
+    turnosC=t.filter(vaccine=1, state=1,center=usu.center,date=today)
     if (not turnosC):
         turnosC=0
         cantC=0
     else:
-        cantC=t.filter(vaccine=1, state=1,center=usu.center).count()
+        cantC=t.filter(vaccine=1, state=1,center=usu.center,date=today).count()
     turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
     if (not turnosG):
         turnosG=0
@@ -451,10 +452,26 @@ def homeAdmin(response):
         turnosF=0
         cantF=0
     else:
-        cantF=t.filter(vaccine=3, state=1,center=usu.center,date=today).count()
+        cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
-    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+    return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
-def marcarAusentes(response,id):
-    print(id)
-    return redirect('http://127.0.0.1:8000/homeAdminCentro')
+def marcarTurnoAusentes(response):
+        if(response.session["ok"] == 0):
+            response.session["ok"]=1
+            print(response.session["ok"])
+            return redirect('http://127.0.0.1:8000/homeAdminCentro')  
+        else:
+            respuesta=response.POST["respuesta"]
+            if(respuesta=='SI'):
+                today = date.today()
+                o= User.objects.all()
+                usu=o.get(id=response.session["user_id"])
+                t=Appointment.objects.all()
+                ausentes=t.filter(state=1, center=usu.center,date=today) #,date=today
+                print(ausentes)
+                for turno in ausentes:
+                    turno.state=0
+                    turno.save()
+            response.session["ok"]=0
+        return redirect('http://127.0.0.1:8000/homeAdminCentro')
