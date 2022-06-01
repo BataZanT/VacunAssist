@@ -21,8 +21,7 @@
           <br>
           <br>
           <br>
-          <br>
-       
+          <br>      
             {% if turnos|length > 0 %}
               {% for turno in turnos %}
                 <div class="box">
@@ -30,15 +29,11 @@
                   <p>{{ turno.vaccine }}</p>
                   <p>{{ turno.center }}</p>
                 </div>
-              {% endfor %}
-            
+              {% endfor %}          
             {% else %}
               <div class="box"> No hay turnos :(
-              </div>
-            
-            
-            {% endif %}
-          
+              </div>                   
+            {% endif %}          
           <section class="section">
             {% if fiebre_disp %}
               <div class="box">

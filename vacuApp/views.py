@@ -136,7 +136,6 @@ def registerFiebreA(response):
         form = RegisterFiebreA()
         return render(response,'register/registerfiebreA.html',{"form":form})
 
-
 def registerCentro(response):
     form = RegisterCentro()
     if(response.method == "POST"):
@@ -453,3 +452,20 @@ def homeAdmin(response):
         cantF=t.filter(vaccine=3, state=1,center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
     return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+
+def presente(response,id, vacuna):  
+    T = Appointment.objects.all()
+    turnoActual = T.get(id = id)
+    turnoActual.state = 2
+    H = History.objects.all()
+    historialActual = H.get(id = id)
+    if (vacuna == 'covid'):
+        historialActual.covid_date = date.today 
+    else:
+        if (vacuna == 'gripe'):
+            historialActual.gripe_date = date.today 
+        else:     
+            historialActual.fiebreA = date.today
+    turnoActual.save()
+    historialActual.save()                
+    return redirect('http://127.0.0.1:8000/homeAdminCentro')

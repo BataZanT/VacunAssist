@@ -30,6 +30,6 @@ urlpatterns = [
     path('modCentro',views.modCentro),  
     path('validarCambioCentro',views.validarCambioCentro), 
     path('cancelarRegistro',views.borrarRegistro),
-    path('homeAdminCentro',views.homeAdmin),         
+    path('homeAdminCentro',views.homeAdmin),  
+    path('pasarPresente/<int:id>/<str:tipo>',views.presente),     
 ]
-
