@@ -11,9 +11,10 @@
         <div ><h2 class="title mt-2"> Recuperar Contraseña</h2></div>
         <p class= "mt-4 "> <b>La nueva contraseña debe tener: al menos una mayuscula y al menos 8 caracteres.</b></p> <br/>
         <p>Ingrese la nueva Contraseña:</p>
-        <input class="input is-primary mt-3 " style="width: 35% ;" type="passwod" name="contNueva" minlength="8" mmaxLength="20" placeholder="Aaaaaaaa"required=""><br/>
+        <input class="input is-primary mt-3 " style="width: 35% ;" type="password" name="contNueva" minlength="8" mmaxLength="20" placeholder="Aaaaaaaa"required=""><br/>
         <p class=" mt-4">Ingrese de nuevo la nueva Contraseña:</p>
         <input class="input is-primary mt-3" style="width: 35% ;" type="password" name="contNuevaR" minlength="8" mmaxLength="20" placeholder="Aaaaaaaaa" required=""><br/>
         <div class=" mt-5"> <button class="button"><a class="navbar-item" href="http://127.0.0.1:8000/recuContraseña" target="_self">Atras</a></button>      <button class="button"> Confirmar </button></div>
     </form>
+    {% include 'messages.html' %}
 </body>

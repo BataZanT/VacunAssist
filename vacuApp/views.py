@@ -1,11 +1,9 @@
-from email import message
+
+
 import smtplib
 import random
-from hashlib import scrypt
-from subprocess import call
-from unicodedata import name
 from django.shortcuts import render
-from vacuApp.models import *
+from .models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
 from django.http import HttpResponse
@@ -70,7 +68,6 @@ def register(response):
                 user = form.save()
                 response.session["reg_user_id"] = user.id
                 return redirect("/registerCovid")
-
             else:
                 messages.warning(response, message)
                 return render(response,'register/register.html',{"form":form})
@@ -138,10 +135,7 @@ def registerFiebreA(response):
     else:
         form = RegisterFiebreA()
         return render(response,'register/registerfiebreA.html',{"form":form})
-        
-def CerrarSesion(response):
-    response.session.flush()
-    return redirect('http://127.0.0.1:8000/')
+
 
 def registerCentro(response):
     form = RegisterCentro()
@@ -264,8 +258,8 @@ def homeUsuario(response):
     idu=response.session["user_id"]
     usu=o.get(id=idu)
     if(usu.is_staff):
-         NCOMPLETO = usu.name + ' ' + usu.surname
-         return render(response,'inicioAdminCentro.html', {'NOMBRE': NCOMPLETO})
+         response.session["ok"]=0
+         return redirect('http://127.0.0.1:8000/homeAdminCentro')     
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
@@ -304,8 +298,7 @@ def modificarContraseña(response):
     else:
         messages.warning(response, 'La contraseña actual no es correcta.')
     return redirect('http://127.0.0.1:8000/modContraseña') 
-    
-
+ 
 def asignarTurnoFiebreA(response):
     o= User.objects.all()
     idu=response.session["user_id"]
@@ -329,11 +322,14 @@ def validarUsuRecuperar(response):
     if usu:
         token=response.POST['token']
         usu=o.get(email=mail)
-        if usu.token==token:
-            response.session['email']=mail
-            return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+        if(not usu.is_staff):
+            if usu.token==token:
+                response.session['email']=mail
+                return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+            else:
+                messages.warning(response, 'El token no es el correcto.')
         else:
-            messages.warning(response, 'El token no es el correcto.')
+             messages.warning(response, 'Un administrador de cento no puede cambiar su contraseña, comuniquese con su superior.')   
     else:
         messages.warning(response, 'El mail ingresado no pertenece a ningun usuario.')
     return redirect('http://127.0.0.1:8000/recuContraseña') 
@@ -402,7 +398,6 @@ def modCentro(response):
     return render(response,'modificarCentro.html', {'centroActual': CENTRO})
 
 def validarCambioCentro(response):
-    print (response.POST.get('elegido'))
     c = Center.objects.get(id = response.POST.get('elegido'))
     o= User.objects.all()
     if o!=None:
@@ -459,3 +454,64 @@ class GeneratePdf(View):
          # rendering the template
         return HttpResponse(pdf, content_type='application/pdf')
 
+def borrarRegistro(response):
+    o= User.objects.all()
+    if o!=None:
+        idUsuario = response.session['reg_user_id']
+        usu = o.get(id = idUsuario)
+        usu.delete() 
+        messages.info(response, "Se ha cancelado el registro" )                 
+        return redirect('/')              
+    else:
+        messages.error(response, 'No hay usuarios cargados en la base')  
+    return redirect('/')
+
+def homeAdmin(response):
+    o= User.objects.all()
+    idUsuario = response.session["user_id"]
+    usu = o.get(id = idUsuario)
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
+    t=Appointment.objects.all()
+    today = date.today()
+    #,date=today
+    turnosC=t.filter(vaccine=1, state=1,center=usu.center,date=today)
+    if (not turnosC):
+        turnosC=0
+        cantC=0
+    else:
+        cantC=t.filter(vaccine=1, state=1,center=usu.center,date=today).count()
+    turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
+    if (not turnosG):
+        turnosG=0
+        cantG=0
+    else:
+        cantG=t.filter(vaccine=2, state=1,center=usu.center,date=today).count()
+    turnosF=t.filter(vaccine=3, state=1,center=usu.center,date=today)
+    if (not turnosF):
+        turnosF=0
+        cantF=0
+    else:
+        cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
+    tot=cantC+cantG+cantF
+    return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+
+def marcarTurnoAusentes(response):
+        if(response.session["ok"] == 0):
+            response.session["ok"]=1
+            print(response.session["ok"])
+            return redirect('http://127.0.0.1:8000/homeAdminCentro')  
+        else:
+            respuesta=response.POST["respuesta"]
+            if(respuesta=='SI'):
+                today = date.today()
+                o= User.objects.all()
+                usu=o.get(id=response.session["user_id"])
+                t=Appointment.objects.all()
+                ausentes=t.filter(state=1, center=usu.center,date=today) #,date=today
+                print(ausentes)
+                for turno in ausentes:
+                    turno.state=0
+                    turno.save()
+            response.session["ok"]=0
+        return redirect('http://127.0.0.1:8000/homeAdminCentro')
