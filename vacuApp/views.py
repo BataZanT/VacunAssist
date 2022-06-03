@@ -1,13 +1,9 @@
-from asyncore import write
-from email import message
+
+
 import smtplib
 import random
-from hashlib import scrypt
-from subprocess import call
-from unicodedata import name
 from django.shortcuts import render
-from django.http import HttpResponse
-from vacuApp.models import *
+from .models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
 from django.http import HttpResponse
@@ -18,6 +14,10 @@ from datetime import date, datetime
 from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
+# importing the necessary libraries
+from django.views.generic import View
+from .process import html_to_pdf
+from django.template.loader import render_to_string
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -136,7 +136,6 @@ def registerFiebreA(response):
         form = RegisterFiebreA()
         return render(response,'register/registerfiebreA.html',{"form":form})
 
-
 def registerCentro(response):
     form = RegisterCentro()
     if(response.method == "POST"):
@@ -244,6 +243,7 @@ def asignarVacunas(user):
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
+    print(user.appointment_set.all())
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -268,7 +268,6 @@ def homeUsuario(response):
             if( not tieneTurno(usu,vacF)):
                 fiebre_disp = True            
         return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
-
     
 def modificarContraseña(response):
     ca=response.POST["contActual"]
@@ -414,6 +413,45 @@ def validarCambioCentro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
 
+
+#Creating a class based view
+class GeneratePdf(View):
+     def get(self, response, *args, **kwargs):
+        turnoG = None 
+        user = User.objects.get(id= response.session["user_id"])
+        #certificado gripe
+        if user.history.gripe == 1:
+
+            turnoG = user.appointment_set.filter(vaccine = 2).order_by('-date')
+            if len(turnoG) > 0:
+                turnoG = turnoG[0]
+            else:
+                turnoG = None
+        turnoF = None
+        if user.history.fiebreA == 1:
+            turnoF = user.appointment_set.filter(vaccine = 3).order_by('-date')
+            if len(turnoF) > 0:
+                turnoF = turnoF[0]
+            else:
+                turnoF = None
+        
+        turnoC = None
+        dosis = None
+        if user.history.covid_doses > 0:
+            turnoC = user.appointment_set.filter(vaccine = 1).order_by('-date')
+            if len(turnoC) > 0:
+                turnoC = turnoC[0]
+                dosis = user.history.covid_doses
+            else:
+                turnoF = None
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certificado.html', {'turnoG': turnoG, 'turnoF' : turnoF, 'turnoC':turnoC, 'dosis': dosis}))
+
+        # getting the template
+        pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+
 def borrarRegistro(response):
     o= User.objects.all()
     if o!=None:
@@ -454,6 +492,30 @@ def homeAdmin(response):
     else:
         cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
+    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+
+def presente(response,id, tipo):  
+    T = Appointment.objects.all()
+    turnoActual = T.get(id = id)
+    turnoActual.state = 2
+    H = History.objects.all()
+    usu = User.objects.get(id = turnoActual.patient_id)
+    historialActual = H.get(user_id = usu.id)
+    if (tipo == 'covid'):
+        print(date.today)
+        historialActual.covid_date = str(date.today)
+        historialActual.covid_doses += 1
+        if(historialActual.covid_doses < 2):
+            vacC = Vaccine.objects.get(name="Covid")
+            usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC)
+    else:
+        if (tipo == 'gripe'):
+            historialActual.gripe_date = str(date.today)
+        else:     
+            historialActual.fiebreA = str(date.today)
+    turnoActual.save()
+    historialActual.save()                
+    return redirect('http://127.0.0.1:8000/homeAdminCentro')
     return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
 def marcarTurnoAusentes(response):
