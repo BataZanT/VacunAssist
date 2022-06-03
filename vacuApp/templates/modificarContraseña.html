@@ -13,15 +13,10 @@
             <p class="mt-5"> La nueva contraseña debe tener: al menos una mayuscula y al menos 8 caracteres.</p>
             <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña Nueva" required="" minlength="8" mmaxLength="20" name="contNueva"><br/>
             <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña Nueva" required="" minlength="8" mmaxLength="20" name="contNuevaR"><br/>
-            <br/>{% for message in messages %}
-            <div class="alert alert-success">
-            <a class="close" href="#" data-dismiss="alert">×</a>
-                     {{ message }}
-            </div>
-            {% endfor %}
+            <br/>
         <div class=" mt-5">
         <button class="button"> <a class="navbar-item" href="http://127.0.0.1:8000/modificarInfo" target="_self">Atras</a></button>
         <button class="button"> Confirmar</button></div> 
         </form>
-        
+        {% include 'messages.html' %}          
 </body>
