@@ -18,14 +18,15 @@
         </p>
         {% endif %}
         <p style="text-align:center;">
-          <p class="is-size-3 ml-6 ">Turnos</p>
+          <p class="is-size-3 ml-6 has-text-weight-bold">Turnos</p>
           <br>
           <br>
           
             {% if turnos|length > 0 %}
               {% for turno in turnos %}
-                <div class="box">
+                <div class="box is-size-5 mx-6" style="background-color: rgba(159, 34, 222, 0.508)">
                   <p>
+                  Estado:
                   {% if turno.state == 0 %}
                   Pendiente
                   {% elif turno.state == 1 %}
@@ -36,23 +37,18 @@
                   Anda mal  
                   {% endif %}                 
                   </p>
-                  <p>{{ turno.vaccine }}</p>
-                  <p>{{ turno.center }}</p>
+                  <p>Vacuna: {{ turno.vaccine }}</p>
+                  <p>Centro de vacunacion: {{ turno.center }} <br>
+                    Dirección: {{ turno.center.adress }} </p>
                 </div>
-              {% endfor %}
-            
+              {% endfor %}          
             {% else %}
-              <div class="box"> No hay turnos :(
-              </div>
-            
-            
-            {% endif %}
-          
-
+              <div class="box is-size-5 mx-6" style="background-color: rgba(113, 111, 114, 0.508)"> Usted no tiene turnos
+              </div>                   
+            {% endif %}          
             {% if fiebre_disp %}
-              <div class="box">
-                <p> Date el turno de la fiebre Pa</p>
-                <a href="/turnoFiebreA">ACA</a>
+              <div class="box is-size-5 mx-6" style="background-color: rgba(63, 63, 63, 0.274)">
+                <a href="/turnoFiebreA">Solicitar turno para Fiebre Amarilla</a>
             </div>
    
           {% endif %}
