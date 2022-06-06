@@ -16,7 +16,7 @@ from . import validators
 from django.contrib.auth.hashers import check_password
 # importing the necessary libraries
 from django.views.generic import View
-from .process import html_to_pdf
+#from .process import html_to_pdf
 from django.template.loader import render_to_string
 
 EMAIL = 'vacunassist.contacto@gmail.com'
