@@ -16,7 +16,7 @@ from . import validators
 from django.contrib.auth.hashers import check_password
 # importing the necessary libraries
 from django.views.generic import View
-from .process import html_to_pdf
+#from .process import html_to_pdf
 from django.template.loader import render_to_string
 
 EMAIL = 'vacunassist.contacto@gmail.com'
@@ -243,7 +243,7 @@ def asignarVacunas(user):
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
-    print(user.appointment_set.all())
+    
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -492,7 +492,7 @@ def homeAdmin(response):
     else:
         cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
-    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
 
 def presente(response,id, tipo):  
     T = Appointment.objects.all()
@@ -502,7 +502,7 @@ def presente(response,id, tipo):
     usu = User.objects.get(id = turnoActual.patient_id)
     historialActual = H.get(user_id = usu.id)
     if (tipo == 'covid'):
-        print(date.today)
+        
         historialActual.covid_date = str(date.today)
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
@@ -516,12 +516,11 @@ def presente(response,id, tipo):
     turnoActual.save()
     historialActual.save()                
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
-    return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+    #return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
 def marcarTurnoAusentes(response):
         if(response.session["ok"] == 0):
             response.session["ok"]=1
-            print(response.session["ok"])
             return redirect('http://127.0.0.1:8000/homeAdminCentro')  
         else:
             respuesta=response.POST["respuesta"]
@@ -531,9 +530,11 @@ def marcarTurnoAusentes(response):
                 usu=o.get(id=response.session["user_id"])
                 t=Appointment.objects.all()
                 ausentes=t.filter(state=1, center=usu.center,date=today) #,date=today
-                print(ausentes)
-                for turno in ausentes:
-                    turno.state=0
-                    turno.save()
+                if(len(ausentes) > 0):
+                    for turno in ausentes:
+                        turno.state=0
+                        turno.save()
+                else:
+                    messages.error(response,"No hay turnos para marcar como ausentes")
             response.session["ok"]=0
         return redirect('http://127.0.0.1:8000/homeAdminCentro')
