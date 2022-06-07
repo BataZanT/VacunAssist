@@ -472,7 +472,7 @@ def homeAdmin(response):
     messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
     t=Appointment.objects.all()
     today = date.today()
-    #,date=today
+    #date=today
     turnosC=t.filter(vaccine=1, state=1,center=usu.center,date=today)
     if (not turnosC):
         turnosC=0
@@ -516,7 +516,6 @@ def presente(response,id, tipo):
     turnoActual.save()
     historialActual.save()                
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
-    #return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
 def marcarTurnoAusentes(response):
         if(response.session["ok"] == 0):
@@ -538,3 +537,6 @@ def marcarTurnoAusentes(response):
                     messages.error(response,"No hay turnos para marcar como ausentes")
             response.session["ok"]=0
         return redirect('http://127.0.0.1:8000/homeAdminCentro')
+
+def informacionVacunas(response):
+    return render(response,'infoVacunas.html')
