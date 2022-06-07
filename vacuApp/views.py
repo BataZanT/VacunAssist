@@ -2,6 +2,7 @@
 
 import smtplib
 import random
+from sqlite3 import Date
 from django.shortcuts import render
 from .models import *
 from django.contrib import messages
@@ -503,16 +504,16 @@ def presente(response,id, tipo):
     historialActual = H.get(user_id = usu.id)
     if (tipo == 'covid'):
         
-        historialActual.covid_date = str(date.today)
+        historialActual.covid_date = str(datetime.today().strftime('%Y-%m-%d'))
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
             vacC = Vaccine.objects.get(name="Covid")
             usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC)
     else:
         if (tipo == 'gripe'):
-            historialActual.gripe_date = str(date.today)
+            historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
         else:     
-            historialActual.fiebreA = str(date.today)
+            historialActual.fiebreA = datetime.today().strftime('%Y-%m-%d')
     turnoActual.save()
     historialActual.save()                
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
