@@ -81,7 +81,7 @@ class Vaccine(models.Model):
 
 
 class Appointment(models.Model):
-    state = models.IntegerField()
+    state = models.IntegerField() # 0 es pendiente, 1 es asignado, 2 es completado. Cuando se cancela se vuelve a pendiente 
     date = models.DateField(null = True)
     center = models.ForeignKey(Center, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
