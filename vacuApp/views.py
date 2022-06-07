@@ -414,7 +414,6 @@ def validarCambioCentro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
 
-
 #Creating a class based view
 class GeneratePdf(View):
      def get(self, response, *args, **kwargs):
@@ -495,7 +494,9 @@ def homeAdmin(response):
     tot=cantC+cantG+cantF
     return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
 
-def presente(response,id, tipo):  
+def presente(response,id,tipo):
+    observaciones = response.session.get("observaciones")
+    detalles = response.session.get("detalles")
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     turnoActual.state = 2
@@ -541,3 +542,10 @@ def marcarTurnoAusentes(response):
 
 def informacionVacunas(response):
     return render(response,'infoVacunas.html')
+
+def completarVacunas(response,id,tipo):
+    T = Appointment.objects.all()
+    turnoActual = T.get(id = id)
+    usu = User.objects.get(id = turnoActual.patient_id)
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})

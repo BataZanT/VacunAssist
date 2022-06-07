@@ -33,5 +33,6 @@ urlpatterns = [
     path('pasarPresente/<int:id>/<str:tipo>',views.presente),         
     path('ausentes',views.marcarTurnoAusentes),
     path('infoVacunas',views.informacionVacunas),
+    path('completarTurno/<int:id>/<str:tipo>',views.completarVacunas),
 ]
 
