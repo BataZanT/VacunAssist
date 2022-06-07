@@ -35,4 +35,3 @@ urlpatterns = [
     path('infoVacunas',views.informacionVacunas),
     path('completarTurno/<int:id>/<str:tipo>',views.completarVacunas),
 ]
-
