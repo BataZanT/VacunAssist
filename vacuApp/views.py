@@ -454,7 +454,7 @@ def homeAdmin(response):
     tot=cantC+cantG+cantF
     return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
-def presente(response,id, vacuna):  
+def presente(response,id,vacuna):  
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     turnoActual.state = 2
