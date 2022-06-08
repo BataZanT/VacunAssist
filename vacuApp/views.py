@@ -2,6 +2,7 @@
 
 import smtplib
 import random
+from sqlite3 import Date
 from django.shortcuts import render
 from .models import *
 from django.contrib import messages
@@ -413,7 +414,6 @@ def validarCambioCentro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
 
-
 #Creating a class based view
 class GeneratePdf(View):
      def get(self, response, *args, **kwargs):
@@ -472,7 +472,7 @@ def homeAdmin(response):
     messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
     t=Appointment.objects.all()
     today = date.today()
-    #,date=today
+    #date=today
     turnosC=t.filter(vaccine=1, state=1,center=usu.center,date=today)
     if (not turnosC):
         turnosC=0
@@ -494,7 +494,9 @@ def homeAdmin(response):
     tot=cantC+cantG+cantF
     return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
 
-def presente(response,id, tipo):  
+def presente(response,id,tipo):
+    observaciones = response.session.get("observaciones")
+    detalles = response.session.get("detalles")
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     turnoActual.state = 2
@@ -503,20 +505,19 @@ def presente(response,id, tipo):
     historialActual = H.get(user_id = usu.id)
     if (tipo == 'covid'):
         
-        historialActual.covid_date = str(date.today)
+        historialActual.covid_date = str(datetime.today().strftime('%Y-%m-%d'))
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
             vacC = Vaccine.objects.get(name="Covid")
             usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC)
     else:
         if (tipo == 'gripe'):
-            historialActual.gripe_date = str(date.today)
+            historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
         else:     
-            historialActual.fiebreA = str(date.today)
+            historialActual.fiebreA = datetime.today().strftime('%Y-%m-%d')
     turnoActual.save()
     historialActual.save()                
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
-    #return render(response,'inicioAdminCentro.html', {  'ok':response.session["ok"],'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
 def marcarTurnoAusentes(response):
         if(response.session["ok"] == 0):
@@ -538,3 +539,13 @@ def marcarTurnoAusentes(response):
                     messages.error(response,"No hay turnos para marcar como ausentes")
             response.session["ok"]=0
         return redirect('http://127.0.0.1:8000/homeAdminCentro')
+
+def informacionVacunas(response):
+    return render(response,'infoVacunas.html')
+
+def completarVacunas(response,id,tipo):
+    T = Appointment.objects.all()
+    turnoActual = T.get(id = id)
+    usu = User.objects.get(id = turnoActual.patient_id)
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
