@@ -49,6 +49,13 @@ a{
         <p style="text-align: center; ">  Cantidad total:&nbsp;&nbsp;&nbsp; {{tot}}   <i class="fa-solid fa-user-large"></i></p></div>
       <div class="m-5 p-2" style="  width: 10%; height: 10%;" ></div>
     </div>
+    <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
+      <form class="ml-5 p-2" method="post" action="ausentes" >
+        <p class="pb-3"> <b> Buscar Paciente </b></p>
+        {% csrf_token %}
+          <label for="token" class="mt-5">Ingrese DNI:</label> <input class="" name="dni" style="width: 15% " type="number" placeholder="" required="" minlength="7" maxlength="8" >      <input  type="submit" value="Continuar">
+    </form>
+    </div>
   <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
     {%if ok == 1 %}
     <form class="ml-5 p-2" method="post" action="ausentes" >
@@ -68,7 +75,6 @@ a{
   {%else%}
   <button class="ml-5 p-2"><a class="navbar-item" href="http://127.0.0.1:8000/ausentes" target="_self"> Marcar los turnos Ausentes los turnos incompletos.</a></button>
   {%endif%}
-
 </div>
     <div class="mt-3 has-background-success-light; ">
       <!--vacuna del covid-->
