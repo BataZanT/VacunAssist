@@ -549,18 +549,18 @@ def presente(response,id,tipo):
     H = History.objects.all()
     usu = User.objects.get(id = turnoActual.patient_id)
     historialActual = H.get(user_id = usu.id)
-    if (tipo == 'covid'):
-        
-        historialActual.covid_date = str(datetime.today().strftime('%Y-%m-%d'))
+    if (tipo == 1): 
+        historialActual.covid_date = datetime.today().strftime('%Y-%m-%d')
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
             vacC = Vaccine.objects.get(name="Covid")
             usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC)
     else:
-        if (tipo == 'gripe'):
+        if (tipo == 2):
             historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
         else:     
-            historialActual.fiebreA = datetime.today().strftime('%Y-%m-%d')
+            historialActual.fiebreA_date = datetime.today().strftime('%Y-%m-%d')
+            
     turnoActual.save()
     historialActual.save()                
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
