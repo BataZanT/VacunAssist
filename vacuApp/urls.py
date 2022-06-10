@@ -30,8 +30,9 @@ urlpatterns = [
     path('validarCambioCentro',views.validarCambioCentro), 
     path('cancelarRegistro',views.borrarRegistro),
     path('homeAdminCentro',views.homeAdmin),  
-    path('pasarPresente/<int:id>/<str:tipo>',views.presente),         
+    path('pasarPresente/<int:id>/<int:tipo>',views.presente),         
     path('ausentes',views.marcarTurnoAusentes),
+    path('buscar',views.pasarAadminiReiniciarbuscarUsuario),
     path('infoVacunas',views.informacionVacunas),
-    path('completarTurno/<int:id>/<str:tipo>',views.completarVacunas),
+    path('completarTurno/<int:id>/<int:tipo>',views.completarVacunas),
 ]
