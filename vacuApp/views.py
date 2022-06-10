@@ -3,6 +3,7 @@
 import smtplib
 import random
 from django.shortcuts import render
+from yaml import serialize, serialize_all
 from .models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
@@ -257,6 +258,7 @@ def homeUsuario(response):
     idu=response.session["user_id"]
     usu=o.get(id=idu)
     if(usu.is_staff):
+         response.session["usubuscar"]=0
          response.session["ok"]=0
          return redirect('http://127.0.0.1:8000/homeAdminCentro')     
     else:
@@ -492,7 +494,29 @@ def homeAdmin(response):
     else:
         cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
-    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
+    usubuscado=0
+    if (response.session["usubuscar"]==1):
+        response.session["usubuscar"]=0
+        dni=response.session["dni"]
+        response.session["dni"]=-1
+        print (dni)
+        o=User.objects.all()
+        u=o.filter(DNI=dni).exists()
+        print(u)
+        if (u):
+            u=o.get(DNI=dni)
+            today = date.today()
+            a=o.get(id=response.session["user_id"])
+            centro=a.center
+            t=u.appointment_set.filter(state=1,date=today,center=centro).exists()
+            if(t):
+                t=u.appointment_set.get(state=1,date=today,center=centro)
+                usubuscado=t 
+            else:
+                usubuscado=1
+        else:
+            usubuscado=2
+    return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
 
 def presente(response,id, tipo):  
     T = Appointment.objects.all()
@@ -538,3 +562,9 @@ def marcarTurnoAusentes(response):
                     messages.error(response,"No hay turnos para marcar como ausentes")
             response.session["ok"]=0
         return redirect('http://127.0.0.1:8000/homeAdminCentro')
+
+def pasarAadminiReiniciarbuscarUsuario(response):
+    response.session["dni"]=response.POST["dni"]
+    if (response.session["usubuscar"]==0):
+        response.session["usubuscar"]=1
+    return redirect('http://127.0.0.1:8000/homeAdminCentro')
