@@ -94,7 +94,7 @@ a{
             {%else%}
             <td style="width: 8%;"> 2 </td>
             {%endif%}
-            <th style="width: 20%; border:none "> <a href="/pasarPresente/{{covid.id}}/covid" target="_self"> Presente </a></th>
+            <th style="width: 20%; border:none "> <a href="/completarTurno/{{covid.id}}/covid" target="_self"> Presente </a></th>
           </tr>
           {% endfor %}
         </tbody>
@@ -123,7 +123,7 @@ a{
           <tr>
             <td>{{ gripe.patient.name }} {{ gripe.patient.surname }}</td>
             <td style="width: 10%;">{{ gripe.patient.DNI }} </td>
-            <th style="width: 20%; border:none"><a href="/pasarPresente/{{gripe.id}}/gripe" target="_self"> Presente </a></th>
+            <th style="width: 20%; border:none"><a href="/completarTurno/{{gripe.id}}/gripe" target="_self"> Presente </a></th>
           </tr>
           {% endfor %}
         </tbody>
@@ -152,7 +152,7 @@ a{
            <tr>
              <td>{{ fiebre.patient.name }} {{ fiebre.patient.surname }}</td>
              <td style="width: 10%;">{{ fiebre.patient.DNI }} </td>
-             <th style="width: 20%; border:none"><a href="/pasarPresente/{{fiebre.patient_id}}/fiebre" target="_self"> Presente </a></th>
+             <th style="width: 20%; border:none"><a href="/completarTurno/{{fiebre.patient_id}}/fiebre" target="_self"> Presente </a></th>
            </tr>
            {% endfor %}
         </tbody>
