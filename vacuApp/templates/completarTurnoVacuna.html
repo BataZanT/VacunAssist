@@ -1,0 +1,44 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}  
+    {% load static %}  
+    <script src="https://kit.fontawesome.com/d09645e702.js" crossorigin="anonymous"></script>
+    <script language="JavaScript">
+        function processUser()
+        {
+          var parameters = location.search.substring(1).split("&");
+      
+          var temp = parameters[0].split("=");
+          idApp = unescape(temp[1]);
+          temp = parameters[1].split("=");
+          tipoVacuna = unescape(temp[1]);
+          document.getElementById("id").innerHTML = idApp;
+          document.getElementById("tipo").innerHTML = tipoVacuna;
+          idApp = int(idApp)
+        }
+      </script>
+</head>
+  <body class= "mt-6 pt-3  has-background-success-light">
+    <div>
+        {% include 'barraAdminDeCentro.html' %}
+        <p class= 'ml-6 pt-3' style="text-align: left; font-size:25px">
+          {% include 'messages.html' %}
+        </p>       
+    </div>
+    <div class="mt-3 has-background-success-light; ">
+        <form class="ml-5 p-2" method="post" action="/pasarPresente/{{idApp}}/{{tipoVacuna}}">
+          {% csrf_token %}
+          <h3 class="title" font-size:18px> Completar vacuna para {{ nombre }} </h3>
+          <label class="mt-5"> Ingrese los detalles de la vacuna: </label> <br/>
+          <input class="input is-primary mt-3" name="detalles" style="width: 75%" type="text" placeholder="Ej. Lote" required="" > 
+          <br> 
+          <br> 
+          <label class="mt-5"> Ingrese las observaciones </label> <br/>
+          <input class="input is-primary mt-3" name="observaciones" style="width: 75%" type="text" placeholder="Ej. El paciente presento fiabre luego de aplicada la dosis" required="" > 
+          <br> 
+          <br>
+          <button class="button"><a class="navbar-item" href="/homeAdminCentro" target="_self"> Cancelar </a></button>  
+          <button type="submit" class="button"> Confirmar </button> 
+        </form>
+    </div>
+</body>

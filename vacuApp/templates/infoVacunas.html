@@ -1,0 +1,53 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}  
+    {% load static %}
+
+    <style>
+        h1{text-align: center;}
+        .column {
+            text-align: center;
+            font-style: arial;
+            font-weight: bold;
+            float: left;
+            width: 33.33%;
+            height: 250px;
+            border-radius: 20px;
+        }
+        .row:after {
+            font-style: oblique;
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>  
+</head>
+<body class= "mt-6 pt-3  has-background-success-light">
+    <div>
+      {% include 'base.html' %}
+      <div class="row">
+        <div class="column" style='background-color: rgba(159, 34, 222, 0.508)'> 
+            Vacuna del COVID-19 
+            <br> 
+            <br> 
+            Actualmente se encuentran disponibles 2 dosis de la misma, postulandote automaticamente para la proxima dosis una vez te vacunes. Solo es accesible para aquellas peronas que posean mas de 18 años. 
+        </div>
+        <div class="column" style='background-color: rgb(145, 236, 152)'> 
+            Vacuna de la Gripe
+            <br> 
+            <br> 
+            Esta vacuna se da una unica vez cada un año y estara disponible para aquellas personas mayores a 18 años. 
+        </div>
+        <div class="column" style='background-color: rgb(193, 219, 126)'> 
+            Vacuna de la Fiebre Amarilla 
+            <br> 
+            <br> 
+            Esta vacuna es opcional, y por lo mismo debe ser solicitada de forma manual a traves de la pestaña de vacunas una vez registrado y loggeado en el sistema. La misma solo es accesible si no se aplico una dosis previa puesto que solo se debe dar una vez en la vida y si se es menor de 60 años. 
+        </div>
+      </div>
+      <br>
+      <br>
+      <h1> ACTUALMENTE TODAS LAS VACUNAS SE APLICAN EN TODOS NUESTRO CENTROS AFILIADOS </h1>
+    </div>
+    {% include 'messages.html' %}
+</body>
