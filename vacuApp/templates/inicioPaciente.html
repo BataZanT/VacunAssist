@@ -17,6 +17,7 @@
             Bienvenido a VacunAssist {{NOMBRE}}
         </p>
         {% endif %}
+      </h1>
         <p style="text-align:center;">
           <p class="is-size-3 ml-6 has-text-weight-bold">Turnos</p>
           <br>
@@ -24,20 +25,26 @@
           
             {% if turnos|length > 0 %}
               {% for turno in turnos %}
+                {% if turno.vaccine.name == "Covid" %}
                 <div class="box is-size-5 mx-6" style="background-color: rgba(159, 34, 222, 0.508)">
+                {% elif turno.vaccine.name == "Gripe" %}
+                <div class="box is-size-5 mx-6" style="background-color: rgb(145, 236, 152)" > 
+                {% else %}
+                <div class="box is-size-5 mx-6" style="background-color: rgb(193, 219, 126)" > 
+                {% endif %}
+                  <p>Vacuna: {{ turno.vaccine }}</p>
                   <p>
                   Estado:
                   {% if turno.state == 0 %}
-                  Pendiente
+                  Pendiente</p>
                   {% elif turno.state == 1 %}
-                  Asignado  
+                  Asignado</p>
                   {% elif turno.state == 2 %}
-                  Dado
+                  Dado</p>
                   {% else %}
-                  Anda mal  
+                  Anda mal</p>  
                   {% endif %}                 
                   </p>
-                  <p>Vacuna: {{ turno.vaccine }}</p>
                   <p>Centro de vacunacion: {{ turno.center }} <br>
                     Dirección: {{ turno.center.adress }} </p>
                 </div>
