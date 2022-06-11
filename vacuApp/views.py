@@ -13,7 +13,7 @@ from asyncio.windows_events import NULL
 from django.shortcuts import redirect, render
 from .admin import UserCreationForm
 from datetime import date, datetime
-from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
+from .forms import Observaciones, RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
 # importing the necessary libraries
@@ -605,3 +605,7 @@ def completarVacunas(response,id,tipo):
     usu = User.objects.get(id = turnoActual.patient_id)
     NCOMPLETO = usu.name + ' ' + usu.surname
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
+
+def observaciones(response,turno):
+    form = Observaciones
+    

@@ -86,6 +86,9 @@ class Appointment(models.Model):
     center = models.ForeignKey(Center, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
+    observaciones = models.CharField(null = True,max_length=150)
+    descripcion = models.CharField(null = True,max_length=150)
+
 
     def __str__(self):
         return str(str(self.vaccine) + ' ' + str(self.patient) + ' ' + str(self.state))

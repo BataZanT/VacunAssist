@@ -1,0 +1,23 @@
+<head>
+  {% load django_simple_bulma %}
+  {% bulma %}
+  {% font_awesome %}
+</head>
+
+<body class= "mt-6 pt-3 background-success-light">
+  {% include 'barraRegistro.html' %}
+  <div class="page mt-6 pt-3 mx-3 is-flex-column">
+    <section class="section">
+      <h2 class="title pb-4">Vacuna contra la Fiebre Amarilla</h2>
+      <form method="post" action="/registerFiebreA" class="form">
+        {% csrf_token %}
+        <div class="field is-size-5">{{ form.fiebreA.label }}</div>
+        <div class="field is-size-5">{{ form.fiebreA }}</div>
+        <div class="field is-size-5">{{ form.fiebreA_date.label }}</div>
+        <div class="field is-size-5"> {{ form.fiebreA_date }}</div>
+        <button class="button is-size-5" type="submit" name="registro">Continuar</button>
+      </form>
+      {% include 'messages.html' %}
+    </section>
+  </div>
+</body>
