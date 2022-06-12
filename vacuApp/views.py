@@ -13,7 +13,7 @@ from asyncio.windows_events import NULL
 from django.shortcuts import redirect, render
 from .admin import UserCreationForm
 from datetime import date, datetime
-from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
+from .forms import Observaciones, RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
 # importing the necessary libraries
@@ -432,8 +432,11 @@ def validarCambioCentro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
 
+
+def elegirCertificado(response):
+    return render(response,'elegirCertificado.html')
 #Creating a class based view
-class GeneratePdf(View):
+class PdfGripe(View):
      def get(self, response, *args, **kwargs):
         if not checkearLogin(response):
             return redirect('/')
@@ -447,14 +450,34 @@ class GeneratePdf(View):
                 turnoG = turnoG[0]
             else:
                 turnoG = None
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certifGripe.html', {'turnoG' : turnoG}))
+        pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+class PdfFiebreA(View):
+     def get(self, response, *args, **kwargs):
+        if not checkearLogin(response):
+            return redirect('/')   
         turnoF = None
+        user = User.objects.get(id= response.session["user_id"])
         if user.history.fiebreA == 1:
             turnoF = user.appointment_set.filter(vaccine = 3).order_by('-date')
             if len(turnoF) > 0:
                 turnoF = turnoF[0]
             else:
                 turnoF = None
-        
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certifFiebreA.html', {'turnoF' : turnoF}))
+        pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+
+class PdfCovid(View):
+     def get(self, response, *args, **kwargs):
+        if not checkearLogin(response):
+            return redirect('/')   
+        user = User.objects.get(id= response.session["user_id"])
         turnoC = None
         dosis = None
         if user.history.covid_doses > 0:
@@ -464,7 +487,7 @@ class GeneratePdf(View):
                 dosis = user.history.covid_doses
             else:
                 turnoF = None
-        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certificado.html', {'turnoG': turnoG, 'turnoF' : turnoF, 'turnoC':turnoC, 'dosis': dosis}))
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certifCovid.html', {'turnoC':turnoC, 'dosis': dosis}))
 
         # getting the template
         pdf = html_to_pdf('temp.html')
@@ -541,11 +564,13 @@ def homeAdmin(response):
 def presente(response,id,tipo):
     if not checkearLogin(response):
         return redirect('/') 
-    observaciones = response.session.get("observaciones")
-    detalles = response.session.get("detalles")
+    observaciones = response.POST["observaciones"]
+    detalles = response.POST["detalles"]
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     turnoActual.state = 2
+    turnoActual.observaciones = observaciones
+    turnoActual.descripcion = detalles
     H = History.objects.all()
     usu = User.objects.get(id = turnoActual.patient_id)
     historialActual = H.get(user_id = usu.id)

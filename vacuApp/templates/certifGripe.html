@@ -1,0 +1,14 @@
+<head>
+</head>
+<body>
+    <div style="background-color:  rgb(145, 236, 152)">
+    {% if turnoG is not None %}
+        <p style="font-size: xx-large;">Vacuna: {{turnoG.vaccine}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turnoG.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turnoG.date}}</p>
+    </div>
+    {% else %}
+    <p style="font-size: xx-large;"> No se dio la vacuna contra la gripe</p>
+    </div>
+    {% endif %}
+</body>
