@@ -1,7 +1,7 @@
 <head>
 </head>
 <body>
-    <div style="background-color: rgba(159, 34, 222, 0.508);">
+    <div style="background-color:  rgb(145, 236, 152)">
     {% if turnoG is not None %}
         <p style="font-size: xx-large;">Vacuna: {{turnoG.vaccine}}</p>
         <p style="font-size: xx-large;">Centro de vacunacion: {{turnoG.center}}</p>
@@ -11,7 +11,7 @@
     <p style="font-size: xx-large;"> No se dio la vacuna contra la gripe</p>
     </div>
     {% endif %}
-    <div style="background-color:  rgb(145, 236, 152);">
+    <div style="background-color:  rgb(193, 219, 126);">
     {% if turnoF is not None %}
         <p style="font-size: xx-large;">Vacuna: {{turnoF.vaccine}}</p>
         <p style="font-size: xx-large;">Centro de vacunacion: {{turnoF.center}}</p>
@@ -21,7 +21,7 @@
     <p style="font-size: xx-large;"> No se dio la vacuna contra la fiebre amarilla</p>
     </div>
     {% endif %}
-    <div style="background-color: rgb(193, 219, 126);">
+    <div style="background-color: rgba(159, 34, 222, 0.508);">
     {% if turnoC is not None %}
         <p style="font-size: xx-large;">Vacuna: {{turnoC.vaccine}} Dosis n°: {{dosis}}</p>
         <p style="font-size: xx-large;">Centro de vacunacion: {{turnoC.center}}</p>
