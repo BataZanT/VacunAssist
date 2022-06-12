@@ -1,0 +1,12 @@
+<body>
+<div style="background-color:  rgb(193, 219, 126);">
+    {% if turnoF is not None %}
+        <p style="font-size: xx-large;">Vacuna: {{turnoF.vaccine}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turnoF.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turnoF.date}}</p>
+    </div>
+    {% else %}
+    <p style="font-size: xx-large;"> No se dio la vacuna contra la fiebre amarilla</p>
+    </div>
+    {% endif %}
+</body>

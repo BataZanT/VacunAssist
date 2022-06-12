@@ -8,7 +8,7 @@ class UserLoginForm(forms.Form):
  
 from random import choices
 from django import forms
-from django.forms import CharField
+from django.forms import CharField, Textarea
 
 class Register(forms.Form):
     name = CharField(label="Nombre", max_length=50)
@@ -60,3 +60,7 @@ class RegisterCentro(forms.Form):
         CENTROS.append((c.id,c.name))
             
     center = forms.ChoiceField(label="¿Cual centro desea seleccionar para que le lleguen sus turnos?", widget=forms.RadioSelect,choices = CENTROS)
+
+class Observaciones(forms.Form):            
+    observaciones = forms.ChoiceField(label="Observaciones",widget=forms.Textarea,required=False)
+    descripcion = forms.CharField(label="Descripcion",widget=forms.Textarea,required=False)

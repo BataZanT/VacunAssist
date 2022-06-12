@@ -1,0 +1,17 @@
+<head>
+    {% include 'base.html' %}
+    {% load django_simple_bulma %}
+    {% bulma %}
+</head>
+<body class= " mt-6 pt-3  has-background-success-light">
+    {% include 'barraUsuarioLogeadoNormal.html' %}
+    <div class= ml-4><h2 class="title"> Certificado de Vacunacion</h2></div>
+    <div class="box mt-3 background-success-light" >
+        <div class=" mt-6">
+        <button class="button is-success is-focused"><a class="button is-success is-focused" href="/certifCovid" target="_self" >Covid-19</a></button></div><br/>
+        <div> <button class="button is-success is-focused"><a class="button is-success is-focused" href="/certifFiebreA" target="_self">Fiebre Amarilla</a></button></div> 
+        <div class=" mt-5"> <button class="button is-success is-focused"><a class="button is-success is-focused" href="/certifGripe" target="_self">Gripe</a></button></div><br/>
+        <br/>  
+        {% include 'messages.html' %}
+    </div>
+</body>

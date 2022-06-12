@@ -4,6 +4,7 @@ import smtplib
 import random
 from sqlite3 import Date
 from django.shortcuts import render
+from yaml import serialize, serialize_all
 from .models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
@@ -12,7 +13,7 @@ from asyncio.windows_events import NULL
 from django.shortcuts import redirect, render
 from .admin import UserCreationForm
 from datetime import date, datetime
-from .forms import RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
+from .forms import Observaciones, RegisterCovid,RegisterGripe,RegisterFiebreA,RegisterCentro
 from . import validators
 from django.contrib.auth.hashers import check_password
 # importing the necessary libraries
@@ -266,6 +267,7 @@ def homeUsuario(response):
     idu=response.session["user_id"]
     usu=o.get(id=idu)
     if(usu.is_staff):
+         response.session["usubuscar"]=0
          response.session["ok"]=0
          return redirect('http://127.0.0.1:8000/homeAdminCentro')     
     else:
@@ -430,8 +432,11 @@ def validarCambioCentro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
 
+
+def elegirCertificado(response):
+    return render(response,'elegirCertificado.html')
 #Creating a class based view
-class GeneratePdf(View):
+class PdfGripe(View):
      def get(self, response, *args, **kwargs):
         if not checkearLogin(response):
             return redirect('/')
@@ -445,14 +450,34 @@ class GeneratePdf(View):
                 turnoG = turnoG[0]
             else:
                 turnoG = None
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certifGripe.html', {'turnoG' : turnoG}))
+        pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+class PdfFiebreA(View):
+     def get(self, response, *args, **kwargs):
+        if not checkearLogin(response):
+            return redirect('/')   
         turnoF = None
+        user = User.objects.get(id= response.session["user_id"])
         if user.history.fiebreA == 1:
             turnoF = user.appointment_set.filter(vaccine = 3).order_by('-date')
             if len(turnoF) > 0:
                 turnoF = turnoF[0]
             else:
                 turnoF = None
-        
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certifFiebreA.html', {'turnoF' : turnoF}))
+        pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+
+class PdfCovid(View):
+     def get(self, response, *args, **kwargs):
+        if not checkearLogin(response):
+            return redirect('/')   
+        user = User.objects.get(id= response.session["user_id"])
         turnoC = None
         dosis = None
         if user.history.covid_doses > 0:
@@ -462,7 +487,7 @@ class GeneratePdf(View):
                 dosis = user.history.covid_doses
             else:
                 turnoF = None
-        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certificado.html', {'turnoG': turnoG, 'turnoF' : turnoF, 'turnoC':turnoC, 'dosis': dosis}))
+        open('vacuApp/templates/temp.html', "w",encoding='utf-8').write(render_to_string('certifCovid.html', {'turnoC':turnoC, 'dosis': dosis}))
 
         # getting the template
         pdf = html_to_pdf('temp.html')
@@ -512,31 +537,55 @@ def homeAdmin(response):
     else:
         cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
-    return render(response,'inicioAdminCentro.html', {'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
+    usubuscado=0
+    if (response.session["usubuscar"]==1):
+        response.session["usubuscar"]=0
+        dni=response.session["dni"]
+        response.session["dni"]=-1
+        print (dni)
+        o=User.objects.all()
+        u=o.filter(DNI=dni).exists()
+        print(u)
+        if (u):
+            u=o.get(DNI=dni)
+            today = date.today()
+            a=o.get(id=response.session["user_id"])
+            centro=a.center
+            t=u.appointment_set.filter(state=1,date=today,center=centro).exists()
+            if(t):
+                t=u.appointment_set.get(state=1,date=today,center=centro)
+                usubuscado=t 
+            else:
+                usubuscado=1
+        else:
+            usubuscado=2
+    return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
 
 def presente(response,id,tipo):
     if not checkearLogin(response):
         return redirect('/') 
-    observaciones = response.session.get("observaciones")
-    detalles = response.session.get("detalles")
+    observaciones = response.POST["observaciones"]
+    detalles = response.POST["detalles"]
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     turnoActual.state = 2
+    turnoActual.observaciones = observaciones
+    turnoActual.descripcion = detalles
     H = History.objects.all()
     usu = User.objects.get(id = turnoActual.patient_id)
     historialActual = H.get(user_id = usu.id)
-    if (tipo == 'covid'):
-        
-        historialActual.covid_date = str(datetime.today().strftime('%Y-%m-%d'))
+    if (tipo == 1): 
+        historialActual.covid_date = datetime.today().strftime('%Y-%m-%d')
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
             vacC = Vaccine.objects.get(name="Covid")
             usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC)
     else:
-        if (tipo == 'gripe'):
+        if (tipo == 2):
             historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
         else:     
-            historialActual.fiebreA = datetime.today().strftime('%Y-%m-%d')
+            historialActual.fiebreA_date = datetime.today().strftime('%Y-%m-%d')
+            
     turnoActual.save()
     historialActual.save()                
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
@@ -564,6 +613,11 @@ def marcarTurnoAusentes(response):
             response.session["ok"]=0
         return redirect('http://127.0.0.1:8000/homeAdminCentro')
 
+def pasarAadminiReiniciarbuscarUsuario(response):
+    response.session["dni"]=response.POST["dni"]
+    if (response.session["usubuscar"]==0):
+        response.session["usubuscar"]=1
+    return redirect('http://127.0.0.1:8000/homeAdminCentro')
 def checkearLogin(response):
     return "user_id" in response.session
         

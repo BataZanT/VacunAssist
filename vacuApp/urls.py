@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import GeneratePdf
+from .views import  PdfCovid, PdfFiebreA, PdfGripe
 
 urlpatterns = [
     path('infoPersonal',views.infoPersonal,name='visualizarInfoPersonal'),
@@ -26,12 +26,17 @@ urlpatterns = [
     path('modContRecup',views.validarCambioContraseñaRecuperada),
     path('validarMail',views.validarCambioMail),    
     path('modCentro',views.modCentro),  
-    path('descargarCertif', GeneratePdf.as_view()),
+    path('certifFiebreA', PdfFiebreA.as_view()),
+    path('certifCovid', PdfCovid.as_view()),
+    path('certifGripe', PdfGripe.as_view()),
+    path('certifGripe', PdfGripe.as_view()),
+    path('elegirCertificado',views.elegirCertificado),
     path('validarCambioCentro',views.validarCambioCentro), 
     path('cancelarRegistro',views.borrarRegistro),
     path('homeAdminCentro',views.homeAdmin),  
-    path('pasarPresente/<int:id>/<str:tipo>',views.presente),         
+    path('pasarPresente/<int:id>/<int:tipo>',views.presente),         
     path('ausentes',views.marcarTurnoAusentes),
+    path('buscar',views.pasarAadminiReiniciarbuscarUsuario),
     path('infoVacunas',views.informacionVacunas),
-    path('completarTurno/<int:id>/<str:tipo>',views.completarVacunas),
+    path('completarTurno/<int:id>/<int:tipo>',views.completarVacunas),
 ]

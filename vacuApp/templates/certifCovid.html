@@ -1,0 +1,13 @@
+<body>
+<div style="background-color: rgba(159, 34, 222, 0.508);">
+    {% if turnoC is not None %}
+        <p style="font-size: xx-large;">Vacuna: {{turnoC.vaccine}} Dosis n°: {{dosis}}</p>
+        <p style="font-size: xx-large;">Centro de vacunacion: {{turnoC.center}}</p>
+        <p style="font-size: xx-large;">Fecha: {{turnoC.date}}</p>
+    </div>
+    {% else %}
+    <p style="font-size: xx-large;"> No se dio ninguna vacuna contra el covid-19</p>
+    </div>
+    {% endif %}
+    </div>
+</body>

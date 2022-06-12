@@ -37,6 +37,7 @@ a{
           {% include 'messages.html' %}
         </p>       
     </div>
+    <!--cantidades-->
     <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; ">
       <p class="ml-5 "> <b> Cantidad de personas para atender el dia de hoy {{hoy}} : </b></p>
       <div  class="m-5 p-2" style="  width: 15%; height: 10%; background-color: rgba(159, 34, 222, 0.508); border: 1px solid; float: left">
@@ -47,8 +48,42 @@ a{
         <p style="text-align: center; ">Fiebre A:&nbsp;&nbsp;&nbsp;{{cantF}}   <i class="fa-solid fa-user-large"></i></p></div>
       <div  class="m-5 p-2" style=" width: 15%; height: 10%; background-color: rgba(113, 114, 109, 0.449); border: 1px solid; float: left ">
         <p style="text-align: center; ">  Cantidad total:&nbsp;&nbsp;&nbsp; {{tot}}   <i class="fa-solid fa-user-large"></i></p></div>
-      <div class="m-5 p-2" style="  width: 10%; height: 10%;" ></div>
+      <div class="m-5 " style="  width: 10%; height: 10%;" ></div>
     </div>
+    <!--buscar-->
+    <div style= "background-color: #bff1c982;" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
+      <form class="ml-5 p-2" method="post" action="buscar" >
+        <p class="pb-3"> <b> Buscar Paciente </b></p>
+        {% csrf_token %}
+          <label for="token" class="mt-5">Ingrese DNI:</label> <input class="" name="dni" style="width: 15% " type="number" min="1000000"  max="99999999" placeholder="" required="" >      <input  type="submit" value="Continuar">
+      </form>
+      {%if turnobuscado != 0 and turnobuscado != 1 and turnobuscado != 2 %}
+      <table style= "background-color: #6e727065; width: 70%; border: none;" class="ml-4 pl-5 pt-2 pb-2 mb-2">
+      <tbody>
+      <tr>
+        <td style="width: 10%;">Nombre: {{ turnobuscado.patient.nombre }} {{ turnobuscado.patient.surname }}</td>
+        <td style="width: 10%;">DNI: {{ turnobuscado.patient.DNI }} </td>
+        <td style="width: 10%;">Vacuna: {{ turnobuscado.vaccine.name }} </td>
+        <th style="width: 8%; border:none "> <a href="completarTurno/{{turnobuscado.id}}/{{turnobuscado.vaccine.id}}" target="_self"> Presente </a></th>
+      </tr>
+     </tbody>
+     </table>
+     <p class=" ml-5"> <b> {{turnobuscado.id}} {{turnobuscado.vaccine.id}} </b></p>
+     <!--mensajes-->
+     <div >
+      {%else%}
+        {%if turnobuscado == 1 %}
+          <p  style= "background-color: #f8780865; width: 45%" class="ml-4 pl-5 pt-2 pb-2 mb-2"> <b> El paciente no tiene turno para hoy. </b></p>
+        {%else%}
+        {%if turnobuscado == 2 %}
+          <p  style= "background-color: #f8780865; width: 45%" class="ml-4 pl-5 pt-2 pb-2 mb-2"> <b> El paciente no esta registrado en el sistema. </b></p>
+        {%endif%}
+        {%endif%}
+      {%endif%}
+      <!--<p style= "background-color: #f8780865; width: 45%" class="ml-4 pl-5 pt-2 pb-2 mb-2" > <b> {{turnobuscado}}</b></p>-->
+    </div>
+  </div>
+  <!--marcar todo como ausente-->
   <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
     {%if ok == 1 %}
     <form class="ml-5 p-2" method="post" action="ausentes" >
@@ -68,7 +103,6 @@ a{
   {%else%}
   <button class="ml-5 p-2"><a class="navbar-item" href="http://127.0.0.1:8000/ausentes" target="_self"> Marcar los turnos Ausentes los turnos incompletos.</a></button>
   {%endif%}
-
 </div>
     <div class="mt-3 has-background-success-light; ">
       <!--vacuna del covid-->
@@ -94,7 +128,7 @@ a{
             {%else%}
             <td style="width: 8%;"> 2 </td>
             {%endif%}
-            <th style="width: 20%; border:none "> <a href="/completarTurno/{{covid.id}}/covid" target="_self"> Presente </a></th>
+            <th style="width: 20%; border:none "> <a href="completarTurno/{{covid.id}}/{{covid.vaccine.id}}" target="_self"> Presente </a></th>
           </tr>
           {% endfor %}
         </tbody>
@@ -123,7 +157,7 @@ a{
           <tr>
             <td>{{ gripe.patient.name }} {{ gripe.patient.surname }}</td>
             <td style="width: 10%;">{{ gripe.patient.DNI }} </td>
-            <th style="width: 20%; border:none"><a href="/completarTurno/{{gripe.id}}/gripe" target="_self"> Presente </a></th>
+            <th style="width: 20%; border:none"><a href="completarTurno/{{gripe.id}}/{{gripe.vaccine.id}}" target="_self"> Presente </a></th>
           </tr>
           {% endfor %}
         </tbody>
@@ -152,7 +186,7 @@ a{
            <tr>
              <td>{{ fiebre.patient.name }} {{ fiebre.patient.surname }}</td>
              <td style="width: 10%;">{{ fiebre.patient.DNI }} </td>
-             <th style="width: 20%; border:none"><a href="/completarTurno/{{fiebre.patient_id}}/fiebre" target="_self"> Presente </a></th>
+             <th style="width: 20%; border:none"><a href="completarTurno/{{fiebre.id}}/{{fiebre.vaccine.id}}" target="_self"> Presente </a></th>
            </tr>
            {% endfor %}
         </tbody>
