@@ -541,11 +541,13 @@ def homeAdmin(response):
 def presente(response,id,tipo):
     if not checkearLogin(response):
         return redirect('/') 
-    observaciones = response.session.get("observaciones")
-    detalles = response.session.get("detalles")
+    observaciones = response.POST["observaciones"]
+    detalles = response.POST["detalles"]
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     turnoActual.state = 2
+    turnoActual.observaciones = observaciones
+    turnoActual.descripcion = detalles
     H = History.objects.all()
     usu = User.objects.get(id = turnoActual.patient_id)
     historialActual = H.get(user_id = usu.id)
@@ -605,7 +607,3 @@ def completarVacunas(response,id,tipo):
     usu = User.objects.get(id = turnoActual.patient_id)
     NCOMPLETO = usu.name + ' ' + usu.surname
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
-
-def observaciones(response,turno):
-    form = Observaciones
-    
