@@ -538,7 +538,7 @@ def homeAdmin(response):
         cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
     usubuscado=0
-    if (response.session["usubuscar"]==1):
+    if (response.session["usubuscar"] == 1):
         response.session["usubuscar"]=0
         dni=response.session["dni"]
         response.session["dni"]=-1
@@ -618,6 +618,7 @@ def pasarAadminiReiniciarbuscarUsuario(response):
     if (response.session["usubuscar"]==0):
         response.session["usubuscar"]=1
     return redirect('http://127.0.0.1:8000/homeAdminCentro')
+
 def checkearLogin(response):
     return "user_id" in response.session
         
