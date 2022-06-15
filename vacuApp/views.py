@@ -4,7 +4,6 @@ import smtplib
 import random
 from sqlite3 import Date
 from django.shortcuts import render
-from yaml import serialize, serialize_all
 from .models import *
 from django.contrib import messages
 from django.http.response import HttpResponse

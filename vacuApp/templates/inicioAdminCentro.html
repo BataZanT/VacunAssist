@@ -58,12 +58,19 @@ a{
           <label for="token" class="mt-5">Ingrese DNI:</label> <input class="" name="dni" style="width: 15% " type="number" min="1000000"  max="99999999" placeholder="" required="" >      <input  type="submit" value="Continuar">
       </form>
       {%if turnobuscado != 0 and turnobuscado != 1 and turnobuscado != 2 %}
-      <table style= "background-color: #6e727065; width: 70%; border: none;" class="ml-4 pl-5 pt-2 pb-2 mb-2">
+      <table style= "background-color: #6e727065; width: 75%; border: none;" class="ml-4 pl-5 pt-2 pb-2 mb-2">
       <tbody>
       <tr>
-        <td style="width: 10%;">Nombre: {{ turnobuscado.patient.nombre }} {{ turnobuscado.patient.surname }}</td>
+        <td style="width: 13%;">Nombre: {{ turnobuscado.patient.name }} {{ turnobuscado.patient.surname }}</td>
         <td style="width: 10%;">DNI: {{ turnobuscado.patient.DNI }} </td>
-        <td style="width: 10%;">Vacuna: {{ turnobuscado.vaccine.name }} </td>
+        <td style="width: 10%;">Vacuna: {{ turnobuscado.vaccine.name }}</td>
+        {%if turnobuscado.vaccine.id == 1%}
+        {%if  turnobuscado.patient.history.covid_doses == 0 %}
+            <td style="width: 5%;"> Dosis: 1 </td>
+            {%else%}
+            <td style="width: 5%;">Dosis: 2 </td>
+            {%endif%}
+            {%endif%}
         <th style="width: 8%; border:none "> <a href="completarTurno/{{turnobuscado.id}}/{{turnobuscado.vaccine.id}}" target="_self"> Presente </a></th>
       </tr>
      </tbody>
