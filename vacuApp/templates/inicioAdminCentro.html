@@ -61,9 +61,15 @@ a{
       <table style= "background-color: #6e727065; width: 70%; border: none;" class="ml-4 pl-5 pt-2 pb-2 mb-2">
       <tbody>
       <tr>
-        <td style="width: 10%;">Nombre: {{ turnobuscado.patient.nombre }} {{ turnobuscado.patient.surname }}</td>
+        <td style="width: 10%;">Nombre: {{ turnobuscado.patient.name }} {{ turnobuscado.patient.surname }}</td>
         <td style="width: 10%;">DNI: {{ turnobuscado.patient.DNI }} </td>
-        <td style="width: 10%;">Vacuna: {{ turnobuscado.vaccine.name }} </td>
+        <td style="width: 10%;">Vacuna: {{ turnobuscado.vaccine.name }}</td>
+        {%if turnobuscado.vaccine.id == 1%}
+        {%if  turnobuscado.patient.history.covid_doses == 0 %}
+            <td style="width: 8%;"> Dosis: 1 </td>
+            {%else%}
+            <td style="width: 8%;">Dosis: 2 </td>
+            {%endif%}
         <th style="width: 8%; border:none "> <a href="completarTurno/{{turnobuscado.id}}/{{turnobuscado.vaccine.id}}" target="_self"> Presente </a></th>
       </tr>
      </tbody>
