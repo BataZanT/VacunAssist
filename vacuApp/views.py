@@ -278,7 +278,7 @@ def homeUsuario(response):
         if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
             if( not tieneTurno(usu,vacF)):
                 fiebre_disp = True            
-        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
+        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'user':usu,'dosis':(usu.history.covid_doses + 1)})
     
 def modificarContraseña(response):
     if not checkearLogin(response):
