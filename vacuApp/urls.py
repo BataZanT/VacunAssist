@@ -39,4 +39,5 @@ urlpatterns = [
     path('buscar',views.pasarAadminiReiniciarbuscarUsuario),
     path('infoVacunas',views.informacionVacunas),
     path('completarTurno/<int:id>/<int:tipo>',views.completarVacunas),
+    path('testPandas',views.testPandas),
 ]

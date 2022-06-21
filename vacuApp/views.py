@@ -19,6 +19,7 @@ from django.contrib.auth.hashers import check_password
 from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
+import pandas as pd
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -629,3 +630,7 @@ def completarVacunas(response,id,tipo):
     usu = User.objects.get(id = turnoActual.patient_id)
     NCOMPLETO = usu.name + ' ' + usu.surname
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
+
+def testPandas(response):
+    df = pd.DataFrame(User.objects.all().values())
+    return render(response,'testPandas.html')
