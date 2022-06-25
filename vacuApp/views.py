@@ -632,5 +632,14 @@ def completarVacunas(response,id,tipo):
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
 
 def testPandas(response):
-    df = pd.DataFrame(User.objects.all().values())
-    return render(response,'testPandas.html')
+    centros = Center.objects.all()
+    turnos = Appointment.objects.all()
+    cantidades = []
+    Ncentros = []
+    for centro in centros:
+        cant = turnos.filter(center = centro).count()
+        cantidades.append(cant)
+        Ncentros.append(centro.name)
+    print(Ncentros)
+    print(cantidades)
+    return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
