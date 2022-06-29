@@ -1,0 +1,17 @@
+<head>
+  {% load django_simple_bulma %}
+  {% bulma %}
+  {% load static %} 
+</head>
+
+<body>   
+<div class="box">
+{% for turno in pagina %}
+
+<p>{{turno.patient.name}} {{turno.patient.surname}} {{turno.vaccine.name}} {{turno.center.name}} {{turno.date}} </p>
+<br>
+{% endfor %}
+</div>
+{% for pagina in paginas %}
+
+</body>

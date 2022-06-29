@@ -19,7 +19,7 @@ from django.contrib.auth.hashers import check_password
 from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
-import pandas as pd
+from django.core.paginator import Paginator
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -640,6 +640,12 @@ def testPandas(response):
         cant = turnos.filter(center = centro).count()
         cantidades.append(cant)
         Ncentros.append(centro.name)
-    print(Ncentros)
-    print(cantidades)
     return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
+
+def turnosAsignados(response,pagina = 1):
+    turnos = Appointment.objects.filter(state = 1)
+    turnos = turnos.order_by('date')
+    p = Paginator(turnos,2)
+    pagina_actual = p.page(pagina)
+    print(pagina_actual)
+    return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
