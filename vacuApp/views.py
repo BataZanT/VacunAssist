@@ -660,13 +660,20 @@ def testPandas(response):
         Ncentros.append(centro.name)
     return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
 
-def turnosAsignados(response,pagina = 1):
+def turnosAsignados(response,pagina = 1,filtro='centro'):
     turnos = Appointment.objects.filter(state = 1)
-    turnos = turnos.order_by('date')
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
     p = Paginator(turnos,2)
     pagina_actual = p.page(pagina)
-    print(pagina_actual)
     return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
+
 
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
