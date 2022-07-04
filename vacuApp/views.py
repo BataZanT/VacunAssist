@@ -3,7 +3,6 @@ import random
 from sqlite3 import Date
 from xml.dom.minidom import TypeInfo
 from django.shortcuts import render
-from yaml import serialize, serialize_all
 from .models import *
 from django.contrib import messages
 from django.http.response import HttpResponse
@@ -19,6 +18,7 @@ from django.contrib.auth.hashers import check_password
 from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
+from django.core.paginator import Paginator
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -269,7 +269,7 @@ def homeUsuario(response):
         if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
             if( not tieneTurno(usu,vacF)):
                 fiebre_disp = True            
-        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
+        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'user':usu,'dosis':(usu.history.covid_doses + 1)})
     
 def modificarContraseña(response):
     if not checkearLogin(response):
@@ -329,7 +329,7 @@ def validarUsuRecuperar(response):
         if(not usu.is_staff):
             if usu.token==token:
                 response.session['email']=mail
-                return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+                return mailRecuperarContraseña(response)
             else:
                 messages.warning(response, 'El token no es el correcto.')
         else:
@@ -339,29 +339,33 @@ def validarUsuRecuperar(response):
     return redirect('http://127.0.0.1:8000/recuContraseña') 
 
 def validarCambioContraseñaRecuperada(response):
-    cn=response.POST['contNueva']
-    cnr=response.POST['contNuevaR']
-    upper = False
-    for character in cn:
-        if character.isupper():
-            upper = True
-    if(not upper):
-        messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
-    else:
-        m=response.session['email']
-        o=User.objects.all()
-        user=o.get(email=m)
-        if check_password(cn, user.password):
-            messages.warning(response, 'La contraseña ingreso es igual a la anterior.')
-        elif cn==cnr:
-            user.set_password(cn)
-            user.save()
-            response.session.flush()
-            messages.warning(response, 'La contraseña se a cambiado de manera exitosa.')
-            return redirect('http://127.0.0.1:8000/login') 
+    mail=response.POST['mail']
+    o=User.objects.all()
+    usu=o.filter(email=mail).exists()
+    if usu:
+        usu=o.get(email=mail)
+        cn=response.POST['contNueva']
+        cnr=response.POST['contNuevaR']
+        upper = False
+        for character in cn:
+            if character.isupper():
+                upper = True
+        if(not upper):
+            messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
         else:
-            messages.warning(response, 'La contraseña nueva y la repetida deben ser iguales.')
-    return redirect('http://127.0.0.1:8000/camContraseñaRecu') 
+            if check_password(cn, usu.password):
+                messages.warning(response, 'La contraseña ingreso es igual a la anterior.')
+            elif cn==cnr:
+                usu.set_password(cn)
+                usu.save()
+                response.session.flush()
+                messages.warning(response, 'La contraseña se a cambiado de manera exitosa.')
+                return redirect('http://127.0.0.1:8000/login') 
+            else:
+                messages.warning(response, 'La contraseña nueva y la repetida deben ser iguales.')
+    else:
+        messages.warning(response, 'Mail incorrecto.')
+    return redirect('http://127.0.0.1:8000/camcontrecu') 
 
     NOMBRE = usu.name
     APELLIDO = usu.surname
@@ -506,28 +510,41 @@ def homeAdmin(response):
     messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
     t=Appointment.objects.all()
     today = date.today()
-    #date=today
-    turnosC=t.filter(vaccine=1, state=1,center=usu.center,date=today)
+    #covid
+    turnosC=t.filter(vaccine=1,state=1,center=usu.center,date=today)
+    dtc=t.filter(vaccine=1,center=usu.center,date=today).exclude(state=1)
+    print (dtc)
+    if (not dtc):
+        dtc=0
     if (not turnosC):
         turnosC=0
         cantC=0
     else:
-        cantC=t.filter(vaccine=1, state=1,center=usu.center,date=today).count()
-    turnosG=t.filter(vaccine=2, state=1,center=usu.center,date=today)
+        cantC=t.filter(vaccine=1,state=1,center=usu.center,date=today).count()
+    #gripe
+    turnosG=t.filter(vaccine=2,state=1,center=usu.center,date=today)
+    dtg=t.filter(vaccine=2,center=usu.center,date=today).exclude(state=1)
+    if(not dtg):
+        dtg=0
     if (not turnosG):
         turnosG=0
         cantG=0
     else:
-        cantG=t.filter(vaccine=2, state=1,center=usu.center,date=today).count()
-    turnosF=t.filter(vaccine=3, state=1,center=usu.center,date=today)
+        cantG=t.filter(vaccine=2,state=1,center=usu.center,date=today).count()
+    #fiebre
+    turnosF=t.filter(vaccine=3,state=1,center=usu.center,date=today)
+    dtf=t.filter(vaccine=3,center=usu.center,date=today).exclude(state=1)
+    if(not dtf):
+        dtf=0
     if (not turnosF):
         turnosF=0
         cantF=0
     else:
         cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
+    #buscar
     usubuscado=0
-    if (response.session["usubuscar"]==1):
+    if (response.session["usubuscar"] == 1):
         response.session["usubuscar"]=0
         dni=response.session["dni"]
         response.session["dni"]=-1
@@ -548,7 +565,7 @@ def homeAdmin(response):
                 usubuscado=1
         else:
             usubuscado=2
-    return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF,'ok': response.session["ok"]})
+    return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
 
 def presente(response,id,tipo):
     if not checkearLogin(response):
@@ -730,3 +747,53 @@ def completarAdmin(response):
         messages.success(response, 'Se ha creado un nuevo administrador de centro')
         return render(response,'home.html')
     
+def testPandas(response):
+    centros = Center.objects.all()
+    turnos = Appointment.objects.all()
+    cantidades = []
+    Ncentros = []
+    for centro in centros:
+        cant = turnos.filter(center = centro).count()
+        cantidades.append(cant)
+        Ncentros.append(centro.name)
+    return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
+
+def turnosAsignados(response,pagina = 1,filtro='centro'):
+    turnos = Appointment.objects.filter(state = 1)
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
+    p = Paginator(turnos,2)
+    pagina_actual = p.page(pagina)
+    return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
+
+
+def mailRecuperarContraseña(response):
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
+        user = User.objects.get(email=response.session["email"]) 
+        NAME = user.name
+        SURNAME =  user.surname
+        NCOMPLETO = str(NAME) + ' ' + str(SURNAME)
+        DESTINATARIO = response.session["email"]
+        user.save()
+
+        smtp.ehlo()                                                                 #Nos identifica con gmail
+        smtp.starttls()                                                             #Encripta algo que no se como se llama
+        smtp.ehlo()                                                                 #Nos identificamos de nuevo porque nos encriptamos    
+        smtp.login(EMAIL, PASSW)     
+                                                       #Nos logeamos (xoejdavfzdfnoigf)
+        subject = 'Recuperar Cuenta'                                          #Asunto del email
+        body = 'Para recuparar su cuenta haga click en el siguiente link:  http://127.0.0.1:8000/camcontrecu '          
+        msg = f'Subject: {subject}\n\n{body}'                                       #Es necesario formatear el mensaje (f) para que lo tome gmail
+
+        smtp.sendmail(EMAIL, DESTINATARIO, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
+
+    return HttpResponse("""<html><script>window.location.replace('/envioMailRecuperar');</script></html>""")
+
+def verEnvioMailRecuperar(responde):
+    return render(responde, 'recuperarcontesperandomail.html')
