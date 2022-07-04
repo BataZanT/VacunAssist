@@ -39,4 +39,11 @@ urlpatterns = [
     path('buscar',views.pasarAadminiReiniciarbuscarUsuario),
     path('infoVacunas',views.informacionVacunas),
     path('completarTurno/<int:id>/<int:tipo>',views.completarVacunas),
+    path('seleccionarCentro',views.seleccionarCentro),
+    path('modificarCentro/<int:id>',views.modificarCentro),
+    path('modificarCentroX/<int:id>',views.modificar),
+    path('crearCentro',views.crearCentro),
+    path('crearCentroNuevo',views.crearCentroNuevo),
+    path('crearAdmin',views.crearAdmin),
+    path('completarAdmin',views.completarAdmin),
 ]
