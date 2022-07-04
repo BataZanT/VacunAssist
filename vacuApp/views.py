@@ -265,7 +265,9 @@ def homeUsuario(response):
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
-    if(usu.is_staff):
+    if(usu.is_admin):
+        return redirect('http://127.0.0.1:8000/homeAdmin')   
+    elif(usu.is_staff):
          response.session["usubuscar"]=0
          response.session["ok"]=0
          return redirect('http://127.0.0.1:8000/homeAdminCentro')     
@@ -303,7 +305,7 @@ def modificarContraseña(response):
             else:
                 user.set_password(cn)
                 user.save()
-                messages.warning(response, 'Las contraseñas se ha modificado correctamente')
+                messages.success(response, 'Las contraseñas se ha modificado correctamente')
                 return redirect('http://127.0.0.1:8000/modificarInfo') 
     else:
         messages.warning(response, 'La contraseña actual no es correcta.')
@@ -367,7 +369,7 @@ def validarCambioContraseñaRecuperada(response):
                 usu.set_password(cn)
                 usu.save()
                 response.session.flush()
-                messages.warning(response, 'La contraseña se a cambiado de manera exitosa.')
+                messages.success(response, 'La contraseña se a cambiado de manera exitosa.')
                 return redirect('http://127.0.0.1:8000/login') 
             else:
                 messages.warning(response, 'La contraseña nueva y la repetida deben ser iguales.')
@@ -510,7 +512,8 @@ def borrarRegistro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/')
 
-def homeAdmin(response):
+#homeadmin=admin de centro
+def homeAdminCentro(response):
     if not checkearLogin(response):
         return redirect('/')
     o= User.objects.all()
@@ -673,3 +676,40 @@ def mailRecuperarContraseña(response):
 
 def verEnvioMailRecuperar(responde):
     return render(responde, 'recuperarcontesperandomail.html')
+#homeAdministrador=administrador central
+def homeAdmin(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    o= User.objects.all()
+    idUsuario = response.session["user_id"]
+    usu = o.get(id = idUsuario)
+    NCOMPLETO = usu.name + ' ' + usu.surname
+    messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
+    t=Appointment.objects.all()
+    today = date.today()
+    #covid
+    turnosC=t.filter(vaccine=1,state=0)
+    if (not turnosC):
+        turnosC=0
+        cantC=0
+    else:
+        cantC=t.filter(vaccine=1,state=0).count()
+    #gripe
+    turnosG=t.filter(vaccine=2,state=0)
+    if (not turnosG):
+        turnosG=0
+        cantG=0
+    else:
+        cantG=t.filter(vaccine=2,state=0).count()
+    #fiebre
+    turnosF=t.filter(vaccine=3,state=0)
+    if (not turnosF):
+        turnosF=0
+        cantF=0
+    else:
+        cantF=t.filter(vaccine=3, state=0).count()
+    tot=cantC+cantG+cantF
+    asignados=t.filter(state=1,date=today)
+    if(not asignados):
+        asignados=0
+    return render(response,'inicioAdmin.html',{'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})

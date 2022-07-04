@@ -33,11 +33,12 @@ urlpatterns = [
     path('elegirCertificado',views.elegirCertificado),
     path('validarCambioCentro',views.validarCambioCentro), 
     path('cancelarRegistro',views.borrarRegistro),
-    path('homeAdminCentro',views.homeAdmin),  
+    path('homeAdminCentro',views.homeAdminCentro),  
     path('pasarPresente/<int:id>/<int:tipo>',views.presente),         
     path('ausentes',views.marcarTurnoAusentes),
     path('buscar',views.pasarAadminiReiniciarbuscarUsuario),
     path('infoVacunas',views.informacionVacunas),
     path('completarTurno/<int:id>/<int:tipo>',views.completarVacunas),
-    path('envioMailRecuperar',views.verEnvioMailRecuperar)
+    path('envioMailRecuperar',views.verEnvioMailRecuperar),
+    path('homeAdmin',views.homeAdmin)
 ]
