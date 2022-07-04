@@ -19,6 +19,7 @@ from django.contrib.auth.hashers import check_password
 from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
+from django.core.paginator import Paginator
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -277,7 +278,7 @@ def homeUsuario(response):
         if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
             if( not tieneTurno(usu,vacF)):
                 fiebre_disp = True            
-        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
+        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'user':usu,'dosis':(usu.history.covid_doses + 1)})
     
 def modificarContraseña(response):
     if not checkearLogin(response):
@@ -647,6 +648,31 @@ def completarVacunas(response,id,tipo):
     usu = User.objects.get(id = turnoActual.patient_id)
     NCOMPLETO = usu.name + ' ' + usu.surname
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
+
+def testPandas(response):
+    centros = Center.objects.all()
+    turnos = Appointment.objects.all()
+    cantidades = []
+    Ncentros = []
+    for centro in centros:
+        cant = turnos.filter(center = centro).count()
+        cantidades.append(cant)
+        Ncentros.append(centro.name)
+    return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
+
+def turnosAsignados(response,pagina = 1,filtro='centro'):
+    turnos = Appointment.objects.filter(state = 1)
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
+    p = Paginator(turnos,2)
+    pagina_actual = p.page(pagina)
+    return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
 
 
 def mailRecuperarContraseña(response):
