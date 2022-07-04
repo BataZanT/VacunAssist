@@ -1,0 +1,34 @@
+<head>
+    {% include 'base.html' %}
+    {% load django_simple_bulma %}
+    {% bulma %}
+</head>
+<body class= " mt-6 pt-3  has-background-success-light">
+    {% include 'barraAdminPrincipal.html' %}
+    <div class= ml-4><h2 class="title"> Administracion de Administradores</h2></div>
+    <div class="box mt-3 background-success-light" >
+        <table>
+            <thead>
+              <tr>
+                <th style="width: 10%;"> Nombre completo </th>
+                <th style="width: 20%;"> Centro </th>
+                <th style="width: 30%;"> Opciones </th>
+               </tr>
+            </thead>
+            <tbody>
+              {% for admin in todosLosAdmins %}
+              <tr>
+                <td>{{ admin.name }} {{ admin.surname }}</td>
+                <td style="width: 10%;">{{ admin.center }} </td>
+                <th style="width: 20%; border:none"><a href="/" target="_self"> Modificar </a></th>
+                <th style="width: 20%; border:none"><a href="/" target="_self"> Eliminar </a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+           </table>
+        <br>
+        <button class="button"><a class="button" href="/" target="_self"> Atras </a></button>
+        <button class="button"><a class="button" href="/crearAdmin" target="_self"> Crear Nuevo Administrador </a></button>
+    </div>
+    {% include 'messages.html' %}
+</body>
