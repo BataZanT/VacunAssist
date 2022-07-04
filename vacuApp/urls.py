@@ -49,5 +49,8 @@ urlpatterns = [
     path('testPandas',views.testPandas),
     path('turnosAsignados/<filtro>/<pagina>',views.turnosAsignados),
     path('turnosAsignados/',views.turnosAsignados),
-    path('envioMailRecuperar',views.verEnvioMailRecuperar)
+    path('envioMailRecuperar',views.verEnvioMailRecuperar),
+    path('elegirOpcion',views.elegir),
+    path('seleccionarAdministrador',views.seleccionarAdministrador),
+    path('borrarAdmin',views.borrarAdmin),
 ]

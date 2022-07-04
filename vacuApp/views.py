@@ -739,9 +739,8 @@ def completarAdmin(response):
         c = Center.objects.get(id = response.POST.get('elegido'))
         adminNuevo = User(id= (User.objects.count() + 1), name= nombreNuevo, surname= apellidoNuevo, email= emailNuevo, birthDate= '2000-06-05', DNI= (11111111 + (random.randint(1000, 9999))), center_id= c.id, is_staff= True, is_admin=False)
         CLAVE = str(random.randint( 1000000, 9999999)) + str("V")
-        adminNuevo.password = CLAVE
+        adminNuevo.set_password(CLAVE)
         print (CLAVE)
-        print (adminNuevo.password)
         adminNuevo.save()
         enviaremail(response, adminNuevo)
         messages.success(response, 'Se ha creado un nuevo administrador de centro')
@@ -772,7 +771,6 @@ def turnosAsignados(response,pagina = 1,filtro='centro'):
     pagina_actual = p.page(pagina)
     return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
 
-
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
         user = User.objects.get(email=response.session["email"]) 
@@ -797,3 +795,14 @@ def mailRecuperarContraseña(response):
 
 def verEnvioMailRecuperar(responde):
     return render(responde, 'recuperarcontesperandomail.html')
+
+def elegir(response):
+    return render(response,'elegirOpcion.html')
+
+def seleccionarAdministrador(response):
+    a = User.objects.filter(is_staff = 1)
+    return render(response,'seleccionarAdministrador.html',{'todosLosAdmins':a})
+
+def borrarAdmin(response):
+    a = User.objects.filter(is_staff = 1)
+    return render(response,'borrarAdminX.html',{'todosLosAdmins':a})

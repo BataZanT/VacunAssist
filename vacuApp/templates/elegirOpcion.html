@@ -1,0 +1,20 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}  
+    {% load static %}  
+  
+  </head>
+  <body class= "mt-6 pt-3  has-background-success-light">
+    <div>
+      {% include 'barraAdminPrincipal.html' %}
+      <h1>
+        <div class="mt-3 has-background-success-light; box">
+            <button class="button"><a class="navbar-item" href="/seleccionarCentro" target="_self"> Modificar Centros </a></button>
+            <br>
+            <br>
+            <button class="button"><a class="navbar-item" href="/seleccionarAdministrador" target="_self"> Modificar Administradores </a></button>
+        </div>
+        </h1>
+    </div>
+    {% include 'messages.html' %}
+  </body>

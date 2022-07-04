@@ -4,16 +4,31 @@
     {% bulma %}
 </head>
 <body class= " mt-6 pt-3  has-background-success-light">
-    {% include 'base.html' %}
-    <div class= ml-4><h2 class="title"> Centros Actuales</h2></div>
+    {% include 'barraAdminPrincipal.html' %}
+    <div class= ml-4><h2 class="title"> Centros Actuales </h2></div>
     <div class="box mt-3 background-success-light" >
-        {% for centro in todosLosCentros %}
-        <div>
-            <br>
-            <button class="button is-success is-focused"><a class="button is-success is-focused" href="/modificarCentro/{{centro.id}}" target="_self"> {{ centro.name }} </a></button>
-            <br>
-        </div>
-        {% endfor %}
+        <table>
+            <thead>
+              <tr>
+                <th style="width: 10%;"> Nombre </th>
+                <th style="width: 20%;"> Direccion </th>
+                <th style="width: 30%;"> Opciones</th>
+               </tr>
+            </thead>
+            <tbody>
+              {% for centro in todosLosCentros %}
+              <tr>
+                <td>{{ centro.name }}</td>
+                <td style="width: 10%;">{{ centro.adress }} </td>
+                <th style="width: 20%; border:none"><a href="/modificarCentro/{{centro.id}}" target="_self"> Modificar </a></th>
+                <th style="width: 20%; border:none"><a href="/" target="_self"> Eliminar </a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+           </table>
+           <br>
+           <button class="button"><a class="button" href="/" target="_self"> Atras </a></button>
+           <button class="button"><a class="button" href="/crearAdmin" target="_self"> Crear Nuevo Centro </a></button>
     </div>
     {% include 'messages.html' %}
 </body>
