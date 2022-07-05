@@ -19,6 +19,7 @@ from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
+from datetime import timedelta
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -767,12 +768,15 @@ def turnosAsignados(response,pagina = 1,filtro='centro'):
         turnos = turnos.order_by('vaccine__name')
     else:
         turnos = turnos.order_by('center__name')
-    p = Paginator(turnos,2)
+    p = Paginator(turnos,12)
     pagina_actual = p.page(pagina)
     return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
 
-def asignarTurnos(response,pagina = 1,filtro='centro'):
+def turnosParaAsignar(response,pagina = 1,filtro='centro'):
     turnos = Appointment.objects.filter(state = 0)
+    fecha = None
+    if response.method == "POST":
+        fecha = response.POST["fecha"]
     if(filtro == 'fecha'):
         turnos = turnos.order_by('date')
     elif(filtro == 'nombre'):
@@ -781,9 +785,27 @@ def asignarTurnos(response,pagina = 1,filtro='centro'):
         turnos = turnos.order_by('vaccine__name')
     else:
         turnos = turnos.order_by('center__name')
-    p = Paginator(turnos,2)
+    p = Paginator(turnos,12)
     pagina_actual = p.page(pagina)
-    return render(response,'asignarTurnos.html',{'pagina':pagina_actual,'paginas':p})
+    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha})
+
+def asignarTurnos(response,fecha):
+    turnos = response.POST.getlist("turnos[]")
+    print(turnos)
+    for turno in turnos:
+        turnobj = Appointment.objects.get(id = turno)
+        turnobj.state = 1
+        turnobj.date = fecha
+        turnobj.save()
+    turnos = Appointment.objects.filter(state = 0)
+    p = Paginator(turnos,12)
+    fecha = None
+    return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
+        
+
+
+
+
 
 
 def mailRecuperarContraseña(response):
