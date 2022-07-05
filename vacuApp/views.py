@@ -1,8 +1,7 @@
-
-
 import smtplib
 import random
 from sqlite3 import Date
+from xml.dom.minidom import TypeInfo
 from django.shortcuts import render
 from .models import *
 from django.contrib import messages
@@ -19,6 +18,8 @@ from django.contrib.auth.hashers import check_password
 from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
+from django.core.paginator import Paginator
+from datetime import timedelta
 
 EMAIL = 'vacunassist.contacto@gmail.com'
 PASSW = 'xoejdavfzdfnoigf'
@@ -208,18 +209,11 @@ def enviaremail(response):
         body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta su TOKEN es ' + str(TOKEN)          
         msg = f'Subject: {subject}\n\n{body}'                                       #Es necesario formatear el mensaje (f) para que lo tome gmail
 
-        smtp.sendmail(EMAIL, DESTINATARIO, msg)                                       #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
+        smtp.sendmail(EMAIL, DESTINATARIO, msg)                                      #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
 
 
     response.session.flush()
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
-
-## User(name=data["name"] data,center = None, 
-                ##token = None, password = data["password"],
-                ##sex = data, birthDate = data,
-                ##DNI = data, email = data,
-                ##surname =data
-                ##surname =data
 
 def completarUsuario(response):
     u = User.objects.get(id=response.session["reg_user_id"])
@@ -247,8 +241,7 @@ def asignarVacunas(user):
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
-    
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG)  
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -279,7 +272,7 @@ def homeUsuario(response):
         if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
             if( not tieneTurno(usu,vacF)):
                 fiebre_disp = True            
-        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'sexo':usu.sex})
+        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'user':usu,'dosis':(usu.history.covid_doses + 1)})
     
 def modificarContraseña(response):
     if not checkearLogin(response):
@@ -437,7 +430,6 @@ def validarCambioCentro(response):
         messages.error(response, 'No hay usuarios cargados en la base')  
     return redirect('/modCentro')
 
-
 def elegirCertificado(response):
     return render(response,'elegirCertificado.html')
 #Creating a class based view
@@ -477,7 +469,6 @@ class PdfFiebreA(View):
          
          # rendering the template
         return HttpResponse(pdf, content_type='application/pdf')
-
 class PdfCovid(View):
      def get(self, response, *args, **kwargs):
         if not checkearLogin(response):
@@ -651,6 +642,174 @@ def completarVacunas(response,id,tipo):
     NCOMPLETO = usu.name + ' ' + usu.surname
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
 
+def seleccionarCentro(response):
+    centros = Center.objects.all()
+    return render(response,'seleccionarCentro.html', {'todosLosCentros': centros})
+
+def modificarCentro(response, id):
+    return render(response,'ingresarNuevaInfo.html', {'centro':id})
+
+def modificar(response, id):
+    nombreNuevo = response.POST["nombre"]
+    direccNueva = response.POST["direccion"]
+    c = Center.objects.get(id = id)
+    if (nombreNuevo == "") and (direccNueva == ""):
+            messages.info(response,'No hay informacion nueva que cargar')
+    else:     
+        if (nombreNuevo != ""):
+            if (c.name == nombreNuevo):
+                messages.error(response,'El nombre no puede ser el actual')
+                return render(response,'ingresarNuevaInfo.html', {'centro':id}) 
+            else:
+                todosLosCentros = Center.objects.all()
+                cCopiado = todosLosCentros.filter(name = nombreNuevo)    
+                if cCopiado:
+                    messages.warning(response, 'El nombre nuevo coincide con el de otro centro')
+                    return render(response,'ingresarNuevaInfo.html', {'centro':id})
+                else:
+                    messages.success(response,'Nombre modificado con exito')
+                    c.name = nombreNuevo
+        if (direccNueva != ""):
+            if (c.adress == direccNueva):
+                messages.error(response,'La direccion nueva no puede ser la actual')
+                return render(response,'ingresarNuevaInfo.html', {'centro':id}) 
+            else:
+                todosLosCentros = Center.objects.all()
+                cCopiado = todosLosCentros.filter(adress = direccNueva)    
+                if cCopiado:
+                    messages.warning(response, 'La direccion nueva coincide con la de otro centro')
+                    return render(response,'ingresarNuevaInfo.html', {'centro':id})
+                else:
+                    messages.success(response,'Direccion modificada con exito')
+                    c.adress = direccNueva
+        c.save()
+    centros = Center.objects.all()
+    return render(response,'seleccionarCentro.html', {'todosLosCentros': centros})
+
+def crearCentro(response):
+    return render(response,'crearCentro.html')
+
+def crearCentroNuevo(response):
+    nombreNuevo = response.POST["nombre"]
+    direccNueva = response.POST["direccion"]  
+    todosLosCentros = Center.objects.all()
+    cCopiado = todosLosCentros.filter(name = nombreNuevo)    
+    if cCopiado:
+        messages.warning(response, 'El nombre nuevo coincide con el de otro centro')
+        return render(response,'crearCentro.html')
+    cCopiado = todosLosCentros.filter(adress = direccNueva)    
+    if cCopiado:
+        messages.warning(response, 'La direccion nueva coincide con la de otro centro')
+        return render(response,'crearCentro.html')
+    c = Center(name=nombreNuevo,adress=direccNueva, id= (Center.objects.count()) + 1)
+    c.save()
+    return render(response,'seleccionarCentro.html', {'todosLosCentros': todosLosCentros})
+
+def enviaremail(response, admin): 
+    
+    #user = request.session["user"]
+    
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
+        DESTINATARIO = admin.email
+        smtp.ehlo()                                                                 #Nos identifica con gmail
+        smtp.starttls()                                                             #Encripta algo que no se como se llama
+        smtp.ehlo()                                                                 #Nos identificamos de nuevo porque nos encriptamos    
+        smtp.login(EMAIL, PASSW)                                                    #Nos logeamos (xoejdavfzdfnoigf)
+        TOKEN = random.randint(1000, 9999)
+        admin.token = TOKEN
+        admin.save()
+        subject = 'Confirmacion de cuenta'                                          #Asunto del email
+        body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta utilice la siguiente clave ' + str(admin.password) + ',su TOKEN es ' + str(TOKEN)          
+        msg = f'Subject: {subject}\n\n{body}'                                       #Es necesario formatear el mensaje (f) para que lo tome gmail
+        smtp.sendmail(EMAIL, DESTINATARIO, msg)                                     #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
+    response.session.flush()
+    return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
+
+def crearAdmin(response):
+    centros = Center.objects.all()
+    return render(response,'crearAdmin.html', {'todosLosCentros': centros})
+    
+def completarAdmin(response):
+    nombreNuevo = response.POST["nombre"]
+    apellidoNuevo = response.POST["apellido"]
+    emailNuevo = response.POST["email"]
+    o= User.objects.all()
+    usu = o.filter(email=emailNuevo)
+    if usu:
+        messages.error(response, 'El mail pertenece a otra cuenta del sistema')
+        centros = Center.objects.all()
+        return render(response,'crearAdmin.html', {'todosLosCentros': centros})   
+    else:
+        c = Center.objects.get(id = response.POST.get('elegido'))
+        adminNuevo = User(id= (User.objects.count() + 1), name= nombreNuevo, surname= apellidoNuevo, email= emailNuevo, birthDate= '2000-06-05', DNI= (11111111 + (random.randint(1000, 9999))), center_id= c.id, is_staff= True, is_admin=False)
+        CLAVE = str(random.randint( 1000000, 9999999)) + str("V")
+        adminNuevo.set_password(CLAVE)
+        print (CLAVE)
+        adminNuevo.save()
+        enviaremail(response, adminNuevo)
+        messages.success(response, 'Se ha creado un nuevo administrador de centro')
+        return render(response,'home.html')
+    
+def testPandas(response):
+    centros = Center.objects.all()
+    turnos = Appointment.objects.all()
+    cantidades = []
+    Ncentros = []
+    for centro in centros:
+        cant = turnos.filter(center = centro).count()
+        cantidades.append(cant)
+        Ncentros.append(centro.name)
+    return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
+
+def turnosAsignados(response,pagina = 1,filtro='centro'):
+    turnos = Appointment.objects.filter(state = 1)
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
+    p = Paginator(turnos,12)
+    pagina_actual = p.page(pagina)
+    return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
+
+def turnosParaAsignar(response,pagina = 1,filtro='centro'):
+    turnos = Appointment.objects.filter(state = 0)
+    fecha = None
+    if response.method == "POST":
+        fecha = response.POST["fecha"]
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
+    p = Paginator(turnos,12)
+    pagina_actual = p.page(pagina)
+    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha})
+
+def asignarTurnos(response,fecha):
+    turnos = response.POST.getlist("turnos[]")
+    print(turnos)
+    for turno in turnos:
+        turnobj = Appointment.objects.get(id = turno)
+        turnobj.state = 1
+        turnobj.date = fecha
+        turnobj.save()
+    turnos = Appointment.objects.filter(state = 0)
+    p = Paginator(turnos,12)
+    fecha = None
+    return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
+        
+
+
+
+
+
 
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
@@ -713,3 +872,14 @@ def homeAdmin(response):
     if(not asignados):
         asignados=0
     return render(response,'inicioAdmin.html',{'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
+
+def elegir(response):
+    return render(response,'elegirOpcion.html')
+
+def seleccionarAdministrador(response):
+    a = User.objects.filter(is_staff = 1)
+    return render(response,'seleccionarAdministrador.html',{'todosLosAdmins':a})
+
+def borrarAdmin(response):
+    a = User.objects.filter(is_staff = 1)
+    return render(response,'borrarAdminX.html',{'todosLosAdmins':a})

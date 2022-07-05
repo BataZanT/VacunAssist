@@ -8,7 +8,7 @@
     <div>
       {% include 'barraUsuarioLogeadoNormal.html' %}
       <h1>
-        {% if sex == M %}
+        {% if user.sex == M %}
         <p class= 'ml-6 pt-3 mb-4' style="text-align: left; font-size:25px">
             Bienvenida a VacunAssist {{NOMBRE}}
         </p>
@@ -32,7 +32,7 @@
                 {% else %}
                 <div class="box is-size-5 mx-6" style="background-color: rgb(193, 219, 126)" > 
                 {% endif %}
-                  <p>Vacuna: {{ turno.vaccine }}</p>
+                  <p>Vacuna: {{ turno.vaccine }} {% if turno.vaccine.name == "Covid" %} Dosis: {{ dosis }} {% endif %}</p>
                   <p>
                   Estado:
                   {% if turno.state == 0 %}

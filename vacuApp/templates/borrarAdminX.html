@@ -1,0 +1,21 @@
+<head>
+    {% include 'base.html' %}
+    {% load django_simple_bulma %}
+    {% bulma %}
+</head>
+<body class= " mt-6 pt-3  has-background-success-light">
+    {% include 'barraAdminPrincipal.html' %}
+    <div class= ml-4><h2 class="title"> Centros Actuales</h2></div>
+    <div class="box mt-3 background-success-light" >
+        {% for admin in todosLosAdmins %}
+        <div>
+            <br>
+            <button class="button is-success is-focused"><a class="button is-success is-focused" href="/" target="_self"> {{ admin.name }} </a></button>
+            <br>
+        </div>
+        {% endfor %}
+        <br>
+        <button class="button"><a class="button" href="/" target="_self"> Atras </a></button>
+    </div>
+    {% include 'messages.html' %}
+</body>

@@ -1,0 +1,33 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}
+    {% load static %} 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  </head>
+  
+  <body> 
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/homeAdminCentro">
+            <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
+          </a>     
+        </div>    
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/turnosParaAsignar" target="_self"> Turnos Pendientes </a>
+            <a class="navbar-item" href="/turnosAsignados" target="_self"> Turnos Asignados </a>
+            <a class="navbar-item" href="/homeAdminCentro" target="_self"> Estadisticas </a>
+            <a class="navbar-item" href="/elegirOpcion" target="_self"> Administracion </a>
+          </div>
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-light" href="/cerrarSesion" target="_self">                        <!-- Habria que hacer algun cript que cierre sesion en el sistema? -->
+                  <strong>Cerrar Sesion</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+  </body>

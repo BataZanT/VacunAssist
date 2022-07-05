@@ -1,0 +1,27 @@
+<head>
+    {% include 'base.html' %}
+    {% load django_simple_bulma %}
+    {% bulma %}
+</head>
+<body class= " mt-6 pt-3  has-background-success-light">
+    {% include 'base.html' %}
+    <div class= ml-4><h2 class="title"> Ingrese la informacion del nuevo centro </h2></div>
+    <div class="box mt-3 has-background-success-light; ">
+        <form action="/completarAdmin" method="post">
+            {% csrf_token %}
+            <label class="mt-5"> Ingrese el nombre del nuevo administrador </label>
+            <br>
+            <input class="input is-primary mt-3" name="nombre" style="width: 75%" type="text" placeholder="Ej. Jose Jose" required> 
+            <br> 
+            <br>
+            <label class="mt-5"> Ingrese la direccion de correo electronico del nuevo administrador</label>
+            <br>
+            <input class="input is-primary mt-3" name="direccion" style="width: 75%" type="email" placeholder="josejose@gmail.com" required> 
+            <br> 
+            <br> 
+            <button class="button"><a class="navbar-item" href="/" target="_self"> Cancelar </a></button>  
+            <button type="submit" class="button"> Confirmar </button> 
+        </form>
+    </div>
+    {% include 'messages.html' %}
+</body>
