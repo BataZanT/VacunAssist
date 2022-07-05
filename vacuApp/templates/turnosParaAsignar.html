@@ -6,10 +6,10 @@
 
 <body>   
   {% include 'barraAdminPrincipal.html' %}
-  <div class="is-flex mt-6 gap-4 is-align-items-baseline is-flex-grow-3">
-  <form action="/asignarTurnos/{{fecha}}/" method="post">
+  <div class="is-flex mt-6 is-justify-content-space-around">
+  <form action="/asignarTurnos/{{fecha}}/{{pagina.number}}/{{filtro}}" method="post">
     {% csrf_token %}
-    <table class="table background-grey-light" >
+    <table class="table" >
       <thead>
         <tr>
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/nombre/{{pagina.number}}" target="_self">Nombre</a></th>
@@ -46,11 +46,13 @@
     {% endfor %}
       </tbody>
     </table>
+    {% if fecha %}
     <button class="button" type="submit">Asignar Turnos</button>  
+    {% endif %}
   </form>
     
 
-  <form class="mt-2 pl-2" action="http://127.0.0.1:8000/turnosParaAsignar/centro/{{pagina.number}}/" method="post">
+  <form class="mt-2 pl-2" action="http://127.0.0.1:8000/turnosParaAsignar/{{filtro}}/{{pagina.number}}/" method="post">
     {% csrf_token %}
     <div class="field">
       {% if fecha %}
@@ -58,12 +60,28 @@
       {% else %}
       <input class="input is-primary is-focused" type="date" placeholder="DD/MM/AAAA" name="fecha">
       {% endif %}
+      
+      {% include 'messages.html' %}
     </div>
   <button class="button" type="submit">Seleccionar Fecha</button>
 </form>
+  <div>
+  {% if cantidades %}
+    {% for centro,vacs in cantidades.items %}
+      <div class="box">
+      <p class="is-size-3 is-bold">{{ centro }}</p>
+        {% for vac in vacs %}
+          <p class="is-size-5">{{ vac }}</p>
+        {% endfor %}
+      </div>  
+    {% endfor %}
+  {% endif %}
+  </div>
 </div>
-{% for pagina in paginas %}
-<a class="button" href="http://127.0.0.1:8000/turnosParaAsignar/centro/{{pagina.number}}">{{pagina.number}}</a>
-{% endfor %}
 
+<div class="section">
+  {% for pagina in paginas %}
+  <a class="button" href="http://127.0.0.1:8000/turnosParaAsignar/{{filtro}}/{{pagina.number}}">{{pagina.number}}</a>
+  {% endfor %}
+  </div>
 </body>
