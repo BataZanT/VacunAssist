@@ -5,7 +5,8 @@
 </head>
 
 <body>   
-  <table class="table background-grey-light">
+  {% include 'barraAdminPrincipal.html' %}
+  <table class="table background-grey-light mt-6">
     <thead>
       <tr>
         <th><a href="http://127.0.0.1:8000/turnosAsignados/nombre/{{pagina.number}}" target="_self">Nombre</a></th>
@@ -26,6 +27,6 @@
     </tbody>
   </table>
 {% for pagina in paginas %}
-<a href="http://127.0.0.1:8000/turnosAsignados/centro/{{pagina.number}}">{{pagina.number}}</a>
+<a class="button" href="http://127.0.0.1:8000/turnosAsignados/centro/{{pagina.number}}">{{pagina.number}}</a>
 {% endfor %}
 </body>
