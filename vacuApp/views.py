@@ -804,12 +804,6 @@ def asignarTurnos(response,fecha):
     p = Paginator(turnos,12)
     fecha = None
     return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
-        
-
-
-
-
-
 
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
