@@ -8,20 +8,23 @@
   <body> 
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="http://127.0.0.1:8000/homeAdminCentro">
+          <a class="navbar-item" href="/homeAdminCentro">
             <img src="{% static 'imagenes/logotipo.png' %}" alt="LogoVacunassist"> <!-- Este es el logo de VacunAssist -->
           </a>     
         </div>    
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item" href="http://127.0.0.1:8000/homeAdminCentro" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
+            <a class="navbar-item" href="/homeAdminCentro" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
               Inicio
+            </a>
+            <a class="navbar-item" href="/miInfo" target="_self">                      <!-- Cambiar a la pagina post inicio en un futuro -->
+              Modificar Informacion Personal
             </a>
           </div>
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
-                <a class="button is-light" href="http://127.0.0.1:8000/cerrarSesion" target="_self">                        <!-- Habria que hacer algun cript que cierre sesion en el sistema? -->
+                <a class="button is-light" href="/cerrarSesion" target="_self">                        <!-- Habria que hacer algun cript que cierre sesion en el sistema? -->
                   <strong>Cerrar Sesion</strong>
                 </a>
               </div>

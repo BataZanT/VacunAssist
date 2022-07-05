@@ -4,7 +4,7 @@
     {% bulma %}
 </head>
 <body class= " mt-6 pt-3  has-background-success-light">
-    {% include 'base.html' %}
+    {% include 'barraAdminPrincipal.html' %}
     <div class= ml-4><h2 class="title"> Ingrese la informacion del nuevo administrador </h2></div>
     <div class="box mt-3 has-background-success-light; ">
         <form action="/completarAdmin" method="post">
@@ -17,6 +17,11 @@
             <label class="mt-5"> Ingrese el apellido </label>
             <br>
             <input class="input is-primary mt-3" name="apellido" style="width: 75%" type="text" placeholder="Ej. Gonzales" required> 
+            <br> 
+            <br>
+            <label class="mt-5"> Ingrese el DNI </label>
+            <br>
+            <input class="input is-primary mt-3" name="dni" style="width: 75%" type="number" placeholder="Ej. 23987253" min=1000000 max=99999999 required> 
             <br> 
             <br>
             <label class="mt-5"> Ingrese la direccion de correo electronico</label>
@@ -32,7 +37,7 @@
             </select>
             <br>  
             <br>    
-            <button class="button"><a class="navbar-item" href="/" target="_self"> Cancelar </a></button>  
+            <button class="button"><a class="navbar-item" href="/seleccionarAdministracion" target="_self"> Cancelar </a></button>  
             <button type="submit" class="button"> Confirmar </button> 
         </form>
     </div>
