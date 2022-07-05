@@ -758,6 +758,66 @@ def testPandas(response):
         Ncentros.append(centro.name)
     return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
 
+def turnosParaAsignar(response,pagina = 1,filtro='centro'):
+    turnos = Appointment.objects.filter(state = 0)
+    fecha = None
+    cantidades = None
+    if response.method == "POST":
+        fecha = response.POST["fecha"]
+        message = validators.validarFechaAsginar(fecha)
+        if message == '':
+            cantidades = turnosPorCentro(fecha)
+        else: 
+            fecha = None
+            messages.error(response,message)
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
+    p = Paginator(turnos,12)
+    pagina_actual = p.page(pagina)
+    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
+
+def turnosPorCentro(fecha):
+    centros = Center.objects.all()
+    turnos = Appointment.objects.filter(state = 1,date = fecha)
+    vacC = Vaccine.objects.get(id = 1)
+    vacG = Vaccine.objects.get(id = 2)
+    vacF = Vaccine.objects.get(id = 3)
+    dic = {}    
+    for centro in centros:
+        arr = []
+        arr.append("Covid:")
+        arr.append(turnos.filter(center = centro,vaccine = vacC).count())
+        arr.append("Gripe:")
+        arr.append(turnos.filter(center = centro,vaccine = vacG).count())
+        arr.append("Fiebre Amarilla:")
+        arr.append(turnos.filter(center = centro,vaccine = vacF).count())
+        dic[centro.name] = arr
+    return dic
+    
+def asignarTurnos(response,fecha,pagina,filtro):
+    turnos = response.POST.getlist("turnos[]")
+    print(turnos)
+    for turno in turnos:
+        turnobj = Appointment.objects.get(id = turno)
+        message = validators.validarTurnoMismoDia(turnobj.patient,fecha)
+        if message == '':
+            turnobj.state = 1
+            turnobj.date = fecha
+            turnobj.save()
+        else:
+            messages.error(response,message)
+    turnos = Appointment.objects.filter(state = 0)
+    p = Paginator(turnos,12)
+    pagina_actual = p.page(pagina)
+    cantidades = turnosPorCentro(fecha)
+    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
+
 def turnosAsignados(response,pagina = 1,filtro='centro'):
     turnos = Appointment.objects.filter(state = 1)
     if(filtro == 'fecha'):
@@ -772,35 +832,14 @@ def turnosAsignados(response,pagina = 1,filtro='centro'):
     pagina_actual = p.page(pagina)
     return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
 
-def turnosParaAsignar(response,pagina = 1,filtro='centro'):
-    turnos = Appointment.objects.filter(state = 0)
-    fecha = None
-    if response.method == "POST":
-        fecha = response.POST["fecha"]
-    if(filtro == 'fecha'):
-        turnos = turnos.order_by('date')
-    elif(filtro == 'nombre'):
-        turnos = turnos.order_by('patient__surname')
-    elif(filtro == 'vacuna'):
-        turnos = turnos.order_by('vaccine__name')
-    else:
-        turnos = turnos.order_by('center__name')
-    p = Paginator(turnos,12)
-    pagina_actual = p.page(pagina)
-    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha})
+def cancelarTurno(response):
+    turno = Appointment.objects.get(id = response.POST["turno"])
+    turno.state = 0
+    turno.date = None
+    turno.save()
+    return redirect('/turnosAsignados')
 
-def asignarTurnos(response,fecha):
-    turnos = response.POST.getlist("turnos[]")
-    print(turnos)
-    for turno in turnos:
-        turnobj = Appointment.objects.get(id = turno)
-        turnobj.state = 1
-        turnobj.date = fecha
-        turnobj.save()
-    turnos = Appointment.objects.filter(state = 0)
-    p = Paginator(turnos,12)
-    fecha = None
-    return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
+    
         
 
 
