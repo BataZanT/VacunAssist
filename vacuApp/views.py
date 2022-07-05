@@ -1,3 +1,5 @@
+from ctypes.wintypes import USHORT
+from select import select
 import smtplib
 import random
 from sqlite3 import Date
@@ -19,6 +21,8 @@ from django.views.generic import View
 from .process import html_to_pdf
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator
+from tkinter import *
+from tkinter import messagebox
 from datetime import timedelta
 
 EMAIL = 'vacunassist.contacto@gmail.com'
@@ -183,7 +187,7 @@ def validar(response):
                 messages.error(response, ' Mail invalido')
         else:
             messages.error(response, 'No hay usuarios cargados en la base')
-        return redirect('http://127.0.0.1:8000/login')     
+        return redirect('/login')     
 
 def enviaremail(response): 
     
@@ -261,7 +265,7 @@ def homeUsuario(response):
     if(usu.is_staff):
          response.session["usubuscar"]=0
          response.session["ok"]=0
-         return redirect('http://127.0.0.1:8000/homeAdminCentro')     
+         return redirect('/homeAdminCentro')     
     else:
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
@@ -549,10 +553,8 @@ def homeAdmin(response):
         response.session["usubuscar"]=0
         dni=response.session["dni"]
         response.session["dni"]=-1
-        print (dni)
         o=User.objects.all()
         u=o.filter(DNI=dni).exists()
-        print(u)
         if (u):
             u=o.get(DNI=dni)
             today = date.today()
@@ -618,7 +620,7 @@ def marcarTurnoAusentes(response):
                 else:
                     messages.error(response,"No hay turnos para marcar como ausentes")
             response.session["ok"]=0
-        return redirect('http://127.0.0.1:8000/homeAdminCentro')
+        return redirect('/homeAdminCentro')
 
 def pasarAadminiReiniciarbuscarUsuario(response):
     response.session["dni"]=response.POST["dni"]
@@ -639,12 +641,8 @@ def completarVacunas(response,id,tipo):
     NCOMPLETO = usu.name + ' ' + usu.surname
     return render(response,'completarTurnoVacuna.html', {'idApp':id,'tipoVacuna':tipo, 'nombre': NCOMPLETO})
 
-def seleccionarCentro(response):
-    centros = Center.objects.all()
-    return render(response,'seleccionarCentro.html', {'todosLosCentros': centros})
-
 def modificarCentro(response, id):
-    return render(response,'ingresarNuevaInfo.html', {'centro':id})
+    return render(response,'ingresarNuevaInfoCentro.html', {'centro':id})
 
 def modificar(response, id):
     nombreNuevo = response.POST["nombre"]
@@ -656,53 +654,35 @@ def modificar(response, id):
         if (nombreNuevo != ""):
             if (c.name == nombreNuevo):
                 messages.error(response,'El nombre no puede ser el actual')
-                return render(response,'ingresarNuevaInfo.html', {'centro':id}) 
+                return render(response,'ingresarNuevaInfoCentro.html', {'centro':id}) 
             else:
                 todosLosCentros = Center.objects.all()
                 cCopiado = todosLosCentros.filter(name = nombreNuevo)    
                 if cCopiado:
                     messages.warning(response, 'El nombre nuevo coincide con el de otro centro')
-                    return render(response,'ingresarNuevaInfo.html', {'centro':id})
+                    return render(response,'ingresarNuevaInfoCentro.html', {'centro':id})
                 else:
                     messages.success(response,'Nombre modificado con exito')
                     c.name = nombreNuevo
         if (direccNueva != ""):
             if (c.adress == direccNueva):
                 messages.error(response,'La direccion nueva no puede ser la actual')
-                return render(response,'ingresarNuevaInfo.html', {'centro':id}) 
+                return render(response,'ingresarNuevaInfoCentro.html', {'centro':id}) 
             else:
                 todosLosCentros = Center.objects.all()
                 cCopiado = todosLosCentros.filter(adress = direccNueva)    
                 if cCopiado:
                     messages.warning(response, 'La direccion nueva coincide con la de otro centro')
-                    return render(response,'ingresarNuevaInfo.html', {'centro':id})
+                    return render(response,'ingresarNuevaInfoCentro.html', {'centro':id})
                 else:
                     messages.success(response,'Direccion modificada con exito')
                     c.adress = direccNueva
         c.save()
     centros = Center.objects.all()
-    return render(response,'seleccionarCentro.html', {'todosLosCentros': centros})
+    a = User.objects.filter(is_staff = 1)
+    return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros})
 
-def crearCentro(response):
-    return render(response,'crearCentro.html')
-
-def crearCentroNuevo(response):
-    nombreNuevo = response.POST["nombre"]
-    direccNueva = response.POST["direccion"]  
-    todosLosCentros = Center.objects.all()
-    cCopiado = todosLosCentros.filter(name = nombreNuevo)    
-    if cCopiado:
-        messages.warning(response, 'El nombre nuevo coincide con el de otro centro')
-        return render(response,'crearCentro.html')
-    cCopiado = todosLosCentros.filter(adress = direccNueva)    
-    if cCopiado:
-        messages.warning(response, 'La direccion nueva coincide con la de otro centro')
-        return render(response,'crearCentro.html')
-    c = Center(name=nombreNuevo,adress=direccNueva, id= (Center.objects.count()) + 1)
-    c.save()
-    return render(response,'seleccionarCentro.html', {'todosLosCentros': todosLosCentros})
-
-def enviaremail(response, admin): 
+def enviaremail(response, admin, CLAVE): 
     
     #user = request.session["user"]
     
@@ -716,7 +696,7 @@ def enviaremail(response, admin):
         admin.token = TOKEN
         admin.save()
         subject = 'Confirmacion de cuenta'                                          #Asunto del email
-        body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta utilice la siguiente clave ' + str(admin.password) + ',su TOKEN es ' + str(TOKEN)          
+        body = 'Este es un mensage autogenerado por VacunAssist. Para acceder a su cuenta utilice la siguiente clave ' + str(CLAVE) + ',su TOKEN es ' + str(TOKEN)          
         msg = f'Subject: {subject}\n\n{body}'                                       #Es necesario formatear el mensaje (f) para que lo tome gmail
         smtp.sendmail(EMAIL, DESTINATARIO, msg)                                     #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
     response.session.flush()
@@ -730,22 +710,31 @@ def completarAdmin(response):
     nombreNuevo = response.POST["nombre"]
     apellidoNuevo = response.POST["apellido"]
     emailNuevo = response.POST["email"]
+    dniNuevo = response.POST["dni"]
     o= User.objects.all()
     usu = o.filter(email=emailNuevo)
     if usu:
         messages.error(response, 'El mail pertenece a otra cuenta del sistema')
         centros = Center.objects.all()
-        return render(response,'crearAdmin.html', {'todosLosCentros': centros})   
-    else:
-        c = Center.objects.get(id = response.POST.get('elegido'))
-        adminNuevo = User(id= (User.objects.count() + 1), name= nombreNuevo, surname= apellidoNuevo, email= emailNuevo, birthDate= '2000-06-05', DNI= (11111111 + (random.randint(1000, 9999))), center_id= c.id, is_staff= True, is_admin=False)
-        CLAVE = str(random.randint( 1000000, 9999999)) + str("V")
-        adminNuevo.set_password(CLAVE)
-        print (CLAVE)
-        adminNuevo.save()
-        enviaremail(response, adminNuevo)
-        messages.success(response, 'Se ha creado un nuevo administrador de centro')
-        return render(response,'home.html')
+        return render(response,'crearAdmin.html', {'todosLosCentros': centros})
+    else:  
+        usu = o.filter(DNI = dniNuevo)
+        if usu:
+            messages.error(response, 'El DNI pertenece a otra cuenta del sistema')
+            centros = Center.objects.all()
+            return render(response,'crearAdmin.html', {'todosLosCentros': centros}) 
+        else:
+            c = Center.objects.get(id = response.POST.get('elegido'))
+            adminNuevo = User(id= (User.objects.count() + 1), name= nombreNuevo, surname= apellidoNuevo, email= emailNuevo, birthDate= '2000-06-05', DNI= dniNuevo, center_id= c.id, is_staff= True, is_admin=False)
+            CLAVE = str(random.randint( 1000000, 9999999)) + str("V")
+            AUX = CLAVE
+            adminNuevo.set_password(CLAVE)
+            adminNuevo.save()
+            enviaremail(response, adminNuevo, AUX)
+            messages.success(response, 'Se ha creado un nuevo administrador de centro')
+            a = User.objects.filter(is_staff = 1)
+            centros = Center.objects.all()
+            return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
     
 def testPandas(response):
     centros = Center.objects.all()
@@ -872,13 +861,182 @@ def mailRecuperarContraseña(response):
 def verEnvioMailRecuperar(responde):
     return render(responde, 'recuperarcontesperandomail.html')
 
-def elegir(response):
-    return render(response,'elegirOpcion.html')
-
-def seleccionarAdministrador(response):
-    a = User.objects.filter(is_staff = 1)
-    return render(response,'seleccionarAdministrador.html',{'todosLosAdmins':a})
-
 def borrarAdmin(response):
     a = User.objects.filter(is_staff = 1)
     return render(response,'borrarAdminX.html',{'todosLosAdmins':a})
+
+def homeAdminP(response):
+    return render(response,'homeAdminPrincipal.html')
+
+def selec(response):
+    a = User.objects.filter(is_staff = 1)
+    centros = Center.objects.all()
+    return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 0})
+
+def modificarAdminC(response, id):
+    c = Center.objects.all()
+    return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': c})
+
+def modificarAdminX(response, id):
+    nomN = response.POST["nombreN"]
+    apeN = response.POST["apellidoN"]
+    dniN = response.POST["dniN"]
+    centroN = response.POST["centroN"]
+    admin = User.objects.get(id = id)
+    a = User.objects.filter(is_staff = 1)
+    centros = Center.objects.all()
+    if (nomN == '') and (apeN == '') and (dniN == '') and (centroN == ''):
+        messages.info(response, 'No se hicieron cambios')
+        return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
+    else:
+        if (nomN != ''):
+            if (admin.name == nomN):
+                messages.error(response, 'El nombre nuevo no puede ser el actual')
+                return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+            else:
+                admin.name = nomN
+        if (apeN != ''):
+            if (admin.surname == apeN):
+                messages.error(response, 'El apellido nuevo no puede ser el actual')
+                return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+            else:
+                admin.surname = apeN
+        if (dniN != ''):
+            if (admin.DNI == dniN):
+                messages.error(response, 'El DNI nuevo no puede ser el actual')
+                return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+            else:
+                copiado = User.objects.filter(DNI = dniN)
+                if copiado:
+                    messages.error(response, 'El DNI pertenece a otro usuario del sistema')
+                    return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+                else:
+                    admin.DNI = dniN
+        if (centroN != ''):
+            existe = Center.objects.filter(name = centroN)
+            if existe:
+                if (admin.center == existe):
+                    messages.error(response, 'El centro nuevo no puede ser el actual')
+                    return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+                else:
+                    cNuevo = Center.objects.get(name = centroN)
+                    admin.center_id = cNuevo.id
+            else:
+                messages.error(response, 'El centro ingresado no existe')
+                return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+        messages.success(response, 'Se han modificado los datos correctamente')
+        admin.save()
+    return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
+
+def confirmarEliminar(response,id):
+    a = User.objects.filter(is_staff = 1)
+    centros = Center.objects.all()
+    return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 1, 'afectado': id})
+
+def eliminarAdmin(response,id):
+    a = User.objects.filter(is_staff = 1)
+    centros = Center.objects.all()
+    respuesta=response.POST["respuesta"]
+    if(respuesta=='SI'):
+        admin = User.objects.filter (id = id)
+        admin.delete()
+        messages.success(response, 'Se ha eliminado el administrador')
+    else:
+        messages.info(response, 'No se hicieron cambios')
+    return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 0})
+
+def miInfo(response):
+    o= User.objects.all()
+    miId = response.session["user_id"]
+    yo = o.get(id = miId)
+    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+
+def modificarMiInfo(response):
+    nomN = response.POST["nombreN"]
+    apeN = response.POST["apellidoN"]
+    dniN = response.POST["dniN"]
+    emailN = response.POST["emailN"]
+    miId = response.session["user_id"]
+    admin = User.objects.get(id = miId)
+    a = User.objects.filter(is_staff = 1)
+    o= User.objects.all()
+    miId = response.session["user_id"]
+    yo = o.get(id = miId)
+    idUsuario = response.session["user_id"]
+    usu = o.get(id = idUsuario)
+    usubuscado=0
+    today = date.today()
+    t=Appointment.objects.all()
+    turnosC=t.filter(vaccine=1,state=1,center=usu.center,date=today)
+    dtc=t.filter(vaccine=1,center=usu.center,date=today).exclude(state=1)
+    turnosG=t.filter(vaccine=2,state=1,center=usu.center,date=today)
+    dtg=t.filter(vaccine=2,center=usu.center,date=today).exclude(state=1)
+    turnosF=t.filter(vaccine=3,state=1,center=usu.center,date=today)
+    dtf=t.filter(vaccine=3,center=usu.center,date=today).exclude(state=1)
+    if(not dtf):
+        dtf=0
+    if (not turnosF):
+        turnosF=0
+        cantF=0
+    else:
+        cantF=t.filter(vaccine=3, state=1, center=usu.center,date=today).count()
+    if(not dtg):
+        dtg=0
+    if (not turnosG):
+        turnosG=0
+        cantG=0
+    else:
+        cantG=t.filter(vaccine=2,state=1,center=usu.center,date=today).count()
+    print (dtc)
+    if (not dtc):
+        dtc=0
+    if (not turnosC):
+        turnosC=0
+        cantC=0
+    else:
+        cantC=t.filter(vaccine=1,state=1,center=usu.center,date=today).count()
+    tot=cantC+cantG+cantF
+    if (nomN == '') and (apeN == '') and (dniN == '') and (emailN == ''):
+        messages.info(response, 'No se hicieron cambios')
+        return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
+    else:
+        if (nomN != ''):
+            if (admin.name == nomN):
+                messages.error(response, 'El nombre nuevo no puede ser el actual')
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+            else:
+                admin.name = nomN
+        if (apeN != ''):
+            if (admin.surname == apeN):
+                messages.error(response, 'El apellido nuevo no puede ser el actual')
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+            else:
+                admin.surname = apeN
+        if (dniN != ''):
+            if (admin.DNI == dniN):
+                messages.error(response, 'El DNI nuevo no puede ser el actual')
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+            else:
+                copiado = User.objects.filter(DNI = dniN)
+                if copiado:
+                    messages.error(response, 'El DNI pertenece a otro usuario del sistema')
+                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                else:
+                    admin.DNI = dniN
+        if (emailN != ''):
+            if (admin.email == emailN):
+                messages.error(response, 'El email nuevo no puede ser el actual')
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+            else:
+                copiado = User.objects.filter(email = emailN)
+                if copiado:
+                    messages.error(response, 'El email pertenece a otro usuario del sistema')
+                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                else:
+                    admin.email = emailN
+        messages.success(response, 'Se han modificado los datos correctamente')
+        admin.save()
+    return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
+
+
+

@@ -1,0 +1,84 @@
+<head>
+    {% include 'base.html' %}
+    {% load django_simple_bulma %}
+    {% bulma %}
+</head>
+<body class= " mt-6 pt-3  has-background-success-light">
+    {% include 'barraAdminPrincipal.html' %}
+    <div class="box mt-3 background-success-light">
+            {%if seQuiereEliminar == 1 %}
+                 <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
+                     <form class="ml-5 p-2" method="post" action="/eliminarAdmin/{{afectado}}">
+                     {% csrf_token %}
+                         <legend class="pt-1">¿Desea eliminar este administrador?</legend>
+                         <p class="pt-2">
+                         <label>
+                         <input type="radio" name="respuesta" value="SI"> SI
+                         </label>
+                         <br>
+                         <label>
+                         <input type="radio" name="respuesta" value="NO" checked> NO
+                         </label>
+                         </p>
+                         <p class="pt-2"> <input  type="submit" value="Continuar"></p>
+                     </form>
+                 </div> 
+            {%endif%}
+        <h2 class="title"> Centros Actuales </h2>
+        <table>
+            <thead>
+              <tr>
+                <th style="width: 10%;"> Nombre </th>
+                <th style="width: 20%;"> Direccion </th>
+                <th style="width: 30%;"> Opciones</th>
+               </tr>
+            </thead>
+            <tbody>
+              {% for centro in todosLosCentros %}
+              <tr>
+                <td>{{ centro.name }}</td>
+                <td style="width: 10%;">{{ centro.adress }} </td>
+                <th style="width: 20%;"><a href="/modificarCentro/{{centro.id}}" target="_self"> Modificar </a></th>
+              </tr>
+              {% endfor %}
+            </tbody>
+           </table>
+           <br>
+    <div> <h2 class="title"> Administradores Actuales </h2></div>
+            <br>
+            {% if totalAdmins == 0 %}
+                <p> No hay administradores cargados por el momento </p>
+            {% else %}
+            <br>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 25%;"> Nombre completo </th>
+                    <th style="width: 10%;"> DNI </th>
+                    <th style="width: 25%;"> Email </th>
+                    <th style="width: 20%;"> Centro </th>
+                    <th style="width: 15%;"> Opciones </th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for admin in todosLosAdmins %}
+                    <tr>
+                        <td><a href="/modificarInfoDeAdmin/{{admin.id}}" target="_self"> {{ admin.name }} {{ admin.surname }} </a> </td>
+                        <td>{{ admin.DNI }} </td>
+                        <td>{{ admin.email }} </td>
+                        <td>{{ admin.center }} </td>
+                        <td><a href="/modificarInfoDeAdmin/{{admin.id}}" target="_self"> Modificar </a></th>
+                        <td><a href="/preguntar/{{admin.id}}" target="_self"> Eliminar </a></th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <br>
+        <a class="button" href="/homeAdminP" target="_self"> Atras </a>
+        <a class="button" href="/crearAdmin" target="_self"> Crear Nuevo Administrador </a>
+        <br>
+        <br>
+        {% include 'messages.html' %}
+    </div>
+</body>

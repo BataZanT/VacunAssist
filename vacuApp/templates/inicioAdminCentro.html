@@ -90,7 +90,7 @@ a{
     </div>
     <!--marcar todo como ausente-->
 <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
-    {%if ok == 1 %}
+    {%if seQuiereEliminar == 1 %}
     <form class="ml-5 p-2" method="post" action="ausentes" >
       {% csrf_token %}
           <legend class="pt-1">¿Desea marcar todos los turnos como ausentes?</legend>
@@ -106,7 +106,7 @@ a{
         <p class="pt-2"><input  type="submit" value="Continuar"></p>
   </form>
   {%else%}
-  <button class="ml-5 p-2"><a class="navbar-item" href="http://127.0.0.1:8000/ausentes" target="_self"> <b> Marcar los turnos Ausentes los turnos incompletos.</b></a></button>
+  <button class="ml-5 p-2"><a class="navbar-item" href="/ausentes" target="_self"> <b> Marcar los turnos Ausentes los turnos incompletos.</b></a></button>
   {%endif%}
 </div>
 <div class="mt-3 has-background-success-light; ">

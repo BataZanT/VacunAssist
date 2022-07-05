@@ -1,0 +1,38 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}
+    {% font_awesome %}
+</head>
+
+<body class= "mt-6 pt-3  has-background-success-light">
+  {% include 'barraAdminDeCentro.html' %}
+  <div class= ml-4><h2 class="title"> Modificar Administrador </h2></div>
+  <div class="box mt-3 background-success-light" >
+    <form action="/modificarMiInfo" method="post">
+      {% csrf_token %}
+      <p> Nobre actual: {{ miNombre }} </p>  
+      <p> Ingrese el nuevo nombre </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="text" placeholder="Ej. Jose" name="nombreN">
+      <br>
+      <br>
+      <p> Apellido actual: {{ miApellido }} </p> 
+      <p> Ingrese el nuevo apellido </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="text" placeholder="Ej. Gonzalez" name="apellidoN">
+      <br>
+      <br>
+      <p> DNI actual: {{ miDNI }} </p> 
+      <p> Ingrese el nuevo DNI </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="number" name="dniN" min="1000000" max="99999999" placeholder="Ej. 1111111">
+      <br>
+      <br>
+      <p> Email actual: {{ miEmail }} </p> 
+      <p> Ingrese el nuevo email </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="email" name="emailN" placeholder="Ej. miEmail@gmail.com">
+      <br>    
+      <br> 
+      <button class="button"> <a class="navbar-item" href="/homeAdminCentro" target="_self"> Cancelar </a></button>
+      <button class="button" type="submit"> Confirmar </button>
+    </form>
+  </div>   
+  {% include 'messages.html' %}       
+</body>
