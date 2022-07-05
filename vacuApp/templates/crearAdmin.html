@@ -1,0 +1,40 @@
+<head>
+    {% include 'base.html' %}
+    {% load django_simple_bulma %}
+    {% bulma %}
+</head>
+<body class= " mt-6 pt-3  has-background-success-light">
+    {% include 'base.html' %}
+    <div class= ml-4><h2 class="title"> Ingrese la informacion del nuevo administrador </h2></div>
+    <div class="box mt-3 has-background-success-light; ">
+        <form action="/completarAdmin" method="post">
+            {% csrf_token %}
+            <label class="mt-5"> Ingrese el nombre </label>
+            <br>
+            <input class="input is-primary mt-3" name="nombre" style="width: 75%" type="text" placeholder="Ej. Jose Jose" required> 
+            <br> 
+            <br>
+            <label class="mt-5"> Ingrese el apellido </label>
+            <br>
+            <input class="input is-primary mt-3" name="apellido" style="width: 75%" type="text" placeholder="Ej. Gonzales" required> 
+            <br> 
+            <br>
+            <label class="mt-5"> Ingrese la direccion de correo electronico</label>
+            <br>
+            <input class="input is-primary mt-3" name="email" style="width: 75%" type="email" placeholder="josejose@gmail.com" required> 
+            <br> 
+            <br>
+            <label class="mt-5"> Seleccione el vacunatorio </label>
+            <select style="width: 125px; height: 25px;" name="elegido">
+                {% for centro in todosLosCentros %}
+                    <option value= {{centro.id}} > {{ centro.name }} </option>
+                {% endfor %}          
+            </select>
+            <br>  
+            <br>    
+            <button class="button"><a class="navbar-item" href="/" target="_self"> Cancelar </a></button>  
+            <button type="submit" class="button"> Confirmar </button> 
+        </form>
+    </div>
+    {% include 'messages.html' %}
+</body>
