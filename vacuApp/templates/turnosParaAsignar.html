@@ -59,7 +59,7 @@
       {% if fecha %}
       <input class="input is-primary is-focused" type="date" placeholder="DD/MM/AAAA" value="{{fecha}}" name="fecha">
       {% else %}
-      <input class="input is-primary is-focused" type="date" placeholder="DD/MM/AAAA" name="fecha">
+      <input class="input is-primary is-focused" type="date" placeholder="DD/MM/AAAA" name="fecha" required>
       {% endif %}
       
       {% include 'messages.html' %}

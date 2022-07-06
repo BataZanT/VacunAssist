@@ -734,8 +734,11 @@ def completarAdmin(response):
             a = User.objects.filter(is_staff = 1)
             centros = Center.objects.all()
             return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
-    
-def testPandas(response):
+
+def elegirGrafico(response):
+    return render(response,'elegirGrafico.html')
+
+def graficoCentros(response):
     centros = Center.objects.all()
     turnos = Appointment.objects.all()
     cantidades = []
@@ -744,7 +747,89 @@ def testPandas(response):
         cant = turnos.filter(center = centro).count()
         cantidades.append(cant)
         Ncentros.append(centro.name)
-    return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
+    return render(response,'graficoCentros.html',{'Ncentros':Ncentros,'cantidades':cantidades})
+
+def graficoVacunas(response):
+    vacunas = Vaccine.objects.all()
+    turnos = Appointment.objects.all()
+    cantidades = []
+    Nturnos = []
+    for vacuna in vacunas:
+        cant = turnos.filter(vaccine = vacuna).count()
+        cantidades.append(cant)
+        Nturnos.append(vacuna.name)
+    return render(response,'graficoVacunas.html',{'Nvacunas':Nturnos,'cantidades':cantidades})
+
+def graficoUsuarios(response):
+    centros = Center.objects.all()
+    usuarios = User.objects.all()
+    cantidades = []
+    Nusuarios = []
+    for centro in centros:
+        cant = usuarios.filter(center = centro).count()
+        cantidades.append(cant)
+        Nusuarios.append(centro.name)
+    return render(response,'graficoUsuarios.html',{'Nusuarios':Nusuarios,'cantidades':cantidades})
+
+def turnosParaAsignar(response,pagina = 1,filtro='centro'):
+    turnos = Appointment.objects.filter(state = 0)
+    fecha = None
+    cantidades = None
+    if response.method == "POST":
+        fecha = response.POST["fecha"]
+        message = validators.validarFechaAsginar(fecha)
+        if message == '':
+            cantidades = turnosPorCentro(fecha)
+        else: 
+            fecha = None
+            messages.error(response,message)
+    if(filtro == 'fecha'):
+        turnos = turnos.order_by('date')
+    elif(filtro == 'nombre'):
+        turnos = turnos.order_by('patient__surname')
+    elif(filtro == 'vacuna'):
+        turnos = turnos.order_by('vaccine__name')
+    else:
+        turnos = turnos.order_by('center__name')
+    p = Paginator(turnos,12)
+    pagina_actual = p.page(pagina)
+    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
+
+def turnosPorCentro(fecha):
+    centros = Center.objects.all()
+    turnos = Appointment.objects.filter(state = 1,date = fecha)
+    vacC = Vaccine.objects.get(id = 1)
+    vacG = Vaccine.objects.get(id = 2)
+    vacF = Vaccine.objects.get(id = 3)
+    dic = {}    
+    for centro in centros:
+        arr = []
+        arr.append("Covid:")
+        arr.append(turnos.filter(center = centro,vaccine = vacC).count())
+        arr.append("Gripe:")
+        arr.append(turnos.filter(center = centro,vaccine = vacG).count())
+        arr.append("Fiebre Amarilla:")
+        arr.append(turnos.filter(center = centro,vaccine = vacF).count())
+        dic[centro.name] = arr
+    return dic
+    
+def asignarTurnos(response,fecha,pagina,filtro):
+    turnos = response.POST.getlist("turnos[]")
+    print(turnos)
+    for turno in turnos:
+        turnobj = Appointment.objects.get(id = turno)
+        message = validators.validarTurnoMismoDia(turnobj.patient,fecha)
+        if message == '':
+            turnobj.state = 1
+            turnobj.date = fecha
+            turnobj.save()
+        else:
+            messages.error(response,message)
+    turnos = Appointment.objects.filter(state = 0)
+    p = Paginator(turnos,12)
+    pagina_actual = p.page(pagina)
+    cantidades = turnosPorCentro(fecha)
+    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
 
 def turnosParaAsignar(response,pagina = 1,filtro='centro'):
     turnos = Appointment.objects.filter(state = 0)
@@ -827,6 +912,18 @@ def cancelarTurno(response):
     turno.save()
     return redirect('/turnosAsignados')
 
+def asignarTurnos(response,fecha):
+    turnos = response.POST.getlist("turnos[]")
+    print(turnos)
+    for turno in turnos:
+        turnobj = Appointment.objects.get(id = turno)
+        turnobj.state = 1
+        turnobj.date = fecha
+        turnobj.save()
+    turnos = Appointment.objects.filter(state = 0)
+    p = Paginator(turnos,12)
+    fecha = None
+    return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
     
         
 
@@ -1037,5 +1134,35 @@ def modificarMiInfo(response):
         admin.save()
     return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
 
+def modificarContraseñaDeAdminDC(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    ca=response.POST["contActual"]
+    idu=response.session["user_id"]
+    o=User.objects.all()
+    user=o.get(id=idu)
+    if check_password(ca, user.password):
+        cn=response.POST["contNueva"]
+        upper = False
+        for character in cn:
+            if character.isupper():
+                    upper = True
+        if(not upper):
+            messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
+        elif ca==cn:
+            messages.warning(response, 'La contraseña actual y la contraseña nueva son iguales')
+        else:
+            cnr=response.POST["contNuevaR"]
+            if (not cn== cnr):
+                messages.warning(response, 'Las contraseñas no coinciden')
+            else:
+                user.set_password(cn)
+                user.save()
+                messages.success(response, 'Las contraseñas se ha modificado correctamente')
+                return redirect('/miInfo')
+    else:
+        messages.warning(response, 'La contraseña actual no es correcta.')
+    return redirect('/modificarContraseñaDeAdminDC')
 
-
+def modCAdmin(response):
+    return render(response,'modificarContraseñaAdminDC.html')

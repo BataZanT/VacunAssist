@@ -1,0 +1,13 @@
+<head>
+  {% load django_simple_bulma %}
+  {% bulma %}
+  {% load static %} 
+</head>
+    <body class= "mt-6 pt-3  has-background-success-light">
+          {% include 'barraAdminPrincipal.html' %}
+            <div class="mt-3 box">
+                <button class="button is-success is-focused mb-6"><a class="button is-success" href="/graficoCentros" target="_self" >Centros</a></button><br>
+                <button class="button is-success is-focused mb-6"><a class="button is-success" href="/graficoVacunas" target="_self" >Vacunas</a></button><br>
+                <button class="button is-success is-focused"><a class="button is-success" href="/graficoUsuarios" target="_self" >Usuarios</a></button><br>
+        {% include 'messages.html' %}
+      </body>
