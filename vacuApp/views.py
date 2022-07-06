@@ -329,14 +329,11 @@ def validarUsuRecuperar(response):
     if usu:
         token=response.POST['token']
         usu=o.get(email=mail)
-        if(not usu.is_staff):
-            if usu.token==token:
-                response.session['email']=mail
-                return mailRecuperarContraseña(response)
-            else:
-                messages.warning(response, 'El token no es el correcto.')
+        if usu.token==token:
+            response.session['email']=mail
+            return mailRecuperarContraseña(response)
         else:
-             messages.warning(response, 'Un administrador de cento no puede cambiar su contraseña, comuniquese con su superior.')   
+            messages.warning(response, 'El token no es el correcto.')
     else:
         messages.warning(response, 'El mail ingresado no pertenece a ningun usuario.')
     return redirect('http://127.0.0.1:8000/recuContraseña') 
@@ -830,42 +827,6 @@ def mailRecuperarContraseña(response):
 def verEnvioMailRecuperar(responde):
     return render(responde, 'recuperarcontesperandomail.html')
 #homeAdministrador=administrador central
-def homeAdmin(response):
-    if not checkearLogin(response):
-        return redirect('/')
-    o= User.objects.all()
-    idUsuario = response.session["user_id"]
-    usu = o.get(id = idUsuario)
-    NCOMPLETO = usu.name + ' ' + usu.surname
-    messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
-    t=Appointment.objects.all()
-    today = date.today()
-    #covid
-    turnosC=t.filter(vaccine=1,state=0)
-    if (not turnosC):
-        turnosC=0
-        cantC=0
-    else:
-        cantC=t.filter(vaccine=1,state=0).count()
-    #gripe
-    turnosG=t.filter(vaccine=2,state=0)
-    if (not turnosG):
-        turnosG=0
-        cantG=0
-    else:
-        cantG=t.filter(vaccine=2,state=0).count()
-    #fiebre
-    turnosF=t.filter(vaccine=3,state=0)
-    if (not turnosF):
-        turnosF=0
-        cantF=0
-    else:
-        cantF=t.filter(vaccine=3, state=0).count()
-    tot=cantC+cantG+cantF
-    asignados=t.filter(state=1,date=today)
-    if(not asignados):
-        asignados=0
-    return render(response,'inicioAdmin.html',{'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'gripe':turnosG,'cantG':cantG, 'fiebre':turnosF,'cantF':cantF})
 
 def elegir(response):
     return render(response,'elegirOpcion.html')
