@@ -1000,9 +1000,7 @@ def asignarTurnos(response,fecha):
     p = Paginator(turnos,12)
     fecha = None
     return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
-  
-def homeAdminP(response):
-    return render(response,'homeAdminPrincipal.html')  
+ 
         
 
 
