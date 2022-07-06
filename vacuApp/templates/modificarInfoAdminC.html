@@ -1,0 +1,40 @@
+<head>
+    {% load django_simple_bulma %}
+    {% bulma %}
+    {% font_awesome %}
+</head>
+
+<body class= "mt-6 pt-3  has-background-success-light">
+  {% include 'barraUsuarioLogeadoNormal.html' %}
+  <div class= ml-4><h2 class="title"> Modificar Administrador </h2></div>
+  <div class="box mt-3 background-success-light" >
+    <form action="/modificarInfoDeAdminX/{{elegido}}" method="post">
+      {% csrf_token %}
+      <p> Ingrese el nuevo nombre </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="text" pattern="[a-zA-Z]+*" placeholder="Ej. Jose" minlength="3" maxlenght="20" name="nombreN">
+      <br>
+      <br>
+      <p> Ingrese el nuevo apellido </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="text" pattern="[a-zA-Z]+*" placeholder="Ej. Gonzalez" name="apellidoN">
+      <br>
+      <br>
+      <p> Ingrese el nuevo DNI </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="number" name="dniN" min="1000000" max="99999999" placeholder="Ej. 1111111">
+      <br>
+      <br>
+      <p> Ingrese el nuevo centro </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="text" pattern="[a-zA-Z]+*" name="centroN" placeholder="Ej. Municipalidad">
+      <br>    
+      <br>
+      <p> Recuerde que los centros disponibles son: </p>   
+      {% for centro in todosLosCentros %} 
+        {{ centro.name }}
+      {% endfor %}  
+      <br>    
+      <br>  
+      <button class="button"> <a class="navbar-item" href="/seleccionarAdministracion" target="_self"> Cancelar </a></button>
+      <button class="button" type="submit"> Confirmar </button>
+    </form>
+  </div>   
+  {% include 'messages.html' %}       
+</body>
