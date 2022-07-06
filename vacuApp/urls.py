@@ -56,7 +56,6 @@ urlpatterns = [
     path('cancelarTurno/',views.cancelarTurno),
     path('envioMailRecuperar',views.verEnvioMailRecuperar),
     path('borrarAdmin',views.borrarAdmin),
-    path('homeAdminP',views.homeAdminP),  
     path('seleccionarAdministracion',views.selec),
     path('modificarInfoDeAdmin/<int:id>',views.modificarAdminC), 
     path('modificarInfoDeAdminX/<int:id>',views.modificarAdminX), 
