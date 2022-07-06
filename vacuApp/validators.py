@@ -67,3 +67,16 @@ def validarGripe(data):
             message = 'La fecha de vacunacion no puede ser en el futuro'
     return message
 
+def validarFechaAsginar(fecha):
+    fechaD = date.fromisoformat(fecha)
+    message = ''
+    if(fechaD < date.today()):
+        message = "La fecha del turno debe ser para mañana como minimo"
+    return message
+
+def validarTurnoMismoDia(usuario,fecha):
+    message = ''
+    turnos = usuario.appointment_set.filter(date = fecha)
+    if len(turnos) > 0:
+        message = 'El usuario '+ usuario.name +' ' + usuario.surname + ' ya tiene un turno para esa fecha'
+    return message
