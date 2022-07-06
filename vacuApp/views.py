@@ -887,7 +887,7 @@ def asignarTurnos(response,fecha,pagina,filtro):
     cantidades = turnosPorCentro(fecha)
     return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
 
-def turnosParaAsignar(response,pagina = 1,filtro='centro'):
+def turnosParaAsignar(response,pagina=1,filtro='centro'):
     if not checkearLogin(response):
         return redirect('/')
     if response.session["categoria"] != 3 :

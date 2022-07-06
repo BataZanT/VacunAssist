@@ -5,10 +5,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 </head>
 
-<body>   
+<body class= "mt-6 pt-3  has-background-success-light">   
     {% include 'barraAdminPrincipal.html' %}
-    <p>Turnos por cada centro</p>
-    <canvas class="mt-6" id="myChart" width="50" height="10vh"></canvas>
+ <div class="ml-3 mt-2" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ;">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos por centro:</u></p>
+    <canvas class="mt-6" id="myChart" width="20" height="10vh"></canvas>
+ </div>
     <canvas class="mt-6" id="myChart2" width="50" height="10vh"></canvas>
     
 </body>
