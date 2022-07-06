@@ -735,17 +735,42 @@ def completarAdmin(response):
             a = User.objects.filter(is_staff = 1)
             centros = Center.objects.all()
             return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
-    
-def testPandas(response):
+
+def elegirGrafico(response):
+    return render(response,'elegirGrafico.html')
+
+def graficoCentros(response):
     centros = Center.objects.all()
     turnos = Appointment.objects.all()
     cantidades = []
-    Ncentros = []
+    Nturnos = []
     for centro in centros:
         cant = turnos.filter(center = centro).count()
         cantidades.append(cant)
-        Ncentros.append(centro.name)
-    return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
+        Nturnos.append(centro.name)
+    return render(response,'graficoCentros.html',{'Ncentros':Nturnos,'cantidades':cantidades})
+
+def graficoVacunas(response):
+    vacunas = Vaccine.objects.all()
+    turnos = Appointment.objects.all()
+    cantidades = []
+    Nturnos = []
+    for vacuna in vacunas:
+        cant = turnos.filter(vaccine = vacuna).count()
+        cantidades.append(cant)
+        Nturnos.append(vacuna.name)
+    return render(response,'graficoVacunas.html',{'Nvacunas':Nturnos,'cantidades':cantidades})
+
+def graficoUsuarios(response):
+    centros = Center.objects.all()
+    usuarios = User.objects.all()
+    cantidades = []
+    Nusuarios = []
+    for centro in centros:
+        cant = usuarios.filter(center = centro).count()
+        cantidades.append(cant)
+        Nusuarios.append(centro.name)
+    return render(response,'graficoUsuarios.html',{'Nusuarios':Nusuarios,'cantidades':cantidades})
 
 def turnosParaAsignar(response,pagina = 1,filtro='centro'):
     turnos = Appointment.objects.filter(state = 0)
