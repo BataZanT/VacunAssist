@@ -529,7 +529,7 @@ def borrarRegistro(response):
 def homeAdmin(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] == 2 :
+    if response.session["categoria"] != 2 :
         response.session.flush()
         return redirect('/')
     o= User.objects.all()
@@ -597,6 +597,9 @@ def homeAdmin(response):
 def presente(response,id,tipo):
     if not checkearLogin(response):
         return redirect('/') 
+    if response.session["categoria"] != 2 :
+        response.session.flush()
+        return redirect('/')
     observaciones = response.POST["observaciones"]
     detalles = response.POST["detalles"]
     T = Appointment.objects.all()
@@ -626,6 +629,9 @@ def presente(response,id,tipo):
 def marcarTurnoAusentes(response):
         if not checkearLogin(response):
             return redirect('/')
+        if response.session["categoria"] != 2 :
+            response.session.flush()
+            return redirect('/')
         if(response.session["ok"] == 0):
             response.session["ok"]=1
             return redirect('http://127.0.0.1:8000/homeAdminCentro')  
@@ -647,6 +653,11 @@ def marcarTurnoAusentes(response):
         return redirect('/homeAdminCentro')
 
 def pasarAadminiReiniciarbuscarUsuario(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 2 :
+        response.session.flush()
+        return redirect('/')
     response.session["dni"]=response.POST["dni"]
     if (response.session["usubuscar"]==0):
         response.session["usubuscar"]=1
@@ -659,6 +670,11 @@ def informacionVacunas(response):
     return render(response,'infoVacunas.html')
 
 def completarVacunas(response,id,tipo):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 2 :
+        response.session.flush()
+        return redirect('/')
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     usu = User.objects.get(id = turnoActual.patient_id)
@@ -669,6 +685,11 @@ def modificarCentro(response, id):
     return render(response,'ingresarNuevaInfoCentro.html', {'centro':id})
 
 def modificar(response, id):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     nombreNuevo = response.POST["nombre"]
     direccNueva = response.POST["direccion"]
     c = Center.objects.get(id = id)
@@ -727,10 +748,20 @@ def enviaremail(response, admin, CLAVE):
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
 
 def crearAdmin(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     centros = Center.objects.all()
     return render(response,'crearAdmin.html', {'todosLosCentros': centros})
     
 def completarAdmin(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     nombreNuevo = response.POST["nombre"]
     apellidoNuevo = response.POST["apellido"]
     emailNuevo = response.POST["email"]
@@ -772,6 +803,11 @@ def testPandas(response):
     return render(response,'testPandas.html',{'df':Ncentros,'df1':cantidades})
 
 def turnosParaAsignar(response,pagina = 1,filtro='centro'):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     turnos = Appointment.objects.filter(state = 0)
     fecha = None
     cantidades = None
@@ -814,6 +850,11 @@ def turnosPorCentro(fecha):
     return dic
     
 def asignarTurnos(response,fecha,pagina,filtro):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     turnos = response.POST.getlist("turnos[]")
     print(turnos)
     for turno in turnos:
@@ -832,6 +873,11 @@ def asignarTurnos(response,fecha,pagina,filtro):
     return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
 
 def turnosAsignados(response,pagina = 1,filtro='centro'):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     turnos = Appointment.objects.filter(state = 1)
     if(filtro == 'fecha'):
         turnos = turnos.order_by('date')
@@ -846,6 +892,11 @@ def turnosAsignados(response,pagina = 1,filtro='centro'):
     return render(response,'turnosAsignados.html',{'pagina':pagina_actual,'paginas':p})
 
 def cancelarTurno(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     turno = Appointment.objects.get(id = response.POST["turno"])
     turno.state = 0
     turno.date = None
@@ -886,22 +937,39 @@ def verEnvioMailRecuperar(responde):
     return render(responde, 'recuperarcontesperandomail.html')
 
 def borrarAdmin(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     a = User.objects.filter(is_staff = 1)
     return render(response,'borrarAdminX.html',{'todosLosAdmins':a})
 
-def homeAdminP(response):
-    return render(response,'homeAdminPrincipal.html')
-
 def selec(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
     return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 0})
 
 def modificarAdminC(response, id):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     c = Center.objects.all()
     return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': c})
 
 def modificarAdminX(response, id):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] == 3 :
+        response.session.flush()
+        return redirect('/')
     nomN = response.POST["nombreN"]
     apeN = response.POST["apellidoN"]
     dniN = response.POST["dniN"]
@@ -953,11 +1021,21 @@ def modificarAdminX(response, id):
     return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
 
 def confirmarEliminar(response,id):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
     return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 1, 'afectado': id})
 
 def eliminarAdmin(response,id):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 3 :
+        response.session.flush()
+        return redirect('/')
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
     respuesta=response.POST["respuesta"]
@@ -970,12 +1048,22 @@ def eliminarAdmin(response,id):
     return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 0})
 
 def miInfo(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 2 :
+        response.session.flush()
+        return redirect('/')
     o= User.objects.all()
     miId = response.session["user_id"]
     yo = o.get(id = miId)
     return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
 
 def modificarMiInfo(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 2 :
+        response.session.flush()
+        return redirect('/')
     nomN = response.POST["nombreN"]
     apeN = response.POST["apellidoN"]
     dniN = response.POST["dniN"]
