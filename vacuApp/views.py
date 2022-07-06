@@ -743,12 +743,12 @@ def graficoCentros(response):
     centros = Center.objects.all()
     turnos = Appointment.objects.all()
     cantidades = []
-    Nturnos = []
+    Ncentros = []
     for centro in centros:
         cant = turnos.filter(center = centro).count()
         cantidades.append(cant)
-        Nturnos.append(centro.name)
-    return render(response,'graficoCentros.html',{'Ncentros':Nturnos,'cantidades':cantidades})
+        Ncentros.append(centro.name)
+    return render(response,'graficoCentros.html',{'Ncentros':Ncentros,'cantidades':cantidades})
 
 def graficoVacunas(response):
     vacunas = Vaccine.objects.all()
