@@ -790,12 +790,6 @@ def asignarTurnos(response,fecha):
     p = Paginator(turnos,12)
     fecha = None
     return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
-        
-
-
-
-
-
 
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
@@ -999,5 +993,35 @@ def modificarMiInfo(response):
         admin.save()
     return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
 
+def modificarContraseñaDeAdminDC(response):
+    if not checkearLogin(response):
+        return redirect('/')
+    ca=response.POST["contActual"]
+    idu=response.session["user_id"]
+    o=User.objects.all()
+    user=o.get(id=idu)
+    if check_password(ca, user.password):
+        cn=response.POST["contNueva"]
+        upper = False
+        for character in cn:
+            if character.isupper():
+                    upper = True
+        if(not upper):
+            messages.warning(response, 'La contraseña nueva debe contener al menos una letra mayuscula')
+        elif ca==cn:
+            messages.warning(response, 'La contraseña actual y la contraseña nueva son iguales')
+        else:
+            cnr=response.POST["contNuevaR"]
+            if (not cn== cnr):
+                messages.warning(response, 'Las contraseñas no coinciden')
+            else:
+                user.set_password(cn)
+                user.save()
+                messages.success(response, 'Las contraseñas se ha modificado correctamente')
+                return redirect('/miInfo')
+    else:
+        messages.warning(response, 'La contraseña actual no es correcta.')
+    return redirect('/modificarContraseñaDeAdminDC')
 
-
+def modCAdmin(response):
+    return render(response,'modificarContraseñaAdminDC.html')
