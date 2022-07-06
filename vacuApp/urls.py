@@ -39,6 +39,7 @@ urlpatterns = [
     path('buscar',views.pasarAadminiReiniciarbuscarUsuario),
     path('infoVacunas',views.informacionVacunas),
     path('completarTurno/<int:id>/<int:tipo>',views.completarVacunas),
+    path('envioMailRecuperar',views.verEnvioMailRecuperar),
     path('modificarCentro/<int:id>',views.modificarCentro),
     path('modificarCentroX/<int:id>',views.modificar),
     path('crearAdmin',views.crearAdmin),

@@ -267,6 +267,8 @@ def homeUsuario(response):
          response.session["ok"]=0
          return redirect('/homeAdminCentro')     
     else:
+        if(usu.is_admin):
+            return redirect('/turnosParaAsignar/')   
         NCOMPLETO = usu.name + ' ' + usu.surname
         turnos = usu.appointment_set.all()
         fiebre_disp = False
@@ -331,14 +333,11 @@ def validarUsuRecuperar(response):
     if usu:
         token=response.POST['token']
         usu=o.get(email=mail)
-        if(not usu.is_staff):
-            if usu.token==token:
-                response.session['email']=mail
-                return mailRecuperarContraseña(response)
-            else:
-                messages.warning(response, 'El token no es el correcto.')
+        if usu.token==token:
+            response.session['email']=mail
+            return mailRecuperarContraseña(response)
         else:
-             messages.warning(response, 'Un administrador de cento no puede cambiar su contraseña, comuniquese con su superior.')   
+            messages.warning(response, 'El token no es el correcto.')
     else:
         messages.warning(response, 'El mail ingresado no pertenece a ningun usuario.')
     return redirect('http://127.0.0.1:8000/recuContraseña') 
