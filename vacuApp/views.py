@@ -38,6 +38,9 @@ def home(response):
 def infoPersonal(response):
     if not checkearLogin(response):
         return redirect('/')
+    if response.session["categoria"] != 1 :
+        response.session.flush()
+        return redirect('/')
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
@@ -46,6 +49,9 @@ def infoPersonal(response):
 
 def modificarInfo(response):
     if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 1 :
+        response.session.flush()
         return redirect('/')
     idu=response.session['user_id']
     o=User.objects.all()
@@ -265,21 +271,28 @@ def homeUsuario(response):
     if(usu.is_staff):
          response.session["usubuscar"]=0
          response.session["ok"]=0
+         response.session["categoria"]=2
          return redirect('/homeAdminCentro')     
     else:
         if(usu.is_admin):
+            response.session["categoria"]=3
             return redirect('/turnosParaAsignar/')   
-        NCOMPLETO = usu.name + ' ' + usu.surname
-        turnos = usu.appointment_set.all()
-        fiebre_disp = False
-        vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-        if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
-            if( not tieneTurno(usu,vacF)):
-                fiebre_disp = True            
-        return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'user':usu,'dosis':(usu.history.covid_doses + 1)})
+        else:
+            NCOMPLETO = usu.name + ' ' + usu.surname
+            turnos = usu.appointment_set.all()
+            fiebre_disp = False
+            vacF = Vaccine.objects.get(name="Fiebre Amarilla")
+            if ((usu.history.fiebreA == False)) and (calculate_age(usu.birthDate) < 60):
+                if( not tieneTurno(usu,vacF)):
+                    fiebre_disp = True   
+            response.session["categoria"]=1         
+            return render(response,'inicioPaciente.html', {'NOMBRE': NCOMPLETO, 'turnos': turnos, 'fiebre_disp':fiebre_disp,'user':usu,'dosis':(usu.history.covid_doses + 1)})
     
 def modificarContraseña(response):
     if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] == 3 :
+        response.session.flush()
         return redirect('/')
     ca=response.POST["contActual"]
     idu=response.session["user_id"]
@@ -310,6 +323,9 @@ def modificarContraseña(response):
  
 def asignarTurnoFiebreA(response):
     if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] != 1 :
+        response.session.flush()
         return redirect('/')
     o= User.objects.all()
     idu=response.session["user_id"]
@@ -379,6 +395,9 @@ def validarCambioContraseñaRecuperada(response):
 def validarCambioMail(response):
         if not checkearLogin(response):
             return redirect('/')
+        if response.session["categoria"] != 1 :
+            response.session.flush()
+            return redirect('/')
         mailN = response.POST['mailNuevo']
         mailNRepetido = response.POST['mailNuevoRepetido']
 
@@ -407,6 +426,9 @@ def validarCambioMail(response):
 def modCentro(response):
     if not checkearLogin(response):
         return redirect('/')
+    if response.session["categoria"] != 1 :
+            response.session.flush()
+            return redirect('/')
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
@@ -506,6 +528,9 @@ def borrarRegistro(response):
 
 def homeAdmin(response):
     if not checkearLogin(response):
+        return redirect('/')
+    if response.session["categoria"] == 2 :
+        response.session.flush()
         return redirect('/')
     o= User.objects.all()
     idUsuario = response.session["user_id"]
