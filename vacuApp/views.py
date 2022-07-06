@@ -276,7 +276,7 @@ def homeUsuario(response):
     else:
         if(usu.is_admin):
             response.session["categoria"]=3
-            return redirect('/turnosParaAsignar/')   
+            return redirect('/turnosParaAsignar')   
         else:
             NCOMPLETO = usu.name + ' ' + usu.surname
             turnos = usu.appointment_set.all()
