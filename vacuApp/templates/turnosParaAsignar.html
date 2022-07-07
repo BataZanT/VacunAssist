@@ -4,8 +4,9 @@
   {% load static %} 
 </head>
 
-<body class= "mt-6 pt-3  has-background-success-light">   
+<body class= "mt-6  has-background-success-light" >   
   {% include 'barraAdminPrincipal.html' %}
+
   <div class="section pl-6 pb-0 pr-0 pt-4  mt-0 mr-0 mb-0 mt-6" style="background-color: rgb(255, 255, 255) ;border-color: rgb(255, 255, 255)  ;height: 50px" >
     <p><b > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <u>TURNOS PENDIENTES: </u></b></p>
   </div>
@@ -66,14 +67,14 @@
     </div>
   <button class="button" type="submit">Seleccionar Fecha</button>
  </form>
-</div>
-  <div style="background-color: rgb(255, 255, 255); ">
+ </div>
+  <div class="" style="background-color: rgb(255, 255, 255); ">
    {% if cantidades %}
    <div class="section pl-6 pb-0 pr-0 pt-4  mt-0 mr-0 mb-0 " style=" background-color: rgb(255, 255, 255)  ;height: 50px;" >
     <p><b > &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <u>INFORMACION PARA ESE DIA: </u></b></p>
    </div>
     {% for centro,vacs in cantidades.items %}
-      <div class="box ml-5 pl-5 mr-5 mt-3" style="background-color: rgb(255, 255, 255); float: left; width: 20%; "  >
+      <div class="box ml-5 pl-5 mr-5 mt-3 mb-4 pb-1" style="background-color: rgb(255, 255, 255); float: left; width: 20%; "  >
       <p class="is-size-3 is-bold">{{ centro }}</p>
         {% for vac in vacs %}
           <p class="is-size-5">{{ vac }}</p>
@@ -82,9 +83,10 @@
     {% endfor %}
    {% endif %}
   </div>
-  <div class="section pl-8 mb-0 pr-0 pt-0 ml-0 mt-0 mr-0 mb-0 " style="float: left ;  ;background-color: rgb(255, 255, 255) ;border-color: rgb(255, 255, 255)  ;height: 45px ; width: 100%;" >
+  <div class=" pl-5 mb-0 pr-0 pb-4 pt-0 ml-0 mt-0 mr-0  " style="float: left   ;background-color: rgb(255, 255, 255) ;border-color: rgb(255, 255, 255) ; height: 7% ; width: 100%;" >
     {% for pagina in paginas %}
    <a class="button" href="http://127.0.0.1:8000/turnosParaAsignar/{{filtro}}/{{pagina.number}}">{{pagina.number}}</a>
     {% endfor %}
   </div>
+
 </body>

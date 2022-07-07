@@ -276,7 +276,7 @@ def homeUsuario(response):
     else:
         if(usu.is_admin):
             response.session["categoria"]=3
-            return redirect('/turnosParaAsignar')   
+            return redirect('/turnosParaAsignar/centro/1')   
         else:
             NCOMPLETO = usu.name + ' ' + usu.surname
             turnos = usu.appointment_set.all()
@@ -646,6 +646,7 @@ def marcarTurnoAusentes(response):
                 if(len(ausentes) > 0):
                     for turno in ausentes:
                         turno.state=0
+                        turno.cancel=1
                         turno.save()
                 else:
                     messages.error(response,"No hay turnos para marcar como ausentes")
@@ -797,13 +798,20 @@ def elegirGrafico(response):
 def graficoCentros(response):
     centros = Center.objects.all()
     turnos = Appointment.objects.all()
-    cantidades = []
-    Ncentros = []
+    canttotalturnos = [] #cantidad de turnos por centro
+    Ncentroscanttotalturnos = []
     for centro in centros:
         cant = turnos.filter(center = centro).count()
-        cantidades.append(cant)
-        Ncentros.append(centro.name)
-    return render(response,'graficoCentros.html',{'Ncentros':Ncentros,'cantidades':cantidades})
+        canttotalturnos.append(cant)
+        Ncentroscanttotalturnos.append(centro.name)
+    cantpendienteturnos = [] #cantidad de turnos pendientes por centro
+    Ncentrospendienteturnos = []
+    for centro in centros:
+        cant = turnos.filter(center = centro, state=0).count()
+        cantpendienteturnos.append(cant)
+        Ncentrospendienteturnos.append(centro.name)
+    return render(response,'graficoCentros.html',{'Nct':Ncentroscanttotalturnos,'Ctt':canttotalturnos,
+    'Npt':Ncentrospendienteturnos,'Cpt':cantpendienteturnos,})
 
 def graficoVacunas(response):
     vacunas = Vaccine.objects.all()
