@@ -5,18 +5,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 </head>
 
-<body>   
+<body class= "mt-6 pt-3  has-background-success-light">   
     {% include 'barraAdminPrincipal.html' %}
-    <p>Turnos por cada centro</p>
-    <canvas class="mt-6" id="myChart" width="50" height="10vh"></canvas>
-    <canvas class="mt-6" id="myChart2" width="50" height="10vh"></canvas>
-    
+ <div class="ml-3 mt-2" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ;">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos por centro:</u></p>
+    <canvas class="mt-6" id="myChart" width="20" height="10vh"></canvas>
+ </div>
+ <div class="ml-3 mt-2" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ;">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos pendientes por centro:</u></p>
+    <canvas class="mt-6" id="myChart2" width="20" height="10vh"></canvas>
+</div>
 </body>
 <script>
-    var df = {{Ncentros|safe}}
-    var df1 = {{cantidades|safe}}
-    const ctx = document.getElementById('myChart');
-    const ctx2 = document.getElementById('myChart2');
+    var df = {{Nct|safe}} //total por centro
+    var df1 = {{Ctt|safe}}
+    var df2 = {{Npt|safe}} //pendiente por centro
+    var df12 = {{Cpt|safe}}
+    const ctx = document.getElementById('myChart'); //turnos totales por centro
+    const ctx2 = document.getElementById('myChart2'); //turnos pendientes por centro
     const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -47,9 +55,9 @@
     const myChart2 = new Chart(ctx2, {
         type: 'doughnut',
         data: {
-            labels: df,
+            labels: df2,
             datasets: [{
-                data: df1,
+                data: df12,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
