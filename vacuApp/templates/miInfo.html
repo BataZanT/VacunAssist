@@ -6,7 +6,7 @@
 
 <body class= "mt-6 pt-3  has-background-success-light">
   {% include 'barraAdminDeCentro.html' %}
-  <div class= ml-4><h2 class="title"> Mi Informacion Personal </h2></div>
+  <div class= ml-4><h2 class="title"> Modificar Administrador </h2></div>
   <div class="box mt-3 background-success-light" >
     <form action="/modificarMiInfo" method="post">
       {% csrf_token %}
@@ -32,9 +32,6 @@
       <br> 
       <button class="button"> <a class="navbar-item" href="/homeAdminCentro" target="_self"> Cancelar </a></button>
       <button class="button" type="submit"> Confirmar </button>
-      <br>
-      <br>
-      <button class="button"> <a class="navbar-item" href="/modificarContraseñaDeAdminDC" target="_self"> Para modificar su contraseña haga click aqui </a></button>
     </form>
   </div>   
   {% include 'messages.html' %}       
