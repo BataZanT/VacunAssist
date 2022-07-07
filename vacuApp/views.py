@@ -160,7 +160,7 @@ def registerCentro(response):
                 data = form.cleaned_data
                 response.session["center"] = data["center"]
                 completarUsuario(response)
-                return enviaremail(response)
+                return enviaremailNormal(response)
 
             else:
                 form = RegisterCentro()
@@ -195,7 +195,7 @@ def validar(response):
             messages.error(response, 'No hay usuarios cargados en la base')
         return redirect('/login')     
 
-def enviaremail(response): 
+def enviaremailNormal(response): 
     
     #user = request.session["user"]
     
@@ -1000,13 +1000,6 @@ def asignarTurnos(response,fecha):
     p = Paginator(turnos,12)
     fecha = None
     return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
- 
-        
-
-
-
-
-
 
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 

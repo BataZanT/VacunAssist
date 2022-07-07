@@ -49,7 +49,7 @@ urlpatterns = [
     path('graficoCentros',views.graficoCentros),
     path('graficoVacunas',views.graficoVacunas),
     path('turnosAsignados/<filtro>/<pagina>',views.turnosAsignados),
-    path('turnosAsignados/',views.turnosAsignados),
+ #   path('turnosAsignados/',views.turnosAsignados),
     path('turnosParaAsignar/<filtro>/<pagina>/',views.turnosParaAsignar),
     path('turnosParaAsignar/',views.turnosParaAsignar),
     path('asignarTurnos/<fecha>/<pagina>/<filtro>',views.asignarTurnos),
@@ -62,6 +62,7 @@ urlpatterns = [
     path('preguntar/<int:id>',views.confirmarEliminar), 
     path('eliminarAdmin/<int:id>',views.eliminarAdmin),
     path('miInfo',views.miInfo),
-    path('miInfo/<int:id>',views.miInfo),
-    path('modificarMiInfo',views.modificarMiInfo), 
+    path('modificarMiInfo',views.modificarMiInfo),
+    path('modificarContraseñaDeAdminDC',views.modCAdmin), 
+    path('validarModificacion',views.modificarContraseñaDeAdminDC), 
 ]
