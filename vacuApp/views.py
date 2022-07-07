@@ -538,13 +538,15 @@ def homeAdmin(response):
     NCOMPLETO = usu.name + ' ' + usu.surname
     messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
     t=Appointment.objects.all()
+    print(t)
     today = date.today()
     #covid
-    turnosC=t.filter(vaccine=1,state=1,center=usu.center,date=today)
+    turnosC=t.filter(vaccine=1,state=1,center=1,date=today)
+    print (turnosC)
     dtc=t.filter(vaccine=1,center=usu.center,date=today).exclude(state=1)
-    print (dtc)
     if (not dtc):
         dtc=0
+    print (dtc)
     if (not turnosC):
         turnosC=0
         cantC=0
@@ -552,6 +554,7 @@ def homeAdmin(response):
         cantC=t.filter(vaccine=1,state=1,center=usu.center,date=today).count()
     #gripe
     turnosG=t.filter(vaccine=2,state=1,center=usu.center,date=today)
+    print (turnosG)
     dtg=t.filter(vaccine=2,center=usu.center,date=today).exclude(state=1)
     if(not dtg):
         dtg=0
@@ -562,6 +565,7 @@ def homeAdmin(response):
         cantG=t.filter(vaccine=2,state=1,center=usu.center,date=today).count()
     #fiebre
     turnosF=t.filter(vaccine=3,state=1,center=usu.center,date=today)
+    print (turnosF)
     dtf=t.filter(vaccine=3,center=usu.center,date=today).exclude(state=1)
     if(not dtf):
         dtf=0
@@ -582,11 +586,9 @@ def homeAdmin(response):
         if (u):
             u=o.get(DNI=dni)
             today = date.today()
-            a=o.get(id=response.session["user_id"])
-            centro=a.center
-            t=u.appointment_set.filter(state=1,date=today,center=centro).exists()
+            t=u.appointment_set.filter(state=1,date=today,center=usu.center).exists()
             if(t):
-                t=u.appointment_set.get(state=1,date=today,center=centro)
+                t=u.appointment_set.get(state=1,date=today,center=usu.center)
                 usubuscado=t 
             else:
                 usubuscado=1

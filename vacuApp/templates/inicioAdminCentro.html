@@ -89,8 +89,8 @@ a{
     </div>
     </div>
     <!--marcar todo como ausente-->
-<div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
-    {%if seQuiereEliminar == 1 %}
+    <div style= "background-color: rgba(191, 241, 201, 0.508);" class=" pb-2 pt-2 mt-3 has-background-success-light; "> 
+    {%if ok == 1 %}
     <form class="ml-5 p-2" method="post" action="ausentes" >
       {% csrf_token %}
           <legend class="pt-1">¿Desea marcar todos los turnos como ausentes?</legend>
@@ -108,25 +108,24 @@ a{
   {%else%}
   <button class="ml-5 p-2"><a class="navbar-item" href="/ausentes" target="_self"> <b> Marcar los turnos Ausentes los turnos incompletos.</b></a></button>
   {%endif%}
-</div>
-<div class="mt-3 has-background-success-light; ">
-  <!--vacuna del covid-->
-      <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgba(159, 34, 222, 0.508); border: 2px solid; float: left">
-       <p class="pb-1" style="text-align: center; "> <b> TURNOS PARA HOY COVID-19 </b></p>
-      {% if covid == 0 and demasC == 0 %}
-      <br>
-      <br>
-      <br>
-      <p style="text-align: center;">No hay turnos pendientes para el covid.</p>
+    </div>
+   <!--vacuna del covid-->
+  <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgba(159, 34, 222, 0.508); border: 2px solid; float: left">
+    <p class="pb-1" style="text-align: center; "> <b> TURNOS PARA HOY COVID-19 </b></p>
+    {% if covid == 0 and demasC == 0 %}
+        <br>
+         <br>
+        <br>
+        <p style="text-align: center;">No hay turnos pendientes para el covid.</p>
       {%else%}
-      {% if covid != 0 %}
+      {% if covid != 0%}
         <table>
         <thead>
           <tr>
             <th>Nombre completo</th>
             <th style="width: 10%;">DNI</th>
             <th style="width: 8%;">Dosis</th>
-            <th style="width: 20%; border:none"> </th>
+            <th style="width: 20%; border:none"></th>
            </tr>
         </thead>
         <tbody>
@@ -139,46 +138,47 @@ a{
             {%else%}
             <td style="width: 8%;"> 2 </td>
             {%endif%}
-            <th style="width: 20%; border:none"><a href="completarTurno/{{covid.id}}/{{covid.vaccine.id}}" target="_self"> Confirmar Asistencia </a></th>
+            <th style="width: 20%; border:none"><a href="completarTurno/{{gripe.id}}/{{gripe.vaccine.id}}" target="_self"> Confirmar Asistencia </a></th>
           </tr>
           {% endfor %}
+        </tbody>
+       </table>
+       {%endif%}
+       <!--demas turnos de covid-->
+       {%if demasC != 0%}
+       <table>
+        <tbody>
+         {% for demasC in demasC %}
+         <tr>
+         {%if demasC.state == 0 %}
+          <td style="background-color: rgba(255, 0, 0, 0.515) ;">{{ demasC.patient.name }} {{ demasC.patient.surname }}</td>
+          <td style="width: 15%;background-color: rgba(255, 0, 0, 0.515) ;">DNI: {{ demasC.patient.DNI }} </td>
+          {%if  demasC.patient.history.covid_doses == 0 %}
+           <td style="width: 9%;background-color: rgba(255, 0, 0, 0.393) "> Dosis: 1 </td>
+          {%else%}
+           <td style="width: 9%;background-color: rgba(255, 0, 0, 0.393) "> Dosis: 2 </td>
+          {%endif%}
+           <td style="width: 20%;background-color: rgba(255, 0, 0, 0.515) ">Estado: AUSENTE</td>
+         {%else%}
+          <td Style="background-color:rgba(0, 128, 255, 0.493);">{{ demasC.patient.name }} {{ demasC.patient.surname }}</td>
+          <td style="width: 15%;background-color:rgba(0, 128, 255, 0.493);">DNI: {{ demasC.patient.DNI }} </td>
+          {%if  demasC.patient.history.covid_doses == 0 %}
+           <td style="width: 10%;background-color:rgba(0, 128, 255, 0.401);">Dosis: 1 </td>
+          {%else%}
+           <td style="width: 10%;background-color:rgba(0, 128, 255, 0.401);"> Dosis: 2 </td>
+          {%endif%}
+          <td style="width: 20%;background-color:rgba(0, 128, 255, 0.493);">Estado: PRESENTE</td>
+         {%endif%}
+        </tr>
+        {% endfor %}
          </tbody>
          </table>
-         {%endif%}
-         <!--demas turnos de covid-->
-        <table>
-       <tbody>
-        {% if demasC != 0%}
-        {% for demasC in demasC %}
-        <tr>
-        {%if demasC.state == 0 %}
-         <td style="width: 20%;background-color: rgba(255, 0, 0, 0.385) ;">{{ demasC.patient.name }} {{ demasC.patient.surname }}</td>
-         <td style="width: 13%;background-color: rgba(255, 0, 0, 0.393) ;">DNI: {{ demasC.patient.DNI }} </td>
-         {%if  demasC.patient.history.covid_doses == 0 %}
-         <td style="width: 9%;background-color: rgba(255, 0, 0, 0.393) "> Dosis: 1 </td>
-         {%else%}
-          <td style="width: 9%;background-color: rgba(255, 0, 0, 0.393) "> Dosis: 2 </td>
-         {%endif%}
-        <td style="width: 15%;background-color: rgba(255, 0, 0, 0.393) ">Estado: AUSENTE</td>
-        {%else%}
-         <td Style="background-color:rgba(0, 128, 255, 0.401);">{{ demasC.patient.name }} {{ demasC.patient.surname }}</td>
-         <td style="width: 13%;background-color:rgba(0, 128, 255, 0.401);"> DNI: {{ demasC.patient.DNI }} </td>
-         {%if  demasC.patient.history.covid_doses == 0 %}
-          <td style="width: 10%;background-color:rgba(0, 128, 255, 0.401);">Dosis: 1 </td>
-         {%else%}
-          <td style="width: 10%;background-color:rgba(0, 128, 255, 0.401);"> Dosis: 2 </td>
-         {%endif%}
-         <td style="width: 15%;background-color:rgba(0, 128, 255, 0.401);">Estado: PRESENTE</td>
-        {%endif%}
-       </tr>
-       {% endfor %}
-        </tbody>
-        </table>
-       {%endif%}
-    {%endif%}
-      </div>
+      {%endif%}
+      {%endif%}
+    </div> 
+
   <!--vacuna del gripe-->
-      <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgb(145, 236, 152);border: 2px solid; float: left">
+   <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgb(145, 236, 152);border: 2px solid; float:right ">
       <p class="pb-1" style="text-align: center; "> <b> TURNOS PARA HOY GRIPE </b></p>
       {% if gripe == 0 and demasG == 0 %}
         <br>
@@ -227,7 +227,7 @@ a{
          </table>
       {%endif%}
       {%endif%}
-      </div>
+    </div>
   <!--vacuna de la fiebre-->
       <div  class="m-5 p-2" style=" overflow:auto; width: 45%; height: 50%; background-color: rgb(193, 219, 126);border: 2px solid;">
       <p class="pb-1" style="text-align: center; "> <b> TURNOS PARA HOY FIEBRE AMARILLA</b></p>
@@ -279,7 +279,73 @@ a{
       {%endif%}
     {%endif%}
      </div>
-    </div>
-    <div>
-</div>
 </body>
+
+
+
+<!--
+{% if covid == 0 and demasC == 0 %}
+      <br>
+      <br>
+      <br>
+      <p style="text-align: center;">No hay turnos pendientes para el covid.</p>
+     {%else%}
+      {% if covid != 0 %}
+        <table>
+        <thead>
+          <tr>
+            <th>Nombre completo</th>
+            <th style="width: 10%;">DNI</th>
+            <th style="width: 8%;">Dosis</th>
+            <th style="width: 20%; border:none"> </th>
+           </tr>
+        </thead>
+        <tbody>
+          {% for covid in covid %}
+          <tr>
+            <td>{{ covid.patient.name }} {{ covid.patient.surname }}</td>
+            <td style="width: 10%;">{{ covid.patient.DNI }} </td>
+            {%if  covid.patient.history.covid_doses == 0 %}
+            <td style="width: 8%;"> 1 </td>
+            {%else%}
+            <td style="width: 8%;"> 2 </td>
+            {%endif%}
+            <th style="width: 20%; border:none"><a href="completarTurno/{{covid.id}}/{{covid.vaccine.id}}" target="_self"> Confirmar Asistencia </a></th>
+          </tr>
+          {% endfor %}
+         </tbody>
+         </table>
+      {%endif%}
+      ··demas turnos de covid
+      {% if demasC != 0%}
+        <table>
+        <tbody>
+       {% for demasC in demasC %}
+        <tr>
+        {%if demasC.state == 0 %}
+         <td style="width: 20%;background-color: rgba(255, 0, 0, 0.385) ;">{{ demasC.patient.name }} {{ demasC.patient.surname }}</td>
+         <td style="width: 13%;background-color: rgba(255, 0, 0, 0.393) ;">DNI: {{ demasC.patient.DNI }} </td>
+         {%if  demasC.patient.history.covid_doses == 0 %}
+         <td style="width: 9%;background-color: rgba(255, 0, 0, 0.393) "> Dosis: 1 </td>
+         {%else%}
+          <td style="width: 9%;background-color: rgba(255, 0, 0, 0.393) "> Dosis: 2 </td>
+         {%endif%}
+           <td style="width: 15%;background-color: rgba(255, 0, 0, 0.393) ">Estado: AUSENTE</td>
+        {%else%}
+          <td Style="background-color:rgba(0, 128, 255, 0.401);">{{ demasC.patient.name }} {{ demasC.patient.surname }}</td>
+          <td style="width: 13%;background-color:rgba(0, 128, 255, 0.401);"> DNI: {{ demasC.patient.DNI }} </td>
+          {%if  demasC.patient.history.covid_doses == 0 %}
+           <td style="width: 10%;background-color:rgba(0, 128, 255, 0.401);">Dosis: 1 </td>
+          {%else%}
+           <td style="width: 10%;background-color:rgba(0, 128, 255, 0.401);"> Dosis: 2 </td>
+          {%endif%}
+          <td style="width: 15%;background-color:rgba(0, 128, 255, 0.401);">Estado: PRESENTE</td>
+        {%endif%}
+        </tr>
+       {% endfor %}
+        </tbody>
+        </table>
+      {%endif%}
+   {%endif%}
+ </div>
+-->
