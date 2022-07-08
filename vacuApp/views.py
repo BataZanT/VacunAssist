@@ -276,7 +276,7 @@ def homeUsuario(response):
     else:
         if(usu.is_admin):
             response.session["categoria"]=3
-            return redirect('/turnosParaAsignar/')   
+            return redirect('/turnosParaAsignar/centro/1')   
         else:
             NCOMPLETO = usu.name + ' ' + usu.surname
             turnos = usu.appointment_set.all()
@@ -538,13 +538,15 @@ def homeAdmin(response):
     NCOMPLETO = usu.name + ' ' + usu.surname
     messages.success(response, ' Bienvenid@ a VacunAssist '+NCOMPLETO)
     t=Appointment.objects.all()
+    print(t)
     today = date.today()
     #covid
-    turnosC=t.filter(vaccine=1,state=1,center=usu.center,date=today)
+    turnosC=t.filter(vaccine=1,state=1,center=1,date=today)
+    print (turnosC)
     dtc=t.filter(vaccine=1,center=usu.center,date=today).exclude(state=1)
-    print (dtc)
     if (not dtc):
         dtc=0
+    print (dtc)
     if (not turnosC):
         turnosC=0
         cantC=0
@@ -552,6 +554,7 @@ def homeAdmin(response):
         cantC=t.filter(vaccine=1,state=1,center=usu.center,date=today).count()
     #gripe
     turnosG=t.filter(vaccine=2,state=1,center=usu.center,date=today)
+    print (turnosG)
     dtg=t.filter(vaccine=2,center=usu.center,date=today).exclude(state=1)
     if(not dtg):
         dtg=0
@@ -562,6 +565,7 @@ def homeAdmin(response):
         cantG=t.filter(vaccine=2,state=1,center=usu.center,date=today).count()
     #fiebre
     turnosF=t.filter(vaccine=3,state=1,center=usu.center,date=today)
+    print (turnosF)
     dtf=t.filter(vaccine=3,center=usu.center,date=today).exclude(state=1)
     if(not dtf):
         dtf=0
@@ -582,11 +586,9 @@ def homeAdmin(response):
         if (u):
             u=o.get(DNI=dni)
             today = date.today()
-            a=o.get(id=response.session["user_id"])
-            centro=a.center
-            t=u.appointment_set.filter(state=1,date=today,center=centro).exists()
+            t=u.appointment_set.filter(state=1,date=today,center=usu.center).exists()
             if(t):
-                t=u.appointment_set.get(state=1,date=today,center=centro)
+                t=u.appointment_set.get(state=1,date=today,center=usu.center)
                 usubuscado=t 
             else:
                 usubuscado=1
@@ -646,6 +648,7 @@ def marcarTurnoAusentes(response):
                 if(len(ausentes) > 0):
                     for turno in ausentes:
                         turno.state=0
+                        turno.cancel=1
                         turno.save()
                 else:
                     messages.error(response,"No hay turnos para marcar como ausentes")
@@ -797,97 +800,187 @@ def elegirGrafico(response):
 def graficoCentros(response):
     centros = Center.objects.all()
     turnos = Appointment.objects.all()
-    cantidades = []
-    Ncentros = []
+    #cantidad de turnos por centro
+    canttotalturnos = []
+    Ncentroscanttotalturnos = []
     for centro in centros:
         cant = turnos.filter(center = centro).count()
-        cantidades.append(cant)
-        Ncentros.append(centro.name)
-    return render(response,'graficoCentros.html',{'Ncentros':Ncentros,'cantidades':cantidades})
+        canttotalturnos.append(cant)
+        Ncentroscanttotalturnos.append(centro.name)
+    #cantidad de turnos pendientes por centro
+    cantpendienteturnos = [] 
+    Ncentrospendienteturnos = []
+    for centro in centros:
+        cant = turnos.filter(center = centro, state=0, cancel=False).count()
+        cantpendienteturnos.append(cant)
+        Ncentrospendienteturnos.append(centro.name)
+    #cantidad de turnos asignados
+    cantasignadoturnos = [] 
+    Ncentrosasignadoturnos = []
+    for centro in centros:
+        cant = turnos.filter(center = centro, state=1).count()
+        cantasignadoturnos.append(cant)
+        Ncentrosasignadoturnos.append(centro.name)
+    #cantidad de turnos asistidos
+    cantasistidosturnos = [] 
+    Ncentrosasistidosturnos = []
+    for centro in centros:
+        cant = turnos.filter(center = centro, state=2).count()
+        cantasistidosturnos.append(cant)
+        Ncentrosasistidosturnos.append(centro.name)
+    #cantidad de turnos ausentes
+    cantausentesturnos = [] 
+    Ncentrosausentesturnos = []
+    for centro in centros:
+        cant = turnos.filter(center = centro, state=0, cancel=True).count()
+        cantausentesturnos.append(cant)
+        Ncentrosausentesturnos.append(centro.name)
+    #cantidad de personas por centro
+    canttotpersonas = [] 
+    Ncentrostotpersonas = []
+    personas=User.objects.all()
+    for centro in centros:
+        cant = personas.filter(is_staff=False, is_admin=False, center = centro).count()
+        canttotpersonas.append(cant)
+        Ncentrostotpersonas.append(centro.name)
+    return render(response,'graficoCentros.html',{'Nct':Ncentroscanttotalturnos,'Ctt':canttotalturnos,
+    'Npt':Ncentrospendienteturnos,'Cpt':cantpendienteturnos,
+    'Nat':Ncentrosasignadoturnos,'Cat':cantasignadoturnos,
+    'Nast':Ncentrosasistidosturnos,'Cast':cantasistidosturnos,
+    'Naut':Ncentrosausentesturnos,'Caut':cantausentesturnos,
+    'Np':Ncentrostotpersonas,'Cp':canttotpersonas,})
 
 def graficoVacunas(response):
     vacunas = Vaccine.objects.all()
     turnos = Appointment.objects.all()
-    cantidades = []
-    Nturnos = []
+    #total de turnos por vacuna
+    canttotalturnosvacunas = []
+    Nvacunascanttotalturnos = []
     for vacuna in vacunas:
         cant = turnos.filter(vaccine = vacuna).count()
-        cantidades.append(cant)
-        Nturnos.append(vacuna.name)
-    return render(response,'graficoVacunas.html',{'Nvacunas':Nturnos,'cantidades':cantidades})
+        canttotalturnosvacunas.append(cant)
+        Nvacunascanttotalturnos.append(vacuna.name)
+    #total personas vacunadas   
+    canttotalpersonasvacunas = []
+    Nvacunascanttotalpersonas = []
+    personas=User.objects.all()
+    for vacuna in vacunas:
+        cant=0
+        for persona in personas:
+            if turnos.filter(patient=persona,vaccine=vacuna,state=2).exists():
+                cant=cant+1
+        canttotalpersonasvacunas.append(cant)
+        Nvacunascanttotalpersonas.append(vacuna.name)
+    #total cantidad vacunas aplicadas 
+    canttotalvacunasapli = []
+    Nvacunascanttotalapli = []
+    personas=User.objects.all()
+    for vacuna in vacunas:
+        cant=turnos.filter(vaccine=vacuna,state=2).count()
+        canttotalvacunasapli.append(cant)
+        Nvacunascanttotalapli.append(vacuna.name)
+    #total cantidad de vacunas pendientes a aplicacion  
+    canttotalvacunaspend = []
+    Nvacunascanttotalpend = []
+    personas=User.objects.all()
+    for vacuna in vacunas:
+        cant = turnos.filter(vaccine = vacuna,state=1).count()
+        canttotalvacunaspend.append(cant)
+        Nvacunascanttotalpend.append(vacuna.name)
+    #total cantidad aplicaciones canceladas por vacunas  
+    canttotalvacunascanc = []
+    Nvacunascanttotalcanc = []
+    personas=User.objects.all()
+    for vacuna in vacunas:
+        cant = turnos.filter(vaccine = vacuna,state=0,cancel=False).count()
+        canttotalvacunascanc.append(cant)
+        Nvacunascanttotalcanc.append(vacuna.name)
+    return render(response,'graficoVacunas.html',{'Ntv':Nvacunascanttotalturnos,'Ctv':canttotalturnosvacunas,
+    'Npv':Nvacunascanttotalpersonas,'Cpv':canttotalpersonasvacunas,
+    'Nav':Nvacunascanttotalapli,'Cav':canttotalvacunasapli,
+    'Npnv':Nvacunascanttotalpend,'Cpnv':canttotalvacunaspend,
+    'Ncv':Nvacunascanttotalcanc,'Ccv':canttotalvacunascanc,})
 
 def graficoUsuarios(response):
     centros = Center.objects.all()
+    turnos = Appointment.objects.all()
     usuarios = User.objects.all()
-    cantidades = []
-    Nusuarios = []
-    for centro in centros:
-        cant = usuarios.filter(center = centro).count()
-        cantidades.append(cant)
-        Nusuarios.append(centro.name)
-    return render(response,'graficoUsuarios.html',{'Nusuarios':Nusuarios,'cantidades':cantidades})
+    #cantidad de personas registradas en el sistemas por sexo
+    cantsexo = []
+    Nsexo = []
+    cant = usuarios.filter(sex='M').count()
+    cantsexo.append(cant)
+    Nsexo.append('M')
+    cant = usuarios.filter(sex='F').count()
+    cantsexo.append(cant)
+    Nsexo.append('F')
+    #cantidad de personas con turnos asignados o pendientes
+    cantpenoasig = []
+    Npenoasig = []
+    p=0
+    a=0  
+    for usuario in usuarios:
+        if usuario.is_admin==False and usuario.is_staff==False :
+            if turnos.filter(patient=usuario,state=0).exists():
+                p=p+1
+            if turnos.filter(patient=usuario,state=1).exists():
+                a=a+1    
+    cantpenoasig.append(p)
+    Npenoasig.append('Pendientes')
+    cantpenoasig.append(a)
+    Npenoasig.append('Asignados')
+    #cantidad de personas con turnos cancelados o completos
+    cantcancelopres = []
+    Ncancelopres = []
+    c=0
+    a=0  
+    for usuario in usuarios:
+        if usuario.is_admin==False and usuario.is_staff==False :
+            if turnos.filter(patient=usuario,state=0,cancel=True).exists():
+                c=c+1
+            if turnos.filter(patient=usuario,state=2).exists():
+                a=a+1    
+    cantcancelopres.append(c)
+    Ncancelopres.append('Ausentes')
+    cantcancelopres.append(a)
+    Ncancelopres.append('Presentes')
+    #cantidad de personas registradas en el sistemas por por rango de edad
+    cantrangoedad = []
+    Nrangoedad = []
+    uno=0; dos=0; tres=0; cuatro=0; cinco=0
+    for usu in usuarios:
+        if usu.is_admin==False and usu.is_staff==False :
+            edad= calculate_age(usu.birthDate)
+            if (edad<18):
+                uno=uno+1
+            else:
+                if(edad>=18 and edad<30):
+                    dos=dos+1
+                else:
+                    if(edad>=30 and edad<50):
+                        tres=tres+1
+                    else:
+                        if(edad>=50 and edad<70):
+                            cuatro=cuatro+1
+                        else:
+                            cinco=cinco+1
+    cantrangoedad.append(uno)
+    Nrangoedad.append('Menos de 18')
+    cantrangoedad.append(dos)
+    Nrangoedad.append('De 18 a menos de 30')
+    cantrangoedad.append(tres)
+    Nrangoedad.append('De 30 a menos de 50  ')
+    cantrangoedad.append(cuatro)
+    Nrangoedad.append('De 50 a menos de 70')
+    cantrangoedad.append(cinco)
+    Nrangoedad.append('De 70 a mas')
+    return render(response,'graficoUsuarios.html',{'Nrs':Nsexo,'Crs':cantsexo,
+    'Npa':Npenoasig,'Cpa':cantpenoasig,
+    'Ncp':Ncancelopres,'Ccp':cantcancelopres,
+    'Ne':Nrangoedad,'Ce':cantrangoedad,
+    })
 
-def turnosParaAsignar(response,pagina = 1,filtro='centro'):
-    turnos = Appointment.objects.filter(state = 0)
-    fecha = None
-    cantidades = None
-    if response.method == "POST":
-        fecha = response.POST["fecha"]
-        message = validators.validarFechaAsginar(fecha)
-        if message == '':
-            cantidades = turnosPorCentro(fecha)
-        else: 
-            fecha = None
-            messages.error(response,message)
-    if(filtro == 'fecha'):
-        turnos = turnos.order_by('date')
-    elif(filtro == 'nombre'):
-        turnos = turnos.order_by('patient__surname')
-    elif(filtro == 'vacuna'):
-        turnos = turnos.order_by('vaccine__name')
-    else:
-        turnos = turnos.order_by('center__name')
-    p = Paginator(turnos,12)
-    pagina_actual = p.page(pagina)
-    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
-
-def turnosPorCentro(fecha):
-    centros = Center.objects.all()
-    turnos = Appointment.objects.filter(state = 1,date = fecha)
-    vacC = Vaccine.objects.get(id = 1)
-    vacG = Vaccine.objects.get(id = 2)
-    vacF = Vaccine.objects.get(id = 3)
-    dic = {}    
-    for centro in centros:
-        arr = []
-        arr.append("Covid:")
-        arr.append(turnos.filter(center = centro,vaccine = vacC).count())
-        arr.append("Gripe:")
-        arr.append(turnos.filter(center = centro,vaccine = vacG).count())
-        arr.append("Fiebre Amarilla:")
-        arr.append(turnos.filter(center = centro,vaccine = vacF).count())
-        dic[centro.name] = arr
-    return dic
-    
-def asignarTurnos(response,fecha,pagina,filtro):
-    turnos = response.POST.getlist("turnos[]")
-    print(turnos)
-    for turno in turnos:
-        turnobj = Appointment.objects.get(id = turno)
-        message = validators.validarTurnoMismoDia(turnobj.patient,fecha)
-        if message == '':
-            turnobj.state = 1
-            turnobj.date = fecha
-            turnobj.save()
-        else:
-            messages.error(response,message)
-    turnos = Appointment.objects.filter(state = 0)
-    p = Paginator(turnos,12)
-    pagina_actual = p.page(pagina)
-    cantidades = turnosPorCentro(fecha)
-    return render(response,'turnosParaAsignar.html',{'pagina':pagina_actual,'paginas':p,'fecha':fecha,'filtro':filtro,'cantidades':cantidades})
-
-def turnosParaAsignar(response,pagina = 1,filtro='centro'):
+def turnosParaAsignar(response,pagina=1,filtro='centro'):
     if not checkearLogin(response):
         return redirect('/')
     if response.session["categoria"] != 3 :
@@ -1001,6 +1094,7 @@ def asignarTurnos(response,fecha):
     fecha = None
     return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
 
+    
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
         user = User.objects.get(email=response.session["email"]) 

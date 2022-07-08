@@ -5,18 +5,64 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 </head>
 
-<body>   
+<body class= "mt-6 pt-3 ">   
     {% include 'barraAdminPrincipal.html' %}
-    <p>Turnos por cada centro</p>
-    <canvas class="mt-6" id="myChart" width="50" height="10vh"></canvas>
-    <canvas class="mt-6" id="myChart2" width="50" height="10vh"></canvas>
-    
+<!--cantidad de turnos totales por centro-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos por centro:</u></p>
+    <canvas class="mt-5" id="myChart" width="20" height="10vh"></canvas>
+ </div>
+ <!--cantidad de turnos pendientes por centro-->
+ <div class="ml-5 mt-3 mr-5" style="background-color: rgba(209, 220, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos pendientes por centro:</u></p>
+    <canvas class="mt-5" id="myChart2" width="20" height="10vh"></canvas>
+</div>
+<!--cantidad de turnos asignados por centro-->
+<div class="ml-5 mt-3 mr-5" style="background-color:  rgba(209, 220, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos Asignados por centro:</u></p>
+    <canvas class="mt-5" id="myChart3" width="20" height="10vh"></canvas>
+</div>
+<!--cantidad de turnos asistidos por centro-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de vacunas aplicadas por centro:</u></p>
+    <canvas class="mt-5" id="myChart4" width="20" height="10vh"></canvas>
+</div>
+<!--cantidad de turnos ausentes por centro-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de turnos Ausentes por centro:</u></p>
+    <canvas class="mt-5"id="myChart5" width="20" height="10vh"></canvas>
+</div>
+<!--cantidad de personas por centro-->
+<div class="ml-5 mt-3 mr-5" style="background-color:rgba(209, 220, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad personas por centro:</u></p>
+    <canvas class="mt-5" id="myChart6" width="20" height="10vh"></canvas>
+</div>
 </body>
 <script>
-    var df = {{Ncentros|safe}}
-    var df1 = {{cantidades|safe}}
-    const ctx = document.getElementById('myChart');
-    const ctx2 = document.getElementById('myChart2');
+    var df = {{Nct|safe}} //total por centro
+    var df1 = {{Ctt|safe}}
+    var df2 = {{Npt|safe}} //pendiente por centro
+    var df12 = {{Cpt|safe}}
+    var df3 = {{Nat|safe}} //asignados por centro
+    var df13 = {{Cat|safe}}
+    var df4 = {{Nast|safe}} //asistidos por centro
+    var df14 = {{Cast|safe}}
+    var df5 = {{Naut|safe}} //ausentes por centro
+    var df15 = {{Caut|safe}}
+    var df6 = {{Np|safe}} //personas por centro
+    var df16 = {{Cp|safe}}
+    const ctx = document.getElementById('myChart'); //turnos totales por centro
+    const ctx2 = document.getElementById('myChart2'); //turnos pendientes por centro
+    const ctx3 = document.getElementById('myChart3'); //turnos Asignados por centro
+    const ctx4 = document.getElementById('myChart4'); //turnos Asistidos por centro
+    const ctx5 = document.getElementById('myChart5'); //turnos ausentes por centro
+    const ctx6 = document.getElementById('myChart6'); //personas por centro
     const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -24,12 +70,12 @@
             datasets: [{
                 data: df1,
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
+                    'rgba(153, 102, 255, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
                 ],
@@ -47,16 +93,124 @@
     const myChart2 = new Chart(ctx2, {
         type: 'doughnut',
         data: {
-            labels: df,
+            labels: df2,
             datasets: [{
-                data: df1,
+                data: df12,
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
+                'rgba(153, 102, 255, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart3 = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+            labels: df3,
+            datasets: [{
+                data: df13,
+                backgroundColor: [
+                'rgba(153, 102, 255, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart4 = new Chart(ctx4, {
+        type: 'doughnut',
+        data: {
+            labels: df4,
+            datasets: [{
+                data: df14,
+                backgroundColor: [
+                'rgba(153, 102, 255, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart5 = new Chart(ctx5, {
+        type: 'doughnut',
+        data: {
+            labels: df5,
+            datasets: [{
+                data: df15,
+                backgroundColor: [
+                'rgba(153, 102, 255, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart6 = new Chart(ctx6, {
+        type: 'doughnut',
+        data: {
+            labels: df6,
+            datasets: [{
+                data: df16,
+                backgroundColor: [
+                'rgba(153, 102, 255, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
                 ],

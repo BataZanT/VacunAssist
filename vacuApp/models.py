@@ -88,6 +88,7 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE)
     observaciones = models.CharField(null = True,max_length=150)
     descripcion = models.CharField(null = True,max_length=150)
+    cancel=models.BooleanField(default=False)
 
 
     def __str__(self):
