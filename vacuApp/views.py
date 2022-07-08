@@ -160,7 +160,7 @@ def registerCentro(response):
                 data = form.cleaned_data
                 response.session["center"] = data["center"]
                 completarUsuario(response)
-                return enviaremail(response)
+                return enviaremailNormal(response)
 
             else:
                 form = RegisterCentro()
@@ -195,7 +195,7 @@ def validar(response):
             messages.error(response, 'No hay usuarios cargados en la base')
         return redirect('/login')     
 
-def enviaremail(response): 
+def enviaremailNormal(response): 
     
     #user = request.session["user"]
     
@@ -1081,6 +1081,18 @@ def cancelarTurno(response):
     turno.save()
     return redirect('/turnosAsignados')
 
+def asignarTurnos(response,fecha):
+    turnos = response.POST.getlist("turnos[]")
+    print(turnos)
+    for turno in turnos:
+        turnobj = Appointment.objects.get(id = turno)
+        turnobj.state = 1
+        turnobj.date = fecha
+        turnobj.save()
+    turnos = Appointment.objects.filter(state = 0)
+    p = Paginator(turnos,12)
+    fecha = None
+    return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
 
     
 def mailRecuperarContraseña(response):
