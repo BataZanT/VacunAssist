@@ -5,16 +5,55 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 </head>
 
-<body class= "mt-6 pt-3  has-background-success-light">   
+<body class= "mt-6 pt-3 ">   
     {% include 'barraAdminPrincipal.html' %}
-    <p  class="mt-6">Turnos por cada centro</p>
-    <canvas class="mt-6" id="myChart" width="50" height="10vh"></canvas>
-    
+<!--cantidad de turnos totales por vacuna-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Turnos por cada vacuna:</u></p>
+    <canvas class="mt-5" id="myChart" width="20%" height="10%"></canvas>
+ </div>
+ <!--cantidad de turnos totales personas vacunadas-->
+<div class="ml-5 mt-3 mr-5" style="background-color:rgba(209, 220, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u> Total de personas vacunadas por vacuna:</u></p>
+    <canvas class="mt-5" id="myChart2" width="20%" height="10%"></canvas>
+ </div>
+ <!--cantidad de turnos totale de vacunas aplicadas-->
+<div class="ml-5 mt-3 mr-5" style="background-color:rgba(209, 220, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u> Total de vacunas aplicadas</u></p>
+    <canvas class="mt-5" id="myChart3" width="20%" height="10%"></canvas>
+ </div>
+<!--cantidad de vacunas con aplicacion pendiente-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Total de aplicaciones pendiente por vacuna:</u></p>
+    <canvas class="mt-5" id="myChart4" width="20%" height="10%"></canvas>
+ </div>
+ <!--cantidad de vacunas con aplicacion canceladas-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285); width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Total de aplicaciones canceladas por vacuna:</u></p>
+    <canvas class="mt-5" id="myChart5" width="20%" height="10%"></canvas>
+ </div>
 </body>
 <script>
-    var df = {{Nvacunas|safe}}
-    var df1 = {{cantidades|safe}}
-    const ctx = document.getElementById('myChart');
+    var df = {{Ntv|safe}} //total de turnos por vacuna
+    var df1 = {{Ctv|safe}}
+    var df2 = {{Npv|safe}} //total de personas vacunadas por vacuna
+    var df12 = {{Cpv|safe}}
+    var df3 = {{Nav|safe}} //total de  vacunadas aplicadas
+    var df13 = {{Cav|safe}}
+    var df4 = {{Npnv|safe}} //total de  vacunadas pendientes
+    var df14 = {{Cpnv|safe}}
+    var df5 = {{Ncv|safe}} //total de aplicaciones canceladas
+    var df15 = {{Ccv|safe}}
+    const ctx = document.getElementById('myChart');//total de turnos por vacuna
+    const ctx2 = document.getElementById('myChart2');//total de turnos por vacuna
+    const ctx3 = document.getElementById('myChart3');//total de vacunas aplicadas
+    const ctx4 = document.getElementById('myChart4');//total de vacunas de aplicasion pendiente
+    const ctx5 = document.getElementById('myChart5');//total de aplicasiones canceladas
     const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -22,6 +61,142 @@
             datasets: [{
                 label: '# de turnos',
                 data: df1,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    /*'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'*/
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    /*'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart2 = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: df2,
+            datasets: [{
+                label: '# de turnos',
+                data: df12,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    /*'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'*/
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    /*'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart3 = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+            labels: df3,
+            datasets: [{
+                label: '# de turnos',
+                data: df13,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    /*'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'*/
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    /*'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart4 = new Chart(ctx4, {
+        type: 'doughnut',
+        data: {
+            labels: df4,
+            datasets: [{
+                label: '# de turnos',
+                data: df14,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    /*'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'*/
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    /*'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart5 = new Chart(ctx5, {
+        type: 'doughnut',
+        data: {
+            labels: df5,
+            datasets: [{
+                label: '# de turnos',
+                data: df15,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',

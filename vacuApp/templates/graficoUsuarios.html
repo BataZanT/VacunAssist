@@ -5,16 +5,46 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
 </head>
 
-<body class= "mt-6 pt-3  has-background-success-light">   
+<body class= "mt-6 pt-3 ">   
     {% include 'barraAdminPrincipal.html' %}
-    <p class="mt-6">Turnos por cada centro</p>
-    <canvas class="mt-6" id="myChart" width="50" height="10vh"></canvas>
-    
+    <!--cantidad de tpersonas registradas en el sistema por sexo-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de personas registradas por sexo:</u></p>
+    <canvas class="mt-5" id="myChart" width="20%" height="10%"></canvas>
+ </div>
+ <!--cantidadpersonas con turnos pendientes o asignados-->
+ <div class="ml-5 mt-3 mr-5" style="background-color:rgba(209, 220, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u> Total de personas en espera de un turno o con un turno:</u></p>
+    <canvas class="mt-5" id="myChart2" width="20%" height="10%"></canvas>
+ </div>
+<!--cantidad de tpersonas registradas en el sistema por sexo-->
+<div class="ml-5 mt-3 mr-5" style="background-color: rgba(209, 220, 206, 0.285); width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Personas que se ausentaron o se presentaron a sus turnos:</u></p>
+    <canvas class="mt-5" id="myChart3" width="20%" height="10%"></canvas>
+</div>   
+ <!--cantidad de tpersonas registradas en el sistema por sexo-->
+ <div class="ml-5 mt-3 mr-5" style="background-color: rgba(220, 206, 206, 0.285) ; width: 40%; height: 60% ; float:left">
+    <br>
+    <p style="text-align: center ;" class=""> <u>Cantidad de personas registradas por rango de edad:</u></p>
+    <canvas class="mt-5" id="myChart6" width="20%" height="10%"></canvas>
+ </div> 
 </body>
 <script>
-    var df = {{Nusuarios|safe}}
-    var df1 = {{cantidades|safe}}
-    const ctx = document.getElementById('myChart');
+    var df = {{Nrs|safe}}//cantidad de personas registradas por sexo
+    var df1 = {{Crs|safe}}
+    var df2 = {{Npa|safe}}//cantidad de personas con turnos pendientes o asignados
+    var df12 = {{Cpa|safe}}
+    var df3 = {{Ncp|safe}}//cantidad de personas con turnos completos o cancelados
+    var df13 = {{Ccp|safe}}
+    var df6 = {{Ne|safe}} //total de personas registradas por rango de edad
+    var df16 = {{Ce|safe}}
+    const ctx = document.getElementById('myChart');//cantidad de personas registradas por sexo
+    const ctx2 = document.getElementById('myChart2');//cantidad de personas con turnos pendientes o asignados
+    const ctx3 = document.getElementById('myChart3');//cantidad de personas con turnos completos o cancelados
+    const ctx6 = document.getElementById('myChart6');//total de personas registradas por rango de edad
     const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -37,6 +67,108 @@
                     /*'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
                     'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart2 = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: df2,
+            datasets: [{
+                label: '# de turnos',
+                data: df12,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    /*'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'*/
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    /*'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart3 = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+            labels: df3,
+            datasets: [{
+                label: '# de turnos',
+                data: df13,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    /*'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'*/
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    /*'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'*/
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const myChart6 = new Chart(ctx6, {
+        type: 'doughnut',
+        data: {
+            labels: df6,
+            datasets: [{
+                label: '# de turnos',
+                data: df16,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
             }]
