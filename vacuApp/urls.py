@@ -49,7 +49,7 @@ urlpatterns = [
     path('graficoCentros',views.graficoCentros),
     path('graficoVacunas',views.graficoVacunas),
     path('turnosAsignados/<filtro>/<pagina>',views.turnosAsignados),
- #   path('turnosAsignados/',views.turnosAsignados),
+    path('turnosAsignados/',views.turnosAsignados),
     path('turnosParaAsignar/<filtro>/<pagina>/',views.turnosParaAsignar),
     path('turnosParaAsignar/',views.turnosParaAsignar),
     path('asignarTurnos/<fecha>/<pagina>/<filtro>',views.asignarTurnos),
