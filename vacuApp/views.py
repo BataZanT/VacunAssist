@@ -1081,19 +1081,6 @@ def cancelarTurno(response):
     turno.save()
     return redirect('/turnosAsignados')
 
-def asignarTurnos(response,fecha):
-    turnos = response.POST.getlist("turnos[]")
-    print(turnos)
-    for turno in turnos:
-        turnobj = Appointment.objects.get(id = turno)
-        turnobj.state = 1
-        turnobj.date = fecha
-        turnobj.save()
-    turnos = Appointment.objects.filter(state = 0)
-    p = Paginator(turnos,12)
-    fecha = None
-    return render(response,'turnosParaAsignar.html',{'pagina':p.page(1),'paginas':p,'fecha':fecha})
-
     
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
