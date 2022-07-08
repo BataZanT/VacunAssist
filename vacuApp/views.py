@@ -621,8 +621,10 @@ def presente(response,id,tipo):
     else:
         if (tipo == 2):
             historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
+            historialActual.gripe = True
         else:     
             historialActual.fiebreA_date = datetime.today().strftime('%Y-%m-%d')
+            historialActual.fiebreA_date
             
     turnoActual.save()
     historialActual.save()                
