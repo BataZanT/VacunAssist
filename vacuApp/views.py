@@ -244,14 +244,14 @@ def completarUsuario(response):
 def asignarVacunas(user):
     if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacC)
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthdate))
 
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG)
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthdate))
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG)  
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthdate))  
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -331,7 +331,7 @@ def asignarTurnoFiebreA(response):
     idu=response.session["user_id"]
     usu=o.get(id=idu)
     vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu)
+    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=calculate_age(usu.birthdate))
     turnoF.save()
     return redirect('/homeUsuario')
 
@@ -617,7 +617,7 @@ def presente(response,id,tipo):
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
             vacC = Vaccine.objects.get(name="Covid")
-            usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC)
+            usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC,edad=calculate_age(usu.birthdate))
     else:
         if (tipo == 2):
             historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
@@ -1005,6 +1005,8 @@ def turnosParaAsignar(response,pagina=1,filtro='centro'):
         turnos = turnos.order_by('patient__surname')
     elif(filtro == 'vacuna'):
         turnos = turnos.order_by('vaccine__name')
+    elif(filtro == 'edad'):
+        turnos = turnos.order_by('edad')
     else:
         turnos = turnos.order_by('center__name')
     p = Paginator(turnos,12)
