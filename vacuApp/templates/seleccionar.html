@@ -28,9 +28,9 @@
         <table>
             <thead>
               <tr>
-                <th style="width: 10%;"> Nombre </th>
+                <th style="width: 20%;"> Nombre </th>
                 <th style="width: 20%;"> Direccion </th>
-                <th style="width: 30%;"> Opciones</th>
+                <th style="width: 50%;"> Opciones</th>
                </tr>
             </thead>
             <tbody>
@@ -45,7 +45,6 @@
            </table>
            <br>
     <div> <h2 class="title"> Administradores Actuales </h2></div>
-            <br>
             {% if totalAdmins == 0 %}
                 <p> No hay administradores cargados por el momento </p>
             {% else %}
@@ -53,19 +52,21 @@
             <table>
                 <thead>
                 <tr>
-                    <th style="width: 25%;"> Nombre completo </th>
-                    <th style="width: 10%;"> DNI </th>
+                    <th style="width: 20%;"> Nombre completo </th>
+                    <th style="width: 15%;"> DNI </th>
                     <th style="width: 25%;"> Email </th>
-                    <th style="width: 20%;"> Centro </th>
-                    <th style="width: 15%;"> Opciones </th>
+                    <th style="width: 15%;"> Telefono </th>
+                    <th style="width: 10%;"> Centro </th>
+                    <th style="width: 10%;"> Opciones </th>
                 </tr>
                 </thead>
                 <tbody>
                     {% for admin in todosLosAdmins %}
                     <tr>
-                        <td><a href="/modificarInfoDeAdmin/{{admin.id}}" target="_self"> {{ admin.name }} {{ admin.surname }} </a> </td>
+                        <td>{{ admin.name }} {{ admin.surname }} </a> </td>
                         <td>{{ admin.DNI }} </td>
                         <td>{{ admin.email }} </td>
+                        <td>{{ admin.telefono }} </td>
                         <td>{{ admin.center }} </td>
                         <td><a href="/modificarInfoDeAdmin/{{admin.id}}" target="_self"> Modificar </a></th>
                         <td><a href="/preguntar/{{admin.id}}" target="_self"> Eliminar </a></th>
