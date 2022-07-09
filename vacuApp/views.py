@@ -242,16 +242,16 @@ def completarUsuario(response):
     return str(u.history)
 
 def asignarVacunas(user):
+    edad=calculate_age(user.birthDate) 
     if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthdate))
-
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=edad)
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthdate))
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=edad)
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthdate))  
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=edad)  
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -330,8 +330,9 @@ def asignarTurnoFiebreA(response):
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
+    edad=calculate_age(usu.birthDate)
     vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=calculate_age(usu.birthdate))
+    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=edad)
     turnoF.save()
     return redirect('/homeUsuario')
 
