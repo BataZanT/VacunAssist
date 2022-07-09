@@ -29,6 +29,11 @@
             <input class="input is-primary mt-3" name="email" style="width: 75%" type="email" placeholder="josejose@gmail.com" required> 
             <br> 
             <br>
+            <label class="mt-5"> Ingrese el numero de telefono </label>
+            <br>
+            <input class="input is-primary mt-3" name="telefono" style="width: 75%" type="number" placeholder="Ej. 152345678" min=150000000 max=2219999999 required> 
+            <br> 
+            <br>
             <label class="mt-5"> Seleccione el vacunatorio </label>
             <select style="width: 125px; height: 25px;" name="elegido">
                 {% for centro in todosLosCentros %}
