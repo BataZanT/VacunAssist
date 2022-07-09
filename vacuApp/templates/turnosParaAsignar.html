@@ -19,6 +19,8 @@
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/nombre/{{pagina.number}}" target="_self">Nombre</a></th>
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/centro/{{pagina.number}}" target="_self">Centro</a></th>
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/vacuna/{{pagina.number}}" target="_self">Vacuna</a></th>
+          <th><a href="http://127.0.0.1:8000/turnosParaAsignar/edad/{{pagina.number}}" target="_self">Edad</a></th>
+
           {% if fecha %}
           <th>Asignar para {{fecha}}</th>
           {% else %}
@@ -28,10 +30,13 @@
       </thead>
       <tbody>
     {% for turno in pagina %}
+
       <tr>
         <th>{{turno.patient.surname}} {{turno.patient.name}}</th>
         <td>{{turno.center.name}}</td>
         <td>{{turno.vaccine.name}}</td>
+        <td>{{turno.edad}}</td>
+
         {% if fecha %}
         <td><label class="checkbox">
           <input type="checkbox" name="turnos[]" value="{{turno.id}}">
@@ -47,6 +52,8 @@
         {% endif %}
 
       </tr>
+      {% empty %}
+      <td><b> No hay turnos pendientes </b></td>
     {% endfor %}
       </tbody>
     </table>

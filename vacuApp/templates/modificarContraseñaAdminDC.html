@@ -6,16 +6,16 @@
 <body class= "mt-6 pt-3  has-background-success-light">
     {% include 'barraUsuarioLogeadoNormal.html' %}
     <div class= ml-4><h2 class="title"> Modificar contraseña:</h2></div>
-        <form class="box mt-3 background-success-light" method="post" action="/validarModificacion">
-            {% csrf_token %}
-            <input class="input is-primary " style="width: 35% ;" type="password" placeholder="Contraseña Actual" required="" minlength="8" mmaxLength="20" name="contActual"> <br/>
-            <p class="mt-5"> La nueva contraseña debe tener: al menos una mayuscula y al menos 8 caracteres.</p>
-            <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña Nueva" required="" minlength="8" maxLength="20" name="contNueva"><br/>
-            <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña Nueva" required="" minlength="8" maxLength="20" name="contNuevaR"><br/>
-            <br/>
+    <form class="box mt-3 background-success-light" method="post" action="/validarModificacion">
+        {% csrf_token %}
+        <input class="input is-primary " style="width: 35% ;" type="password" placeholder="Contraseña Actual" required="" minlength="8" mmaxLength="20" name="contActual"> <br/>
+        <p class="mt-5"> La nueva contraseña debe tener: al menos una mayuscula y al menos 8 caracteres.</p>
+        <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña Nueva" required="" minlength="8" maxLength="20" name="contNueva"><br/>
+        <input class="input is-primary mt-3" style="width: 35% ;" type="password" placeholder="Contraseña Nueva" required="" minlength="8" maxLength="20" name="contNuevaR"><br/>
         <div class=" mt-5">
-        <button class="button"> <a class="navbar-item" href="/miInfo" target="_self">Atras</a></button>
-        <button class="button"> Confirmar</button></div> 
-        </form>
-        {% include 'messages.html' %}          
+            <button class="button"> <a class="navbar-item" href="/miInfo" target="_self">Atras</a></button>
+            <button class="button"> Confirmar</button>
+        </div> 
+    </form>
+    {% include 'messages.html' %}          
 </body>

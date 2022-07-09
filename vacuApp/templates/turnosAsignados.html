@@ -13,6 +13,7 @@
         <th><a href="http://127.0.0.1:8000/turnosAsignados/centro/{{pagina.number}}" target="_self">Centro</a></th>
         <th><a href="http://127.0.0.1:8000/turnosAsignados/vacuna/{{pagina.number}}" target="_self">Vacuna</a></th>
         <th><a href="http://127.0.0.1:8000/turnosAsignados/fecha/{{pagina.number}}" target="_self">Fecha</a></th>
+        <th><a href="http://127.0.0.1:8000/turnosAsignados/edad/{{pagina.number}}" target="_self">Edad</a></th>
         <th>Cancelar</th>
       </tr>
     </thead>
@@ -23,6 +24,7 @@
   <td>{{turno.center.name}}</td>
   <td>{{turno.vaccine.name}}</td>
   <td>{{turno.date}}</td>
+  <td>{{turno.edad}}</td>
   <form action="http://127.0.0.1:8000/cancelarTurno/" method="post">
     {% csrf_token %}
     <td><label class="radio">
@@ -32,6 +34,8 @@
     </td>
   </form>
 </tr>
+{% empty %}
+<td><b> No hay turnos Asginados </b></td>
 {% endfor %}
     </tbody>
   </table>

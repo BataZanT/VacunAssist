@@ -47,7 +47,12 @@
                   </p>
                   <p>Centro de vacunacion: {{ turno.center }} <br>
                     Dirección: {{ turno.center.adress }} </p>
+                  {% if turno.state == 2 %}
+                  <p>Descripcion: {{turno.descripcion}}</p>
+                  <p>Observaciones: {{turno.observaciones}}</p>
+                  {% endif %}
                 </div>
+
               {% endfor %}          
             {% else %}
               <div class="box is-size-5 mx-6" style="background-color: rgba(113, 111, 114, 0.508)"> Usted no tiene turnos
