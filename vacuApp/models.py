@@ -47,6 +47,7 @@ class User(AbstractBaseUser):
     password = CharField(max_length=20)
     token = CharField(max_length=4, null=True,default='1111')
     center = models.ForeignKey(Center, null=True,on_delete=models.CASCADE)
+    telefono = models.IntegerField(null=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     
@@ -89,6 +90,7 @@ class Appointment(models.Model):
     observaciones = models.CharField(null = True,max_length=150)
     descripcion = models.CharField(null = True,max_length=150)
     cancel=models.BooleanField(default=False)
+    edad=models.IntegerField(null = True)
 
 
     def __str__(self):

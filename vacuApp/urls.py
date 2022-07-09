@@ -62,6 +62,7 @@ urlpatterns = [
     path('preguntar/<int:id>',views.confirmarEliminar), 
     path('eliminarAdmin/<int:id>',views.eliminarAdmin),
     path('miInfo',views.miInfo),
-    path('miInfo/<int:id>',views.miInfo),
-    path('modificarMiInfo',views.modificarMiInfo), 
+    path('modificarMiInfo',views.modificarMiInfo),
+    path('modificarContraseñaDeAdminDC',views.modCAdmin), 
+    path('validarModificacion',views.modificarContraseñaDeAdminDC), 
 ]
