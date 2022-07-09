@@ -330,8 +330,9 @@ def asignarTurnoFiebreA(response):
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
+    edad=calculate_age(usu.birthdate)
     vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=calculate_age(usu.birthdate))
+    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=edad)
     turnoF.save()
     return redirect('/homeUsuario')
 
