@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from xmlrpc.client import Boolean
 from django.db import models
 from django.db.models import CharField
@@ -47,7 +48,7 @@ class User(AbstractBaseUser):
     password = CharField(max_length=20)
     token = CharField(max_length=4, null=True,default='1111')
     center = models.ForeignKey(Center, null=True,on_delete=models.CASCADE)
-    telefono = models.IntegerField(default=None)
+    telefono = models.IntegerField(default=NULL)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     
