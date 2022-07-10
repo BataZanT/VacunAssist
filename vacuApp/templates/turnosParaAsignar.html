@@ -20,6 +20,7 @@
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/centro/{{pagina.number}}" target="_self">Centro</a></th>
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/vacuna/{{pagina.number}}" target="_self">Vacuna</a></th>
           <th><a href="http://127.0.0.1:8000/turnosParaAsignar/edad/{{pagina.number}}" target="_self">Edad</a></th>
+          <th><a href="http://127.0.0.1:8000/turnosParaAsignar/fecha/{{pagina.number}}" target="_self">Fecha de peticion</a></th>
 
           {% if fecha %}
           <th>Asignar para {{fecha}}</th>
@@ -36,6 +37,7 @@
         <td>{{turno.center.name}}</td>
         <td>{{turno.vaccine.name}}</td>
         <td>{{turno.edad}}</td>
+        <td>{{turno.initialDate}}</td>
 
         {% if fecha %}
         <td><label class="checkbox">
