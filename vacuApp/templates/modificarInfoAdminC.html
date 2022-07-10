@@ -10,18 +10,27 @@
   <div class="box mt-3 background-success-light" >
     <form action="/modificarInfoDeAdminX/{{elegido}}" method="post">
       {% csrf_token %}
+      <p> Nombre actual: {{ nActual }} </p>
       <p> Ingrese el nuevo nombre </p>
       <input class="input is-primary mt-3" style="width: 35% ;" type="text" pattern="[a-zA-Z]+*" placeholder="Ej. Jose" minlength="3" maxlenght="20" name="nombreN">
       <br>
       <br>
+      <p> Apellido actual: {{ aActual }} </p>
       <p> Ingrese el nuevo apellido </p>
       <input class="input is-primary mt-3" style="width: 35% ;" type="text" pattern="[a-zA-Z]+*" placeholder="Ej. Gonzalez" name="apellidoN">
       <br>
       <br>
+      <p> DNI actual: {{ dActual }} </p>
       <p> Ingrese el nuevo DNI </p>
       <input class="input is-primary mt-3" style="width: 35% ;" type="number" name="dniN" min="1000000" max="99999999" placeholder="Ej. 1111111">
       <br>
       <br>
+      <p> Telefono actual: {{ tActual }} </p>
+      <p> Ingrese el nuevo telefono </p>
+      <input class="input is-primary mt-3" style="width: 35% ;" type="number" name="telefonoN" min="150000000" max="2219999999" placeholder="Ej. 151234567">
+      <br>
+      <br>
+      <p> Centro actual: {{ cActual }} </p>
       <p> Ingrese el nuevo centro </p>
       <input class="input is-primary mt-3" style="width: 35% ;" type="text" pattern="[a-zA-Z]+*" name="centroN" placeholder="Ej. Municipalidad">
       <br>    
