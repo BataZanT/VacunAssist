@@ -236,7 +236,7 @@ def completarUsuario(response):
 def asignarVacunas(user):
     if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate))
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate),initialDate=date.today())
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
         user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate),initialDate=date.today())
