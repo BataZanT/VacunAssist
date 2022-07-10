@@ -91,6 +91,7 @@ class Appointment(models.Model):
     descripcion = models.CharField(null = True,max_length=150)
     cancel=models.BooleanField(default=False)
     edad=models.IntegerField(null = True)
+    initialDate=models.DateField(null = True)
 
 
     def __str__(self):
