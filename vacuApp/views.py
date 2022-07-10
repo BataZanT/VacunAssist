@@ -236,14 +236,14 @@ def completarUsuario(response):
 def asignarVacunas(user):
     if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate))
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate),initialDate=date.today())
 
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate))
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate),initialDate=date.today())
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate))  
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate),initialDate=date.today())  
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
@@ -318,7 +318,7 @@ def asignarTurnoFiebreA(response):
     usu=o.get(id=idu)
     edad=calculate_age(usu.birthDate)
     vacF = Vaccine.objects.get(name="Fiebre Amarilla")
-    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=edad)
+    turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=calculate_age(usu.birthDate),initialDate=date.today())
     turnoF.save()
     return redirect('/homeUsuario')
 
@@ -593,7 +593,7 @@ def presente(response,id,tipo):
         historialActual.covid_doses += 1
         if(historialActual.covid_doses < 2):
             vacC = Vaccine.objects.get(name="Covid")
-            usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC,edad=calculate_age(usu.birthdate))
+            usu.appointment_set.create(state=0,center=usu.center,vaccine=vacC,edad=calculate_age(usu.birthDate),initialDate=date.today())
     else:
         if (tipo == 2):
             historialActual.gripe_date = datetime.today().strftime('%Y-%m-%d')
@@ -962,7 +962,7 @@ def turnosParaAsignar(response,pagina=1,filtro='centro'):
             fecha = None
             messages.error(response,message)
     if(filtro == 'fecha'):
-        turnos = turnos.order_by('date')
+        turnos = turnos.order_by('initialDate')
     elif(filtro == 'nombre'):
         turnos = turnos.order_by('patient__surname')
     elif(filtro == 'vacuna'):
