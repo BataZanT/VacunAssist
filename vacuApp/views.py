@@ -38,9 +38,6 @@ def home(response):
 def infoPersonal(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 1 :
-        response.session.flush()
-        return redirect('/')
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
@@ -49,9 +46,6 @@ def infoPersonal(response):
 
 def modificarInfo(response):
     if not checkearLogin(response):
-        return redirect('/')
-    if response.session["categoria"] != 1 :
-        response.session.flush()
         return redirect('/')
     idu=response.session['user_id']
     o=User.objects.all()
@@ -220,8 +214,6 @@ def enviaremailNormal(response):
         msg = f'Subject: {subject}\n\n{body}'                                       #Es necesario formatear el mensaje (f) para que lo tome gmail
 
         smtp.sendmail(EMAIL, DESTINATARIO, msg)                                      #Para enviarlo usamos sendmail con quien lo envia, a quien y el mensaje en cuestion
-
-
     response.session.flush()
     return HttpResponse("""<html><script>window.location.replace('/');</script></html>""")
 
@@ -291,9 +283,6 @@ def homeUsuario(response):
 def modificarContraseña(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] == 3 :
-        response.session.flush()
-        return redirect('/')
     ca=response.POST["contActual"]
     idu=response.session["user_id"]
     o=User.objects.all()
@@ -324,12 +313,10 @@ def modificarContraseña(response):
 def asignarTurnoFiebreA(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 1 :
-        response.session.flush()
-        return redirect('/')
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
+    edad=calculate_age(usu.birthDate)
     vacF = Vaccine.objects.get(name="Fiebre Amarilla")
     turnoF = Appointment(state=0,center=usu.center,vaccine=vacF,patient=usu,edad=calculate_age(usu.birthDate),initialDate=date.today())
     turnoF.save()
@@ -395,9 +382,7 @@ def validarCambioContraseñaRecuperada(response):
 def validarCambioMail(response):
         if not checkearLogin(response):
             return redirect('/')
-        if response.session["categoria"] != 1 :
-            response.session.flush()
-            return redirect('/')
+
         mailN = response.POST['mailNuevo']
         mailNRepetido = response.POST['mailNuevoRepetido']
 
@@ -426,9 +411,6 @@ def validarCambioMail(response):
 def modCentro(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 1 :
-            response.session.flush()
-            return redirect('/')
     o= User.objects.all()
     idu=response.session["user_id"]
     usu=o.get(id=idu)
@@ -529,9 +511,6 @@ def borrarRegistro(response):
 def homeAdmin(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 2 :
-        response.session.flush()
-        return redirect('/')
     o= User.objects.all()
     idUsuario = response.session["user_id"]
     usu = o.get(id = idUsuario)
@@ -599,9 +578,6 @@ def homeAdmin(response):
 def presente(response,id,tipo):
     if not checkearLogin(response):
         return redirect('/') 
-    if response.session["categoria"] != 2 :
-        response.session.flush()
-        return redirect('/')
     observaciones = response.POST["observaciones"]
     detalles = response.POST["detalles"]
     T = Appointment.objects.all()
@@ -633,9 +609,6 @@ def presente(response,id,tipo):
 def marcarTurnoAusentes(response):
         if not checkearLogin(response):
             return redirect('/')
-        if response.session["categoria"] != 2 :
-            response.session.flush()
-            return redirect('/')
         if(response.session["ok"] == 0):
             response.session["ok"]=1
             return redirect('http://127.0.0.1:8000/homeAdminCentro')  
@@ -660,9 +633,6 @@ def marcarTurnoAusentes(response):
 def pasarAadminiReiniciarbuscarUsuario(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 2 :
-        response.session.flush()
-        return redirect('/')
     response.session["dni"]=response.POST["dni"]
     if (response.session["usubuscar"]==0):
         response.session["usubuscar"]=1
@@ -677,9 +647,6 @@ def informacionVacunas(response):
 def completarVacunas(response,id,tipo):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 2 :
-        response.session.flush()
-        return redirect('/')
     T = Appointment.objects.all()
     turnoActual = T.get(id = id)
     usu = User.objects.get(id = turnoActual.patient_id)
@@ -691,9 +658,6 @@ def modificarCentro(response, id):
 
 def modificar(response, id):
     if not checkearLogin(response):
-        return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
         return redirect('/')
     nombreNuevo = response.POST["nombre"]
     direccNueva = response.POST["direccion"]
@@ -755,22 +719,17 @@ def enviaremail(response, admin, CLAVE):
 def crearAdmin(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     centros = Center.objects.all()
     return render(response,'crearAdmin.html', {'todosLosCentros': centros})
     
 def completarAdmin(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     nombreNuevo = response.POST["nombre"]
     apellidoNuevo = response.POST["apellido"]
     emailNuevo = response.POST["email"]
     dniNuevo = response.POST["dni"]
+    telefonoNuevo = response.POST["telefono"]
     o= User.objects.all()
     usu = o.filter(email=emailNuevo)
     if usu:
@@ -784,17 +743,23 @@ def completarAdmin(response):
             centros = Center.objects.all()
             return render(response,'crearAdmin.html', {'todosLosCentros': centros}) 
         else:
-            c = Center.objects.get(id = response.POST.get('elegido'))
-            adminNuevo = User(id= (User.objects.count() + 1), name= nombreNuevo, surname= apellidoNuevo, email= emailNuevo, birthDate= '2000-06-05', DNI= dniNuevo, center_id= c.id, is_staff= True, is_admin=False)
-            CLAVE = str(random.randint( 1000000, 9999999)) + str("V")
-            AUX = CLAVE
-            adminNuevo.set_password(CLAVE)
-            adminNuevo.save()
-            enviaremail(response, adminNuevo, AUX)
-            messages.success(response, 'Se ha creado un nuevo administrador de centro')
-            a = User.objects.filter(is_staff = 1)
-            centros = Center.objects.all()
-            return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
+            usu = o.filter(telefono = telefonoNuevo)
+            if usu:
+                messages.error(response, 'El telefono pertenece a otra cuenta del sistema')
+                centros = Center.objects.all()
+                return render(response,'crearAdmin.html', {'todosLosCentros': centros})
+            else:
+                c = Center.objects.get(id = response.POST.get('elegido'))
+                adminNuevo = User(id= (User.objects.count() + 1), name= nombreNuevo, surname= apellidoNuevo, email= emailNuevo, birthDate= '2000-06-05', DNI= dniNuevo, center_id= c.id, is_staff= True, is_admin=False, telefono=telefonoNuevo)
+                CLAVE = str(random.randint( 1000000, 9999999)) + str("V")
+                AUX = CLAVE
+                adminNuevo.set_password(CLAVE)
+                adminNuevo.save()
+                enviaremail(response, adminNuevo, AUX)
+                messages.success(response, 'Se ha creado un nuevo administrador de centro')
+                a = User.objects.filter(is_staff = 1)
+                centros = Center.objects.all()
+                return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
 
 def elegirGrafico(response):
     return render(response,'elegirGrafico.html')
@@ -985,9 +950,6 @@ def graficoUsuarios(response):
 def turnosParaAsignar(response,pagina=1,filtro='centro'):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     turnos = Appointment.objects.filter(state = 0)
     fecha = None
     cantidades = None
@@ -1034,9 +996,6 @@ def turnosPorCentro(fecha):
 def asignarTurnos(response,fecha,pagina,filtro):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     turnos = response.POST.getlist("turnos[]")
     print(turnos)
     for turno in turnos:
@@ -1057,9 +1016,6 @@ def asignarTurnos(response,fecha,pagina,filtro):
 def turnosAsignados(response,pagina = 1,filtro='centro'):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     turnos = Appointment.objects.filter(state = 1)
     if(filtro == 'fecha'):
         turnos = turnos.order_by('date')
@@ -1076,15 +1032,11 @@ def turnosAsignados(response,pagina = 1,filtro='centro'):
 def cancelarTurno(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     turno = Appointment.objects.get(id = response.POST["turno"])
     turno.state = 0
     turno.date = None
     turno.save()
     return redirect('/turnosAsignados')
-
     
 def mailRecuperarContraseña(response):
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:                               #Esto prepara la conexion con gmail, utilizando el puerto 587, y lo llamamos smtp 
@@ -1114,17 +1066,11 @@ def verEnvioMailRecuperar(responde):
 def borrarAdmin(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     a = User.objects.filter(is_staff = 1)
     return render(response,'borrarAdminX.html',{'todosLosAdmins':a})
 
 def selec(response):
     if not checkearLogin(response):
-        return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
         return redirect('/')
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
@@ -1133,26 +1079,26 @@ def selec(response):
 def modificarAdminC(response, id):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     c = Center.objects.all()
-    return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': c})
+    o= User.objects.all()
+    usu = o.get(id = id)
+    suCentro = usu.center_id
+    cCentro = Center.objects.get (id = suCentro)
+    elNombreDeSuCENTRO = cCentro.name
+    return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': c,'nActual': usu.name,'aActual': usu.surname,'dActual': usu.DNI,'tActual': usu.telefono, 'cActual': elNombreDeSuCENTRO})
 
 def modificarAdminX(response, id):
     if not checkearLogin(response):
-        return redirect('/')
-    if response.session["categoria"] == 3 :
-        response.session.flush()
         return redirect('/')
     nomN = response.POST["nombreN"]
     apeN = response.POST["apellidoN"]
     dniN = response.POST["dniN"]
     centroN = response.POST["centroN"]
+    telefonoN = response.POST["telefonoN"]
     admin = User.objects.get(id = id)
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
-    if (nomN == '') and (apeN == '') and (dniN == '') and (centroN == ''):
+    if (nomN == '') and (apeN == '') and (dniN == '') and (centroN == '') and (telefonoN == ''):
         messages.info(response, 'No se hicieron cambios')
         return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
     else:
@@ -1191,6 +1137,13 @@ def modificarAdminX(response, id):
             else:
                 messages.error(response, 'El centro ingresado no existe')
                 return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+        if (telefonoN != ''):
+            copiado = User.objects.filter(telefono = telefonoN)
+            if copiado:
+                messages.error(response, 'El telefono pertenece a otra cuenta del sistema')
+                return render(response,'modificarInfoAdminC.html', {'elegido':id,'todosLosCentros': centros})
+            else:
+                admin.telefono = telefonoN
         messages.success(response, 'Se han modificado los datos correctamente')
         admin.save()
     return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count()})
@@ -1198,18 +1151,12 @@ def modificarAdminX(response, id):
 def confirmarEliminar(response,id):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
-        return redirect('/')
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
     return render(response,'seleccionar.html',{'todosLosAdmins':a, 'todosLosCentros': centros, 'totalAdmins': a.count(),'seQuiereEliminar': 1, 'afectado': id})
 
 def eliminarAdmin(response,id):
     if not checkearLogin(response):
-        return redirect('/')
-    if response.session["categoria"] != 3 :
-        response.session.flush()
         return redirect('/')
     a = User.objects.filter(is_staff = 1)
     centros = Center.objects.all()
@@ -1225,25 +1172,20 @@ def eliminarAdmin(response,id):
 def miInfo(response):
     if not checkearLogin(response):
         return redirect('/')
-    if response.session["categoria"] != 2 :
-        response.session.flush()
-        return redirect('/')
     o= User.objects.all()
     miId = response.session["user_id"]
     yo = o.get(id = miId)
-    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
 
 def modificarMiInfo(response):
     if not checkearLogin(response):
-        return redirect('/')
-    if response.session["categoria"] != 2 :
-        response.session.flush()
         return redirect('/')
     nomN = response.POST["nombreN"]
     apeN = response.POST["apellidoN"]
     dniN = response.POST["dniN"]
     emailN = response.POST["emailN"]
     miId = response.session["user_id"]
+    telN = response.POST["telefonoN"]
     admin = User.objects.get(id = miId)
     a = User.objects.filter(is_staff = 1)
     o= User.objects.all()
@@ -1283,44 +1225,55 @@ def modificarMiInfo(response):
     else:
         cantC=t.filter(vaccine=1,state=1,center=usu.center,date=today).count()
     tot=cantC+cantG+cantF
-    if (nomN == '') and (apeN == '') and (dniN == '') and (emailN == ''):
+    if (nomN == '') and (apeN == '') and (dniN == '') and (emailN == '') and (telN == ''):
         messages.info(response, 'No se hicieron cambios')
         return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
     else:
         if (nomN != ''):
             if (admin.name == nomN):
                 messages.error(response, 'El nombre nuevo no puede ser el actual')
-                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
             else:
                 admin.name = nomN
         if (apeN != ''):
             if (admin.surname == apeN):
                 messages.error(response, 'El apellido nuevo no puede ser el actual')
-                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
             else:
                 admin.surname = apeN
         if (dniN != ''):
             if (admin.DNI == dniN):
                 messages.error(response, 'El DNI nuevo no puede ser el actual')
-                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
             else:
                 copiado = User.objects.filter(DNI = dniN)
                 if copiado:
                     messages.error(response, 'El DNI pertenece a otro usuario del sistema')
-                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
                 else:
                     admin.DNI = dniN
         if (emailN != ''):
             if (admin.email == emailN):
                 messages.error(response, 'El email nuevo no puede ser el actual')
-                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
             else:
                 copiado = User.objects.filter(email = emailN)
                 if copiado:
                     messages.error(response, 'El email pertenece a otro usuario del sistema')
-                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email})
+                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
                 else:
                     admin.email = emailN
+        if (telN != ''):
+            if (admin.telefono == telN):
+                messages.error(response, 'El telefono nuevo no puede ser el actual')
+                return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
+            else:
+                copiado = User.objects.filter(telefono = telN)
+                if copiado:
+                    messages.error(response, 'El telefono pertenece a otra cuenta del sistema')
+                    return render(response,'miInfo.html', {'miNombre': yo.name, 'miApellido': yo.surname, 'miDNI': yo.DNI, 'miEmail': yo.email, 'miTelefono': yo.telefono})
+                else:
+                    admin.telefono = telN
         messages.success(response, 'Se han modificado los datos correctamente')
         admin.save()
     return render(response,'inicioAdminCentro.html', {'turnobuscado':usubuscado,'tot':tot,'hoy':today, 'covid':turnosC, 'cantC':cantC, 'demasC':dtc, 'gripe':turnosG,'cantG':cantG,'demasG':dtg, 'fiebre':turnosF,'cantF':cantF,'demasF':dtf,'ok': response.session["ok"]})
