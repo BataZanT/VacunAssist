@@ -242,16 +242,15 @@ def completarUsuario(response):
     return str(u.history)
 
 def asignarVacunas(user):
-    edad=calculate_age(user.birthDate) 
     if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=edad)
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate))
     if (user.history.gripe == '0'):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=edad)
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate))
     elif (calculate_age(datetime.strptime(user.history.gripe_date, '%Y-%m-%d').date()) > 0):
         vacG = Vaccine.objects.get(name="Gripe")
-        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=edad)  
+        user.appointment_set.create(state=0,center=user.center,vaccine=vacG,edad=calculate_age(user.birthDate))  
     
 def visualizar(response):
     return render(response,'visualizarInfoPersonal.html')
