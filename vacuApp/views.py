@@ -651,7 +651,7 @@ def marcarTurnoAusentes(response):
                 if(len(ausentes) > 0):
                     for turno in ausentes:
                         turno.state=0
-                        turno.cancel=1
+                        turno.cancel=True
                         turno.save()
                 else:
                     messages.error(response,"No hay turnos para marcar como ausentes")
@@ -895,7 +895,7 @@ def graficoVacunas(response):
     Nvacunascanttotalcanc = []
     personas=User.objects.all()
     for vacuna in vacunas:
-        cant = turnos.filter(vaccine = vacuna,state=0,cancel=False).count()
+        cant = turnos.filter(vaccine = vacuna,state=0,cancel=True).count()
         canttotalvacunascanc.append(cant)
         Nvacunascanttotalcanc.append(vacuna.name)
     return render(response,'graficoVacunas.html',{'Ntv':Nvacunascanttotalturnos,'Ctv':canttotalturnosvacunas,
