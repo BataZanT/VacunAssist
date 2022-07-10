@@ -237,8 +237,11 @@ def asignarVacunas(user):
     if (calculate_age(user.birthDate) > 18) and (int(user.history.covid_doses) < 2):
         vacC = Vaccine.objects.get(name="Covid")
 <<<<<<< HEAD
+<<<<<<< HEAD
         user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate))
 =======
+=======
+>>>>>>> 9dc5253f35c8095f5943865a77274ca80fea52f1
         user.appointment_set.create(state=0,center=user.center,vaccine=vacC,edad=calculate_age(user.birthDate),initialDate=date.today())
 
 >>>>>>> 9dc5253f35c8095f5943865a77274ca80fea52f1
