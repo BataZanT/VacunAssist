@@ -45,6 +45,9 @@
                   Anda mal</p>  
                   {% endif %}                 
                   </p>
+                  {% if turno.date %}
+                  <p>Fecha: {{turno.date}}</p>
+                  {% endif %}
                   <p>Centro de vacunacion: {{ turno.center }} <br>
                     Dirección: {{ turno.center.adress }} </p>
                   {% if turno.state == 2 %}
