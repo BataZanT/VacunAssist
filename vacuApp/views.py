@@ -623,6 +623,7 @@ def marcarTurnoAusentes(response):
                     for turno in ausentes:
                         turno.state=0
                         turno.cancel=True
+                        turno.initialDate=today
                         turno.save()
                 else:
                     messages.error(response,"No hay turnos para marcar como ausentes")
