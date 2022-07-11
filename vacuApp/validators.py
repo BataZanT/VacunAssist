@@ -71,7 +71,7 @@ def validarFechaAsginar(fecha):
     fechaD = date.fromisoformat(fecha)
     message = ''
     if(fechaD < date.today()):
-        message = "La fecha del turno debe ser para mañana como minimo"
+        message = "La fecha del turno debe ser para hoy como minimo"
     return message
 
 def validarTurnoMismoDia(usuario,fecha):
